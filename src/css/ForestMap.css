@@ -1216,7 +1216,9 @@ body.content #storage-ui-container {
 }
 
 
-/**/
+/*
+  ForestMap  - преобразование  leaflet  - красота для лесов
+*/
 
 .leaflet-left {
 	left: 0;
