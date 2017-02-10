@@ -204,6 +204,7 @@ L.Storage.FeatureMixin = {
 
     populate: function (feature) {
         this.properties = L.extend({}, feature.properties);
+        //TODO :ForestMap было в старой this.options.title = feature.properties && feature.properties.name;
         this.properties._storage_options = L.extend({}, this.properties._storage_options);
         // Retrocompat
         if (this.properties._storage_options.clickable === false) {

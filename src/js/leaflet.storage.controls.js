@@ -377,7 +377,7 @@ L.Storage.EditControl = L.Control.extend({
 L.Control.Embed = L.Control.extend({
 
     options: {
-        position: 'topleft'
+        position: 'bottomright'//TODO:ForestMap
     },
 
     onAdd: function (map) {
@@ -399,7 +399,7 @@ L.Control.Embed = L.Control.extend({
 L.Storage.MoreControls = L.Control.extend({
 
     options: {
-        position: 'topleft'
+        position: 'topright'//ForestMap
     },
 
     onAdd: function () {
@@ -524,9 +524,13 @@ L.Storage.DataLayersControl = L.Control.extend({
         var datalayerLi = L.DomUtil.create('li', '', container);
         if (draggable) L.DomUtil.element('i', {className: 'drag-handle', title: L._('Drag to reorder')}, datalayerLi);
         datalayer.renderToolbox(datalayerLi);
-        var title = L.DomUtil.add('span', 'layer-title', datalayerLi, datalayer.options.name);
 
-        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);
+
+        var title = L.DomUtil.add('span', 'layer-title', datalayerLi, datalayer.options.name);
+        //TODO: ForestMap : назначение обозначения для открытия табличного представления
+        title.id =  datalayer.options.laydescription;
+
+        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);//TODO:ForestMap datalayerLi.id = 'browse_data_toggle_' + datalayer.storage_id;
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
 
         title.innerHTML = datalayer.options.name;
@@ -585,7 +589,10 @@ L.Storage.DataLayer.include({
         table.title = L._('Edit properties in a table');
         remove.title = L._('Delete layer');
         L.DomEvent.on(toggle, 'click', this.toggle, this);
-        L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
+        //-->TODO: ForestMap пока уберем
+        //L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
+        //-->TODO: ForestMap
+
         L.DomEvent.on(edit, 'click', this.edit, this);
         L.DomEvent.on(table, 'click', this.tableEdit, this);
         L.DomEvent.on(remove, 'click', function () {
@@ -760,17 +767,34 @@ L.Storage.TileLayerControl = L.Control.extend({
         this._map.ui.openPanel({data: {html: this._tilelayers_container}, className: options.className});
     },
 
+    //TODO: ForestMap  - добавление на нижний толбар открытия легенды
+    //TODO:  замена  слоя происходит при нажатии  только на картинку
     addTileLayerElement: function (tilelayer, options) {
         var selectedClass = this._map.hasLayer(tilelayer) ? 'selected' : '',
             el = L.DomUtil.create('li', selectedClass, this._tilelayers_container),
-            img = L.DomUtil.create('img', '', el),
-            name = L.DomUtil.create('div', '', el);
+                     img = L.DomUtil.create('img', '', el),
+                     // name = L.DomUtil.create('div', 'mainclass', el),
+                     widget_f = L.DomUtil.create('div', 'mainclass', el);
+
+        // TODO: ForestMAP
+        widget_f.id= tilelayer.options.attribution;
+        widget_f.innerHTML = tilelayer.options.name;
+        widget_f.title = "Легенда слоя";
+
         img.src = L.Util.template(tilelayer.options.url_template, this._map.demoTileInfos);
         name.innerHTML = tilelayer.options.name;
         L.DomEvent.on(el, 'click', function () {
             this._map.selectTileLayer(tilelayer);
             this._map.ui.closePanel();
             if (options && options.callback) options.callback(tilelayer);
+        }, this); //TODO:ForestMap  отображение легенды
+        L.DomEvent.on(widget_f, 'click', function () {
+            var namelayer = widget_f.id;
+            if (namelayer != '')
+            {
+                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.PNG');
+                $('#widget_legenda').show();
+            }
         }, this);
     }
 
@@ -806,7 +830,7 @@ L.S.AttributionControl = L.Control.Attribution.extend({
 L.Storage.LocateControl = L.Control.extend({
 
     options: {
-        position: 'topleft'
+        position: 'topright'//TODO:ForestMAp
     },
 
     onAdd: function (map) {
@@ -884,17 +908,20 @@ L.Storage.SearchControl = L.Control.extend({
             self = this;
 
         L.DomEvent.disableClickPropagation(container);
-        var link = L.DomUtil.create('a', '', container);
+        var link = L.DomUtil.create('a', 'findForestMap', container); //TODO:ForestMap
         link.href = '#';
-        L.DomEvent.on(link, 'click', function (e) {
-            L.DomEvent.stop(e);
-            self.openPanel(map);
-        });
+
+        // TODO: ForestMap закрытие выезжающей панели для поиска
+            // L.DomEvent.on(link, 'click', function (e) {
+            //     L.DomEvent.stop(e);
+            //     self.openPanel(map);
+            // });
+        // TODO: ForestMap закрытие выезжающей панели для поиска
         return container;
     },
 
     openPanel: function (map) {
-        var options = {
+       /* var options = {
             limit: 10,
             noResultLabel: L._('No results'),
         }
@@ -917,7 +944,7 @@ L.Storage.SearchControl = L.Control.extend({
         map.ui.once('panel:ready', function () {
             input.focus();
         });
-        map.ui.openPanel({data: {html: container}});
+        map.ui.openPanel({data: {html: container}});*/
     }
 
 });

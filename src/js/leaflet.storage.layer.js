@@ -321,14 +321,14 @@ L.Storage.DataLayer = L.Class.extend({
         var self = this,
             url = this.map.localizeUrl(this.options.remoteData.url);
         if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
-        this.map.ajax({
-            uri: url,
+        //TODO:ForestMap:/*this.map.ajax({
+         /*   uri: url,
             verb: 'GET',
             callback: function (raw) {
                 self.clear();
                 self.rawToGeoJSON(raw, self.options.remoteData.format, function (geojson) {self.fromGeoJSON(geojson);});
             }
-        });
+        });*/
     },
 
     onceLoaded: function (callback, context) {

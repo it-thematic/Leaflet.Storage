@@ -291,6 +291,7 @@ L.Storage.Map.include({
     },
 
     initDatalayers: function () {
+        //TODO OLOLO
         var toload = 0, datalayer, seen = 0, self = this;
         var loaded = function () {
             self.datalayersLoaded = true;
@@ -443,6 +444,9 @@ L.Storage.Map.include({
         try {
             this.addLayer(tilelayer);
             this.fire('baselayerchange', {layer: tilelayer});
+            //--TODO:ForestMap в новой версии нижней строки  не  было
+                  tilelayer.bringToBack()
+            //TODO:ForesMap
             if (this.selected_tilelayer) {
                 this.removeLayer(this.selected_tilelayer);
             }
