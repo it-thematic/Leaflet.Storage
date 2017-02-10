@@ -40,6 +40,16 @@ L.S.UI = L.Evented.extend({
         L.DomUtil.add('i', 'storage-close-icon', closeLink);
         var label = L.DomUtil.create('span', '', closeLink);
         label.title = label.innerHTML = L._('Close');
+
+		/* ForestMap: Кнопка табличное представление  */
+
+        // var layersForestMap = L.DomUtil.create('li', 'storage-layers-forestmap', actionsContainer);
+        // L.DomUtil.add('i', '', layersForestMap);
+        // var labelLayersForestMap = L.DomUtil.create('span', '', layersForestMap);
+        // labelLayersForestMap.title = labelLayersForestMap.innerHTML = L._('Табличное представление');
+        //
+
+
         if (e.actions) {
             for (var i = 0; i < e.actions.length; i++) {
                 actionsContainer.appendChild(e.actions[i]);
@@ -56,6 +66,8 @@ L.S.UI = L.Evented.extend({
             L.DomUtil.addClass(this.parent, 'storage-ui');
         }
         L.DomEvent.on(closeLink, 'click', this.closePanel, this);
+        // L.DomEvent.on(labelLayersForestMap,'click',showLayersForestMap,this);
+
     },
 
     closePanel: function () {
