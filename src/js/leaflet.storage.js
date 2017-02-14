@@ -417,6 +417,9 @@ L.Storage.Map.include({
 
     initTileLayers: function () {
         this.tilelayers = [];
+        //--forest
+        this.tilelayers_showing = [];
+        //forest--
         for(var i in this.options.tilelayers) {
             if(this.options.tilelayers.hasOwnProperty(i)) {
                 this.tilelayers.push(this.createTileLayer(this.options.tilelayers[i]));
