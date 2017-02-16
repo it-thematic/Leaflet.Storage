@@ -81,7 +81,7 @@ L.S.Layer.Heat = L.HeatLayer.extend({
         if (layer instanceof L.Marker) {
             var latlng = layer.getLatLng(), alt;
             if (this.datalayer.options.heat && this.datalayer.options.heat.intensityProperty) {
-                alt = parseFloat(layer.properties[this.datalayer.options.heat.intensityProperty || 0]);
+                alt = parseFloat(layer.properties[this.datalayer.options.heat.intensityProperty || 0]);
                 latlng = new L.LatLng(latlng.lat, latlng.lng, alt);
             }
             this.addLatLng(latlng);
@@ -134,6 +134,7 @@ L.S.Layer.Heat = L.HeatLayer.extend({
 
 L.Storage.DataLayer = L.Class.extend({
 
+    includes: [L.Mixin.Events],
 
     options: {
         displayOnLoad: true,
@@ -777,7 +778,6 @@ L.Storage.DataLayer = L.Class.extend({
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
-            ['options.wfst', {handler: 'Switch', label: L._('Data is WFST'), helpEntries: 'wfst'}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
@@ -993,7 +993,7 @@ L.Storage.DataLayer = L.Class.extend({
                 this.map.continueSaving();
             },
             context: this,
-            headers: {'If-Match': this._etag || ''}
+            headers: {'If-Match': this._etag || ''}
         });
     },
 
