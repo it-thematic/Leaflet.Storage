@@ -133,7 +133,6 @@ L.S.Layer.Heat = L.HeatLayer.extend({
 });
 
 L.Storage.DataLayer = L.Class.extend({
-
     includes: [L.Mixin.Events],
 
     options: {
@@ -778,6 +777,7 @@ L.Storage.DataLayer = L.Class.extend({
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
+            ['options.remoteData.wfst', {handler: 'Switch', label: L._('IsWFST'), helpEntries: L._('IsWFST')}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
