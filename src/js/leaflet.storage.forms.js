@@ -219,7 +219,8 @@ L.FormBuilder.LayerTypeChooser = L.FormBuilder.Select.extend({
     selectOptions: [
         ['Default', L._('Default')],
         ['Cluster', L._('Clustered')],
-        ['Heat', L._('Heatmap')]
+        ['Heat', L._('Heatmap')],
+        ['WFST', L._('Wfst')]
     ]
 
 });

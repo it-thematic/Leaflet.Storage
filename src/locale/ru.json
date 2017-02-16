@@ -152,6 +152,7 @@
     "height": "высота",
     "width": "ширина",
     "Clustered": "Кластеризованный",
+    "Wfst": "Удаленный источник данных",
     "Clustering radius": "Радиус кластеризации",
     "GeoRSS (only link)": "GeoRSS (только ссылка)",
     "GeoRSS (title + image)": "GeoRSS (заголовок и изображение)",

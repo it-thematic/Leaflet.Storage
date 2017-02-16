@@ -26,14 +26,6 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
     if (this.map.hasLayer(this.layer)){
         this.map.addLayer(this._tilelay);
     }
-    // this.map.ajax({
-    //     uri: url,
-    //     verb: 'GET',
-    //     callback: function (raw) {
-    //         self.clear();
-    //         self.rawToGeoJSON(raw, self.options.remoteData.format, function (geojson) {self.fromGeoJSON(geojson);});
-    //     }
-    // });
 };
 
 L.Storage.DataLayer.prototype.show = function() {

@@ -152,6 +152,7 @@
     "height": "height",
     "width": "width",
     "Clustered": "Clustered",
+    "Wfst": "remote datasource",
     "Clustering radius": "Clustering radius",
     "GeoRSS (only link)": "GeoRSS (only link)",
     "GeoRSS (title + image)": "GeoRSS (title + image)",

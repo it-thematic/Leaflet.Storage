@@ -134,7 +134,6 @@ L.S.Layer.Heat = L.HeatLayer.extend({
 
 L.Storage.DataLayer = L.Class.extend({
 
-    includes: [L.Mixin.Events],
 
     options: {
         displayOnLoad: true,
@@ -321,14 +320,14 @@ L.Storage.DataLayer = L.Class.extend({
         var self = this,
             url = this.map.localizeUrl(this.options.remoteData.url);
         if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
-        //TODO:ForestMap:/*this.map.ajax({
-         /*   uri: url,
+        this.map.ajax({
+            uri: url,
             verb: 'GET',
             callback: function (raw) {
                 self.clear();
                 self.rawToGeoJSON(raw, self.options.remoteData.format, function (geojson) {self.fromGeoJSON(geojson);});
             }
-        });*/
+        });
     },
 
     onceLoaded: function (callback, context) {
@@ -778,6 +777,7 @@ L.Storage.DataLayer = L.Class.extend({
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
+            ['options.wfst', {handler: 'Switch', label: L._('Data is WFST'), helpEntries: 'wfst'}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
