@@ -3,6 +3,10 @@ DataLayerMixin = {
 
     getLocalId: function () {
         return this.storage_id || 'tmp' + L.Util.stamp(this);
+    },
+
+    isWFSTLayer: function () {
+        return this.isRemoteLayer() && this.options.remoteData.wfst;
     }
 };
 
@@ -24,8 +28,20 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
     this._tilelay = new L.TileLayer(this.options.remoteData.url);
     this._tilelay.options.attribution = '-';
     if (this.map.hasLayer(this.layer)){
-        this.map.addLayer(this._tilelay);
+        this.map.addLayer(this._tilelay)
     }
+    var that = this;
+    if (this.options.remoteData.wfst) {
+        if (!this._loaded) {
+            this.layer.once('load', function (responce) {
+                that.clear();
+                that.addData(JSON.parse(responce.responseText));
+                console.log(that.layer.getBounds().toBBoxString());
+            });
+            this.layer.loadFeatures();
+        }
+    }
+    console.log('DataLayer fetchRemoteData Mixin')
 };
 
 L.Storage.DataLayer.prototype.show = function() {
