@@ -31,6 +31,7 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
         this.map.addLayer(this._tilelay)
     }
     var that = this;
+
     if (this.options.remoteData.wfst) {
         if (!this._loaded) {
             this.layer.once('load', function (responce) {
@@ -38,7 +39,14 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
                 that.addData(JSON.parse(responce.responseText));
                 console.log(that.layer.getBounds().toBBoxString());
             });
-            this.layer.loadFeatures();
+        this.layer.requestFeatures(undefined,function(rt) {
+                var pd = JSON.parse(rt);
+                for (var i = 0; i < pd.features.length; i++) {
+                    pd.features[i].state = 'exist';
+                }
+                that.addData(pd);
+            }
+        );
         }
     }
     console.log('DataLayer fetchRemoteData Mixin')
