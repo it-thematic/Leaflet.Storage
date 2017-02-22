@@ -127,3 +127,23 @@ L.Storage.SearchControl.Mixin = {
     }
 };
 L.Storage.SearchControl.include(L.Storage.SearchControl.Mixin);
+
+
+L.Storage.CancelFeatureAction = L.S.BaseFeatureAction.extend({
+
+    options: {
+        toolbarIcon: {
+            className: 'storage-cancel-one',
+            tooltip: L._('Cancel this feature')
+        }
+    },
+
+    postInit: function () {
+        //if (!this.feature.isMulti()) this.options.toolbarIcon.className = 'storage-delete-one-of-one';
+    },
+
+    onClick: function (e) {
+        this.feature.confirmCancel(e);
+    }
+
+});

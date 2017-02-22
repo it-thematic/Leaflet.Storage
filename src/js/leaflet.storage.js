@@ -1358,9 +1358,12 @@ L.Storage.Map.include({
     },
 
     enableEdit: function() {
-        L.DomUtil.addClass(document.body, 'storage-edit-enabled');
-        this.editEnabled = true;
-        this.fire('edit:enabled');
+        var that = this;
+        this.editLayer(function(e) {
+            L.DomUtil.addClass(document.body, 'storage-edit-enabled');
+            that.editEnabled = true;
+            that.fire('edit:enabled');
+        })
     },
 
     disableEdit: function() {

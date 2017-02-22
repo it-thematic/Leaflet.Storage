@@ -643,6 +643,10 @@ cursor: pointer;
 .storage-delete-all {
     background-position: -204px -85px;
 }
+.storage-cancel-one {
+    background-position: -45px -7px;
+}
+
 .storage-delete-one-of-multi {
     background-position: -165px -125px;
 }

@@ -18,7 +18,32 @@ L.S.Layer.WFST= L.WFST.extend({
                 weight: 2
             }
         }, new L.Format.GeoJSON({crs: L.CRS.EPSG4326, geometryField: 'geometry'})
-        )},
+        );
+        this.on('save:success', function() {
+            this.datalayer.clear();
+        })
+    },
+
+    searchLayer: function (e) {
+        this.datalayer.map.get(this.datalayer._objectUrl(e, this.datalayer.options.laydescription), {
+            callback: function (data, response) {
+                var id = data.id;
+                if (!id) return;
+                var filter_id = new L.Filter.GmlObjectID();
+                filter_id.append(id);
+                var that = this;
+                this.requestFeatures(filter_id,function(rt) {
+                    var pd = JSON.parse(rt);
+                    for (var i = 0; i < pd.features.length; i++) {
+                        pd.features[i].state = 'exist';
+                    }
+                    that.datalayer.addData(pd);
+                    that.datalayer.map.fitBounds(that.getBounds())
+                })},
+            context: this
+        });
+    },
+
     addLayer: function (layer) {
         L.FeatureGroup.prototype.addLayer.call(this, layer);
 

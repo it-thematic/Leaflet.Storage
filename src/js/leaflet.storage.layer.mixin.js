@@ -1,13 +1,43 @@
 DataLayerMixin = {
     _tilelay: null,
 
+    _objectUrl: function(e, layer){
+        var template = './api_identify?lat={lat}&lng={lng}&f=json&lay={lay}';
+        return L.Util.template(template, {'lat': e.latlng.lat, 'lng': e.latlng.lng, 'lay': layer})
+    },
+
     getLocalId: function () {
         return this.storage_id || 'tmp' + L.Util.stamp(this);
     },
 
     isWFSTLayer: function () {
         return this.isRemoteLayer() && this.options.remoteData.wfst;
+    },
+
+    featuresToRemoteData: function () {
+        if (!this.isRemoteLayer()) return [];
+        if (!this.isWFSTLayer()) return [];
+        this.layer.save();
+        return [];
+    },
+
+    cancelLayer: function (feature) {
+        var id = L.stamp(feature);
+        feature.disconnectFromDataLayer(this);
+        this._index.splice(this._index.indexOf(id), 1);
+        delete this._layers[id];
+        this.layer.cancelLayer(feature);
+        if (this.hasDataLoaded()) this.fire('datachanged');
     }
+};
+L.Storage.DataLayer.include(DataLayerMixin);
+
+L.Storage.DataLayer.prototype.umapGeoJSON = function () {
+    return {
+        type: 'FeatureCollection',
+        features: this.isRemoteLayer() ? this.featuresToRemoteData() : this.featuresToGeoJSON(),
+        _storage: this.options
+    };
 };
 
 L.Storage.DataLayer.prototype.fetchRemoteData = function () {
@@ -25,42 +55,37 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
         url = this.map.localizeUrl(this.options.remoteData.url);
     if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
 
-    this._tilelay = new L.TileLayer(this.options.remoteData.url);
-    this._tilelay.options.attribution = '-';
-    if (this.map.hasLayer(this.layer)){
-        this.map.addLayer(this._tilelay)
-    }
-    var that = this;
-
-    if (this.options.remoteData.wfst) {
-        if (!this._loaded) {
-            this.layer.once('load', function (responce) {
-                that.clear();
-                that.addData(JSON.parse(responce.responseText));
-                console.log(that.layer.getBounds().toBBoxString());
-            });
-        this.layer.requestFeatures(undefined,function(rt) {
-                var pd = JSON.parse(rt);
-                for (var i = 0; i < pd.features.length; i++) {
-                    pd.features[i].state = 'exist';
-                }
-                that.addData(pd);
-            }
-        );
+    if (!this._tilelay) {
+        this._tilelay = new L.TileLayer(this.options.remoteData.url);
+        this._tilelay.options.attribution = '-';
+        if (this.map.hasLayer(this.layer)) {
+            this.map.addLayer(this._tilelay)
         }
     }
-    console.log('DataLayer fetchRemoteData Mixin')
+
+    // if (this.options.remoteData.wfst) {
+    //     if (!this._loaded) {
+    //         var that = this;
+    //         this.layer.requestFeatures(undefined,function(rt) {
+    //             var pd = JSON.parse(rt);
+    //             for (var i = 0; i < pd.features.length; i++) {
+    //                 pd.features[i].state = 'exist';
+    //             }
+    //             that.addData(pd);
+    //             that.map.fitBounds(that.layer.getBounds())
+    //         });
+    //     }
+    // }
 };
 
 L.Storage.DataLayer.prototype.show = function() {
     if(!this.isLoaded()) this.fetchData();
-    if (this._tilelay){
+    this.map.addLayer(this.layer);
+    if (this._tilelay && !this.map.hasLayer(this._tilelay)){
           this.map.addLayer(this._tilelay);
     }
-    this.map.addLayer(this.layer);
     this.fire('show');
-    console.log('Datalayer show Mixin')
-    };
+};
 
 L.Storage.DataLayer.prototype.hide = function() {
     if (this._tilelay) {
@@ -68,8 +93,7 @@ L.Storage.DataLayer.prototype.hide = function() {
     }
     this.map.removeLayer(this.layer);
     this.fire('hide');
-    console.log('Datalayer hide Mixin')
-    };
+};
 
 L.Storage.DataLayer.prototype.fromUmapGeoJSON = function (geojson) {
     if (geojson._storage) {
@@ -80,14 +104,11 @@ L.Storage.DataLayer.prototype.fromUmapGeoJSON = function (geojson) {
     if (this.isRemoteLayer()) this.fetchRemoteData();
     else this.fromGeoJSON(geojson);
     this._loaded = true;
-    console.log('Datalayer fromUmapGeoJSON Mixin')
 };
 
 L.Storage.DataLayer.prototype.getHidableClass = function () {
     return 'show_with_datalayer_' + this.getLocalId();
 };
-
-L.Storage.DataLayer.include(DataLayerMixin);
 
 
 L.Storage.Map.prototype.selectTileLayer = function (tilelayer) {
