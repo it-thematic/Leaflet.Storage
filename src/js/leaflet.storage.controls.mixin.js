@@ -134,7 +134,7 @@ L.Storage.CancelFeatureAction = L.S.BaseFeatureAction.extend({
     options: {
         toolbarIcon: {
             className: 'storage-cancel-one',
-            tooltip: L._('Cancel this feature')
+            tooltip: L._('Cancel edits')
         }
     },
 

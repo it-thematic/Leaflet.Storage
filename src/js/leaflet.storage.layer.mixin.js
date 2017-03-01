@@ -17,7 +17,7 @@ DataLayerMixin = {
     featuresToRemoteData: function () {
         if (!this.isRemoteLayer()) return [];
         if (!this.isWFSTLayer()) return [];
-        this.layer.save();
+        if (this.options.type === 'WFST') this.layer.save();
         return [];
     },
 
@@ -30,6 +30,7 @@ DataLayerMixin = {
         if (this.hasDataLoaded()) this.fire('datachanged');
     }
 };
+
 L.Storage.DataLayer.include(DataLayerMixin);
 
 L.Storage.DataLayer.prototype.umapGeoJSON = function () {
@@ -108,6 +109,41 @@ L.Storage.DataLayer.prototype.fromUmapGeoJSON = function (geojson) {
 
 L.Storage.DataLayer.prototype.getHidableClass = function () {
     return 'show_with_datalayer_' + this.getLocalId();
+};
+
+L.Storage.DataLayer.prototype.save = function () {
+    if (this.isDeleted) return this.saveDelete();
+    if (!this.isLoaded()) {return;}
+    var geojson = this.umapGeoJSON();
+    var formData = new FormData();
+    formData.append('name', this.options.name);
+    formData.append('description', this.options.laydescription);
+    formData.append('display_on_load', !!this.options.displayOnLoad);
+    formData.append('rank', this.getRank());
+    // Filename support is shaky, don't do it for now.
+    var blob = new Blob([JSON.stringify(geojson)], {type: 'application/json'});
+    formData.append('geojson', blob);
+    this.map.post(this.getSaveUrl(), {
+        data: formData,
+        callback: function (data, response) {
+            this._geojson = geojson;
+            this._etag = response.getResponseHeader('ETag');
+            this.setStorageId(data.id);
+            this.updateOptions(data);
+            // TODO: При сохранении нового слоя параметры слоя не меняются, поэтому принудительно приходится обновлять
+            // TODO: параметры
+            this.backupOptions();
+            this.reset();
+            this.connectToMap();
+
+            this._loaded = true;
+            this.redraw();  // Needed for reordering features
+            this.isDirty = false;
+            this.map.continueSaving();
+        },
+        context: this,
+        headers: {'If-Match': this._etag || ''}
+    });
 };
 
 

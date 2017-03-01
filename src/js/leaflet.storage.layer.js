@@ -699,7 +699,7 @@ L.Storage.DataLayer = L.Class.extend({
         var container = L.DomUtil.create('div'),
             metadataFields = [
                 'options.name',
-                'options.description',
+                ['options.laydescription', {label: L._('description')}],
                 ['options.type', {handler: 'LayerTypeChooser', label: L._('Type of layer')}],
                 ['options.displayOnLoad', {label: L._('Display on load'), handler: 'Switch'}],
                 ['options.browsable', {label: L._('Data is browsable'), handler: 'Switch', helpEntries: 'browsable'}]
@@ -774,11 +774,26 @@ L.Storage.DataLayer = L.Class.extend({
         if (!L.Util.isObject(this.options.remoteData)) {
             this.options.remoteData = {};
         }
+
+        var wfstCallback = function(field){
+            if (this.options.type === 'WFST') {
+                if (field.helper.field === 'options.remoteData.wfst') {
+                    this.layer.options.typeName = this.options.laydescription;
+                    return;
+                }
+
+                if (field.helper.field == 'options.remoteData.url_wfst') {
+                    this.layer.options.url = field.helper.toJS();
+                    return;
+                }
+
+            }
+        };
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
-            ['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST'}],
+            ['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: wfstCallback}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
-            ['options.remoteData.wfst', {handler: 'Switch', label: L._('IsWFST'), helpEntries: L._('IsWFST')}],
+            ['options.remoteData.wfst', {handler: 'Switch', label: L._('IsWFST'), helpEntries: L._('IsWFST'), callback: wfstCallback}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],

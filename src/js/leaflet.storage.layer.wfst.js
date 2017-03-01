@@ -19,8 +19,10 @@ L.S.Layer.WFST= L.WFST.extend({
             }
         }, new L.Format.GeoJSON({crs: L.CRS.EPSG4326, geometryField: 'geometry'})
         );
+        var that = this;
         this.on('save:success', function() {
-            this.datalayer.clear();
+            that.datalayer.clear();
+            that.fire('viewreset');
         })
     },
 

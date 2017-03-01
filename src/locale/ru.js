@@ -344,7 +344,10 @@ var locale = {
     "Home": "Home",
     "Delete all layers": "Delete all layers",
     "Full map data": "Full map data",
-    "Smart transitions": "Smart transitions"
+    "Smart transitions": "Smart transitions",
+    "Choose the edited layer": "Выберите редактируемый слой",
+    "Cancel this feature": "Отменить изменения",
+    "Are you sure you want to cancel your changes in this feature?" : "Вы уверены, что хотите отменить свои изменения в этом объекте?"
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");

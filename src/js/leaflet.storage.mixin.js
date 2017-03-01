@@ -5,20 +5,24 @@ L.Storage.Map.include({
     editLayer: function (onSelectCallback) {
         var container = L.DomUtil.create('div');
 
-        var builder = new L.S.FormBuilder(this, ['datalayers'], {callback: function (e) {
-            this.edit(e);}
-        });  // removeLayer step will close the edit panel, let's reopen it
+        var builder = new L.S.FormBuilder(this, ['datalayers']);  // removeLayer step will close the edit panel, let's reopen it
         container.appendChild(builder.build());
-
+        if (builder.helpers.datalayers.select.length == 0) {
+            var msg = 'Нет загруженных слоёв';
+            this.ui.alert({content: msg, level: 'error', duration: 100000});
+            return;
+        }
         var editLink = L.DomUtil.create('a', 'button storage-edit', container);
         editLink.href = '#';
         editLink.innerHTML = L._('Edit');
-        L.DomEvent.on(editLink, 'click', function (e) {
-            L.DomEvent.stop(e);
-                this.ui.closePanel();
-                if (!this.editedLayer) {this.editedLayer = builder.helpers['datalayers'].toJS()}
-                onSelectCallback();
-        }, this);
+        L.DomEvent
+            .on(editLink, 'click', L.DomEvent.stop)
+            .on(editLink, 'click', function (e) {
+                L.DomEvent.stop(e);
+                    this.ui.closePanel();
+                    if (!this.editedLayer) {this.editedLayer = builder.helpers['datalayers'].toJS()}
+                    onSelectCallback();
+            }, this);
 
         this.ui.openPanel({data: {html: container}, className: 'dark'})
     }
@@ -26,7 +30,7 @@ L.Storage.Map.include({
 
 L.Storage.Map.addInitHook(function(){
     var editedLayer = null;
-        that = this;
+    var that = this;
     try {
         Object.defineProperty(this, 'editedLayer', {
             get: function () {
@@ -56,7 +60,7 @@ L.Storage.Map.prototype.defaultDataLayer = function(){
     }
     datalayer = this.findDataLayer(function (datalayer) {
         if ((!datalayer.isRemoteLayer() || (datalayer.isRemoteLayer() && datalayer.isWFSTLayer())) && datalayer.canBrowse()) {
-            fallback = datalayer;
+            //fallback = datalayer;
             if (datalayer.isVisible()) return true;
         }
     });
