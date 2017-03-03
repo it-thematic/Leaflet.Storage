@@ -596,6 +596,8 @@ L.Storage.DataLayer.include({
         L.DomEvent.on(edit, 'click', this.edit, this);
         L.DomEvent.on(table, 'click', this.tableEdit, this);
         L.DomEvent.on(remove, 'click', function () {
+                    // TODO: ForestMap: нельзя удалить редактируемый слой
+                    if (this == this.map.editedLayer) return;
                     if (!this.isVisible()) return;
                     if (!confirm(L._('Are you sure you want to delete this layer?'))) return;
                     this._delete();

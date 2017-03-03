@@ -227,7 +227,7 @@ L.Storage.Map.include({
 
         if (this.options.allowEdit && !this.options.noControl) {
             new L.Storage.EditControl(this).addTo(this);
-
+            new L.S.EditingLayerToolbar({map: this}).addTo(this);
             new L.S.DrawToolbar({map: this}).addTo(this);
 
             var editActions = [
@@ -1358,12 +1358,9 @@ L.Storage.Map.include({
     },
 
     enableEdit: function() {
-        var that = this;
-        this.editLayer(function(e) {
-            L.DomUtil.addClass(document.body, 'storage-edit-enabled');
-            that.editEnabled = true;
-            that.fire('edit:enabled');
-        })
+        L.DomUtil.addClass(document.body, 'storage-edit-enabled');
+        this.editEnabled = true;
+        this.fire('edit:enabled');
     },
 
     disableEdit: function() {

@@ -11,7 +11,7 @@ DataLayerMixin = {
     },
 
     isWFSTLayer: function () {
-        return this.isRemoteLayer() && this.options.remoteData.wfst;
+        return this.isRemoteLayer() && this.options.type === 'WFST';
     },
 
     featuresToRemoteData: function () {
@@ -28,6 +28,11 @@ DataLayerMixin = {
         delete this._layers[id];
         this.layer.cancelLayer(feature);
         if (this.hasDataLoaded()) this.fire('datachanged');
+    },
+
+    allowEdit: function () {
+        return !this.isRemoteLayer() ||
+            (this.isRemoteLayer() && this.isWFSTLayer() && this.layer.isValid);
     }
 };
 
@@ -63,20 +68,6 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
             this.map.addLayer(this._tilelay)
         }
     }
-
-    // if (this.options.remoteData.wfst) {
-    //     if (!this._loaded) {
-    //         var that = this;
-    //         this.layer.requestFeatures(undefined,function(rt) {
-    //             var pd = JSON.parse(rt);
-    //             for (var i = 0; i < pd.features.length; i++) {
-    //                 pd.features[i].state = 'exist';
-    //             }
-    //             that.addData(pd);
-    //             that.map.fitBounds(that.layer.getBounds())
-    //         });
-    //     }
-    // }
 };
 
 L.Storage.DataLayer.prototype.show = function() {
@@ -89,6 +80,10 @@ L.Storage.DataLayer.prototype.show = function() {
 };
 
 L.Storage.DataLayer.prototype.hide = function() {
+    if (this.map.editedLayer == this) {
+        this.map.ui.alert({content: 'Нельзя скрыть редактируемый слой', level: 'info', duration: 2000})
+        return;
+    }
     if (this._tilelay) {
         this.map.removeLayer(this._tilelay);
     }
@@ -133,7 +128,6 @@ L.Storage.DataLayer.prototype.save = function () {
             // TODO: При сохранении нового слоя параметры слоя не меняются, поэтому принудительно приходится обновлять
             // TODO: параметры
             this.backupOptions();
-            this.reset();
             this.connectToMap();
 
             this._loaded = true;

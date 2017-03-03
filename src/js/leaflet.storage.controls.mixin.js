@@ -128,6 +128,36 @@ L.Storage.SearchControl.Mixin = {
 };
 L.Storage.SearchControl.include(L.Storage.SearchControl.Mixin);
 
+L.Storage.DrawToolbar.prototype.initialize = function (options) {
+    L.Toolbar.Control.prototype.initialize.call(this, options);
+    this.map = this.options.map;
+    this.map.on('seteditedlayer', this.redraw, this);
+};
+L.Storage.DrawToolbar.prototype.appendToContainer = function (container) {
+    this.options.actions = [];
+    if (this.map.editedLayer) {
+        if (this.map.options.enableMarkerDraw) {
+            this.options.actions.push(L.S.DrawMarkerAction);
+        }
+        if (this.map.options.enablePolylineDraw) {
+            this.options.actions.push(L.S.DrawPolylineAction);
+            if (this.map.editedFeature && this.map.editedFeature instanceof L.S.Polyline) {
+                this.options.actions.push(L.S.AddPolylineShapeAction);
+            }
+        }
+        if (this.map.options.enablePolygonDraw) {
+            this.options.actions.push(L.S.DrawPolygonAction);
+            if (this.map.editedFeature && this.map.editedFeature instanceof L.S.Polygon) {
+                this.options.actions.push(L.S.AddPolygonShapeAction);
+            }
+        }
+        L.Toolbar.Control.prototype.appendToContainer.call(this, container);
+    }
+};
+
+// =====================================================================================================================
+// New stroage actions
+// =====================================================================================================================
 
 L.Storage.CancelFeatureAction = L.S.BaseFeatureAction.extend({
 
@@ -138,12 +168,67 @@ L.Storage.CancelFeatureAction = L.S.BaseFeatureAction.extend({
         }
     },
 
-    postInit: function () {
-        //if (!this.feature.isMulti()) this.options.toolbarIcon.className = 'storage-delete-one-of-one';
-    },
-
     onClick: function (e) {
         this.feature.confirmCancel(e);
+    }
+});
+
+L.Storage.EnableEditLayerAction = L.Storage.BaseAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'edit-layer dark',
+        tooltip: L._('Enable editing layer')
+    },
+
+    addHooks: function () {
+        this.map.editLayer();
+    }
+});
+
+L.Storage.DisableEditLayerAction = L.Storage.BaseAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'disable-edit-layer',
+        tooltip: L._('Disable editing layer')
+    },
+
+    addHooks: function () {
+        if (this.map.editedLayer.isDirty) {
+            if (confirm(L._('You have unsaved changes. Save?'))) {
+                this.map.editedLayer.save();
+                return true;
+            } else {
+                this.map.editedLayer.reset();
+            }
+        }
+        this.map.editedLayer = undefined;
+    }
+});
+
+L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
+
+    initialize: function (options) {
+        L.Toolbar.Control.prototype.initialize.call(this, options);
+        this.map = this.options.map;
+        this.map.on('seteditedlayer', this.redraw, this);
+    },
+
+    appendToContainer: function (container) {
+        this.options.actions = [];
+        if (!this.map.editedLayer) {
+            this.options.actions.push(L.S.EnableEditLayerAction);
+        } else {
+            this.options.actions.push(L.S.DisableEditLayerAction);
+        }
+        L.Toolbar.Control.prototype.appendToContainer.call(this, container);
+    },
+
+    redraw: function () {
+        var container = this._control.getContainer();
+        container.innerHTML = '';
+        this.appendToContainer(container);
     }
 
 });

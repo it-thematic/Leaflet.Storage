@@ -112,9 +112,6 @@ a.storage-control-text {
     background-color: #353c3e;
 }
 
-
-
-
 /* ***************** */
 /*    Search panel   */
 /* ***************** */
@@ -211,6 +208,12 @@ ul.photon-autocomplete {
 .upload-data {
     background-position: -160px 0;
 }
+
+.storage-toolbar .enable-edit-layer, .disable-edit-layer,
+.enable-edit-layer {
+    background-position: 0 0;
+}
+
 .storage-toolbar .update-map-settings,
 .update-map-settings {
     background-position: -120px 0;

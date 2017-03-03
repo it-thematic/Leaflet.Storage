@@ -351,5 +351,9 @@
     "Display measure": "Display measure",
     "Choose the edited layer": "Choose the edited layer",
     "Cancel this feature": "Cancel this feature",
-    "Are you sure you want to cancel your changes in this feature?" : "Are you sure you want to cancel your changes in this feature?"
+    "Are you sure you want to cancel your changes in this feature?" : "Are you sure you want to cancel your changes in this feature?",
+    "Enable editing layer": "Enable editing layer",
+    "Disable editing layer": "Disable editing layer",
+    "You have unsaved changes. Save?": "You have unsaved changes. Save?"
+
 }

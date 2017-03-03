@@ -4,8 +4,8 @@ L.FormBuilder.DataLayerSwitcher.prototype.getOptions = function () {
         options.push([L.stamp(this.builder.map.editedLayer), this.builder.map.editedLayer.getName()]);
     } else {
         this.builder.map.eachDataLayerReverse(function (datalayer) {
-            if(datalayer.isLoaded() && (!datalayer.isRemoteLayer() || (datalayer.isRemoteLayer() && datalayer.isWFSTLayer())) && datalayer.canBrowse()) {
-                options.push([L.stamp(datalayer), datalayer.getName()]);
+            if(datalayer.isLoaded() && datalayer.allowEdit() && datalayer.canBrowse()) {
+                    options.push([L.stamp(datalayer), datalayer.getName()]);
             }
         });
     }
@@ -17,8 +17,8 @@ L.FormBuilder.DataLayersSwitcher = L.FormBuilder.Select.extend({
     getOptions: function () {
         var options = [];
         this.builder.map.eachDataLayerReverse(function (datalayer) {
-            if(datalayer.isLoaded() && (!datalayer.isRemoteLayer() || (datalayer.isRemoteLayer() && datalayer.isWFSTLayer())) && datalayer.canBrowse()) {
-                options.push([L.stamp(datalayer), datalayer.getName()]);
+            if(datalayer.isLoaded() && datalayer.allowEdit() && datalayer.canBrowse()) {
+                    options.push([L.stamp(datalayer), datalayer.getName()]);
             }
         });
         return options;

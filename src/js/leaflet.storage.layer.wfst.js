@@ -5,25 +5,45 @@ L.S.Layer.WFST= L.WFST.extend({
 
     initialize: function (datalayer) {
         this.datalayer = datalayer;
+
+        var isValid = true;
+        try {
+            Object.defineProperty(this, 'isValid', {
+                get: function () {
+                    return isValid;
+                },
+                set: function (value) {
+                    isValid = value;
+                }
+            });
+        }
+        catch (e) {
+            // Certainly IE8, which has a limited version of defineProperty
+        }
         L.WFST.prototype.initialize.call(this,
-        {
-            url: datalayer.options.remoteData.url_wfst,
-            typeName: datalayer.options.laydescription,
-            showExisting: false,
-            maxFeatures: 100,
-            crs: L.CRS.EPSG4326,
-            geometryField: 'geometry',
-            style: {
-                color: 'red',
-                weight: 2
-            }
-        }, new L.Format.GeoJSON({crs: L.CRS.EPSG4326, geometryField: 'geometry'})
+            {
+                url: datalayer.options.remoteData.url_wfst,
+                typeName: datalayer.options.laydescription,
+                showExisting: false,
+                maxFeatures: 100,
+                crs: L.CRS.EPSG4326,
+                geometryField: 'geometry',
+                style: {
+                    color: 'red',
+                    weight: 2
+                }
+            },
+            new L.Format.GeoJSON({crs: L.CRS.EPSG4326, geometryField: 'geometry'})
         );
+
         var that = this;
         this.on('save:success', function() {
             that.datalayer.clear();
             that.fire('viewreset');
-        })
+        });
+        this.on('error', function(error) {
+            that.isValid = false;
+        });
     },
 
     searchLayer: function (e) {

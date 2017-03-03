@@ -1,14 +1,12 @@
 L.Storage.Map.include({
 
-    editedLayer: null,
-
-    editLayer: function (onSelectCallback) {
+    editLayer: function () {
         var container = L.DomUtil.create('div');
 
         var builder = new L.S.FormBuilder(this, ['datalayers']);  // removeLayer step will close the edit panel, let's reopen it
         container.appendChild(builder.build());
         if (builder.helpers.datalayers.select.length == 0) {
-            var msg = 'Нет загруженных слоёв';
+            var msg = 'Нет видимых доступных для редактирования слоёв';
             this.ui.alert({content: msg, level: 'error', duration: 100000});
             return;
         }
@@ -19,13 +17,22 @@ L.Storage.Map.include({
             .on(editLink, 'click', L.DomEvent.stop)
             .on(editLink, 'click', function (e) {
                 L.DomEvent.stop(e);
+                    var checkedLayer = builder.helpers['datalayers'].toJS();
+                    if ( checkedLayer.isWFSTLayer() && !checkedLayer.layer.isValid) {
+                        var msg = 'Выбранный слой не доступен для редактироваия';
+                        this.ui.alert({content: msg, level: 'error', duration: 3000});
+                        return;
+                    }
                     this.ui.closePanel();
-                    if (!this.editedLayer) {this.editedLayer = builder.helpers['datalayers'].toJS()}
-                    onSelectCallback();
+                    // При смене элемента в Select выбранный слой записывается в редактируемый
+                    // Но если выбрать тот слой, который был по умолчанию, то приходится его записывать принудительно
+                    if (!this.editedLayer) {this.editedLayer = checkedLayer}
+                    this.fire('seteditlayer');
             }, this);
 
         this.ui.openPanel({data: {html: container}, className: 'dark'})
     }
+
 });
 
 L.Storage.Map.addInitHook(function(){
@@ -41,6 +48,10 @@ L.Storage.Map.addInitHook(function(){
                     editedLayer.clear();
                 }
                 editedLayer = datalayer;
+                if (editedLayer) {
+                    if (!editedLayer.allowEdit()) { return; }
+                    if (!editedLayer.isVisible()) { editedLayer.show(); }
+                }
                 that.fire('seteditedlayer');
             }
         });
@@ -55,12 +66,11 @@ L.Storage.Map.prototype.defaultDataLayer = function(){
 
     var datalayer, fallback;
     datalayer = this.lastUsedDataLayer;
-    if (datalayer && (!datalayer.isRemoteLayer() || (datalayer.isRemoteLayer() && datalayer.isWFSTLayer())) && datalayer.canBrowse() && datalayer.isVisible()) {
+    if (datalayer && datalayer.allowEdit() && datalayer.canBrowse() && datalayer.isVisible()) {
         return datalayer;
     }
     datalayer = this.findDataLayer(function (datalayer) {
-        if ((!datalayer.isRemoteLayer() || (datalayer.isRemoteLayer() && datalayer.isWFSTLayer())) && datalayer.canBrowse()) {
-            //fallback = datalayer;
+        if (datalayer.allowEdit() && datalayer.canBrowse()) {
             if (datalayer.isVisible()) return true;
         }
     });
@@ -73,15 +83,15 @@ L.Storage.Map.prototype.defaultDataLayer = function(){
     return this.createDataLayer();
 };
 
-L.Storage.Map.prototype.enableEdit = function() {
-    var that = this;
-    this.editLayer(function() {
-        if (!that.editedLayer) return;
-        L.DomUtil.addClass(document.body, 'storage-edit-enabled');
-        that.editEnabled = true;
-        that.fire('edit:enabled');
-    })
-};
+// L.Storage.Map.prototype.enableEdit = function() {
+//     var that = this;
+//     this.editLayer(function() {
+//         if (!that.editedLayer) return;
+//         L.DomUtil.addClass(document.body, 'storage-edit-enabled');
+//         that.editEnabled = true;
+//         that.fire('edit:enabled');
+//     })
+// };
 
 L.Storage.Map.prototype.disableEdit = function() {
     if (this.isDirty) return;

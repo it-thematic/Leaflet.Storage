@@ -777,23 +777,17 @@ L.Storage.DataLayer = L.Class.extend({
 
         var wfstCallback = function(field){
             if (this.options.type === 'WFST') {
-                if (field.helper.field === 'options.remoteData.wfst') {
-                    this.layer.options.typeName = this.options.laydescription;
-                    return;
-                }
-
-                if (field.helper.field == 'options.remoteData.url_wfst') {
-                    this.layer.options.url = field.helper.toJS();
-                    return;
+                if (field.helper.field == 'options.remoteData.wfst') {
+                    this.resetLayer(true);
+                    this.edit();
                 }
 
             }
         };
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
-            ['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: wfstCallback}],
+            ['options.remoteData.wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: wfstCallback}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
-            ['options.remoteData.wfst', {handler: 'Switch', label: L._('IsWFST'), helpEntries: L._('IsWFST'), callback: wfstCallback}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
