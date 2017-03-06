@@ -1,4 +1,4 @@
-{
+var locale = {
     "About": "Подробней",
     "Action not allowed :(": "Действие недоступно :(",
     "Add a layer": "Добавить слой",
@@ -176,7 +176,7 @@
     "None": "Нет",
     "by": "от",
     "Name and description (large)": "Название и описание (большие)",
-    "Empty": "Очистить",
+    "Empty": "Пусто",
     "Split line": "Разделить линию",
     "Clone": "Создать копию",
     "Clone of {name}": "Копия {name}",
@@ -186,7 +186,9 @@
     "Do you want to display the «more» control?": "Показывать кнопку «Ещё»?",
     "Auto": "Автоматически",
     "Default: name": "По умолчанию: название",
+    "Delay between elements (in milliseconds)": "Задержка между элементами (в миллисекундах)",
     "Property to use for sorting features": "Свойство для сортировки объектов",
+    "Set a value for adding a slideshow": "Установите значение, чтобы создать слайдшоу",
     "Slideshow": "Слайдшоу",
     "Start slideshow": "Начать слайдшоу",
     "Stop slideshow": "Остановить слайдшоу",
@@ -355,4 +357,6 @@
     "Enable editing layer": "Выбрать слой для редактирования",
     "Disable editing layer": "Завершить редактирование слоя",
     "You have unsaved changes. Save?": "У вас есть несохранённые изменения. Сохранить"
-}
+};
+L.registerLocale("ru", locale);
+L.setLocale("ru");

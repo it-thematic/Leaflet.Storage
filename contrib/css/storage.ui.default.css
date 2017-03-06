@@ -532,6 +532,19 @@ i.info {
     line-height: 32px;
     background-color: #323737;
 }
+
+/*
+   ForestMap: ����� ��� ������ ��������� �������������
+*/
+.dark .storage-close-link_tab {
+    border: 1px solid #202425;
+    color: #eeeeec;
+    padding: 0 15px;
+    line-height: 32px;
+    background-color: #323737;
+}
+
+
 .dark .storage-close-link:hover {
     background-color: #2e3436;
 }

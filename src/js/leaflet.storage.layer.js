@@ -81,7 +81,7 @@ L.S.Layer.Heat = L.HeatLayer.extend({
         if (layer instanceof L.Marker) {
             var latlng = layer.getLatLng(), alt;
             if (this.datalayer.options.heat && this.datalayer.options.heat.intensityProperty) {
-                alt = parseFloat(layer.properties[this.datalayer.options.heat.intensityProperty || 0]);
+                alt = parseFloat(layer.properties[this.datalayer.options.heat.intensityProperty || 0]);
                 latlng = new L.LatLng(latlng.lat, latlng.lng, alt);
             }
             this.addLatLng(latlng);
@@ -133,7 +133,6 @@ L.S.Layer.Heat = L.HeatLayer.extend({
 });
 
 L.Storage.DataLayer = L.Class.extend({
-
     includes: [L.Mixin.Events],
 
     options: {
@@ -700,7 +699,7 @@ L.Storage.DataLayer = L.Class.extend({
         var container = L.DomUtil.create('div'),
             metadataFields = [
                 'options.name',
-                'options.description',
+                ['options.laydescription', {label: L._('description')}],
                 ['options.type', {handler: 'LayerTypeChooser', label: L._('Type of layer')}],
                 ['options.displayOnLoad', {label: L._('Display on load'), handler: 'Switch'}],
                 ['options.browsable', {label: L._('Data is browsable'), handler: 'Switch', helpEntries: 'browsable'}]
@@ -775,8 +774,19 @@ L.Storage.DataLayer = L.Class.extend({
         if (!L.Util.isObject(this.options.remoteData)) {
             this.options.remoteData = {};
         }
+
+        var wfstCallback = function(field){
+            if (this.options.type === 'WFST') {
+                if (field.helper.field == 'options.remoteData.wfst') {
+                    this.resetLayer(true);
+                    this.edit();
+                }
+
+            }
+        };
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
+            ['options.remoteData.wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: wfstCallback}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
@@ -993,7 +1003,7 @@ L.Storage.DataLayer = L.Class.extend({
                 this.map.continueSaving();
             },
             context: this,
-            headers: {'If-Match': this._etag || ''}
+            headers: {'If-Match': this._etag || ''}
         });
     },
 

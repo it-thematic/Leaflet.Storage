@@ -152,6 +152,8 @@
     "height": "height",
     "width": "width",
     "Clustered": "Clustered",
+    "WFST": "WFST data source",
+    "IsWFST": "Is WFST layer",
     "Clustering radius": "Clustering radius",
     "GeoRSS (only link)": "GeoRSS (only link)",
     "GeoRSS (title + image)": "GeoRSS (title + image)",
@@ -346,5 +348,12 @@
     "Delay between two transitions when in play mode": "Delay between two transitions when in play mode",
     "Set it to false to hide this layer from the slideshow, the data browser, the popup navigation…": "Set it to false to hide this layer from the slideshow, the data browser, the popup navigation…",
     "{delay} seconds": "{delay} seconds",
-    "Display measure": "Display measure"
+    "Display measure": "Display measure",
+    "Choose the edited layer": "Choose the edited layer",
+    "Cancel this feature": "Cancel this feature",
+    "Are you sure you want to cancel your changes in this feature?" : "Are you sure you want to cancel your changes in this feature?",
+    "Enable editing layer": "Enable editing layer",
+    "Disable editing layer": "Disable editing layer",
+    "You have unsaved changes. Save?": "You have unsaved changes. Save?"
+
 }
