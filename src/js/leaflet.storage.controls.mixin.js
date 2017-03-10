@@ -195,15 +195,7 @@ L.Storage.DisableEditLayerAction = L.Storage.BaseAction.extend({
     },
 
     addHooks: function () {
-        if (this.map.editedLayer.isDirty) {
-            if (confirm(L._('You have unsaved changes. Save?'))) {
-                this.map.editedLayer.save();
-                return true;
-            } else {
-                this.map.editedLayer.reset();
-            }
-        }
-        this.map.editedLayer = undefined;
+        this.map.disableEditLayer();
     }
 });
 

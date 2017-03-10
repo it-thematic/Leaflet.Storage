@@ -33,7 +33,10 @@ L.FormBuilder.DataLayersSwitcher = L.FormBuilder.Select.extend({
     },
 
     set: function () {
-        if (this.obj.hasOwnProperty("editedLayer")) {this.obj.editedLayer = this.toJS();}
+        // TODO: Переопределил, но закооментарил код потому что в Leaflet.Formbuilder событие 'change' селектора
+        // TODO:    вызывает метод 'sync' который в свою очередь вызывает метод 'set' в исходниках которого происходит
+        // TODO:    удаление исключение выбранного объекта из внутреннего списка, что нас не устраивает
+        // if (this.obj.hasOwnProperty("editedLayer")) {this.obj.editedLayer = this.toJS();}
     }
 
 });

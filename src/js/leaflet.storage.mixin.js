@@ -3,7 +3,7 @@ L.Storage.Map.include({
     editLayer: function () {
         var container = L.DomUtil.create('div');
 
-        var builder = new L.S.FormBuilder(this, ['datalayers']);  // removeLayer step will close the edit panel, let's reopen it
+        var builder = new L.S.FormBuilder(this, ['datalayers'], {callbackContext: this});  // removeLayer step will close the edit panel, let's reopen it
         container.appendChild(builder.build());
         if (builder.helpers.datalayers.select.length == 0) {
             var msg = 'Нет видимых доступных для редактирования слоёв';
@@ -31,8 +31,19 @@ L.Storage.Map.include({
             }, this);
 
         this.ui.openPanel({data: {html: container}, className: 'dark'})
+    },
+    
+    disableEditLayer: function () {
+        if (this.editedLayer.isDirty) {
+            if (confirm(L._('You have unsaved changes. Save?'))) {
+                this.editedLayer.save();
+                return true;
+            } else {
+                this.editedLayer.reset();
+            }
+        }
+        this.editedLayer = null;
     }
-
 });
 
 L.Storage.Map.addInitHook(function(){
@@ -83,15 +94,13 @@ L.Storage.Map.prototype.defaultDataLayer = function(){
     return this.createDataLayer();
 };
 
-// L.Storage.Map.prototype.enableEdit = function() {
-//     var that = this;
-//     this.editLayer(function() {
-//         if (!that.editedLayer) return;
-//         L.DomUtil.addClass(document.body, 'storage-edit-enabled');
-//         that.editEnabled = true;
-//         that.fire('edit:enabled');
-//     })
-// };
+L.Storage.Map.prototype.askForReset = function(e) {
+    if (!confirm(L._('Are you sure you want to cancel your changes?'))) return;
+    if (this.editedLayer) { this.disableEditLayer(); }
+    this.reset();
+    this.disableEdit(e);
+    this.ui.closePanel();
+};
 
 L.Storage.Map.prototype.disableEdit = function() {
     if (this.isDirty) return;
