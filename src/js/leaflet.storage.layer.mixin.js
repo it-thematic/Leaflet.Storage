@@ -6,6 +6,11 @@ DataLayerMixin = {
         return L.Util.template(template, {'lat': e.latlng.lat, 'lng': e.latlng.lng, 'lay': layer})
     },
 
+    _importUrl: function () {
+        var template = './api_import';
+        return L.Util.template(template, {})
+    },
+
     getLocalId: function () {
         return this.storage_id || 'tmp' + L.Util.stamp(this);
     },
@@ -138,6 +143,27 @@ L.Storage.DataLayer.prototype.save = function () {
         context: this,
         headers: {'If-Match': this._etag || ''}
     });
+};
+
+L.Storage.DataLayer.prototype.importFromFile = function (f, type) {
+    var reader = new FileReader(),
+        that = this;
+    type = type || L.Util.detectFileType(f, 'utf8');
+    reader.readAsText(f);
+    reader.onload = function (e) {
+        var rawData = e.target.result;
+        var formData = new FormData();
+        formData.append('layer', that.options.laydescription);
+        formData.append('data', rawData);
+        that.map.post(that._importUrl(), {
+            data: formData,
+            callback: function (data, response) {
+                that.isDirty = true;
+                that.zoomTo();
+            },
+            context: that
+        });
+    };
 };
 
 
