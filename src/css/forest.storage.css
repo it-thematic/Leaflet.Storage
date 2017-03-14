@@ -317,20 +317,30 @@ i.info {
 .leaflet-ui-container {
     overflow-x: hidden;
 }
+#storage-ui-container .body {
+    clear: both;
+    height: calc(100% - 75px);
+}
+.storage-edit-enabled #storage-ui-container {
+    top: 46px;
+}
 #storage-ui-container {
     width: 400px;
     position: fixed;
     top: 0;
     bottom: 0;
     right: -400px;
-    padding: 0 20px 40px 20px;
+    padding: 0 20px 30px 20px;
     border-left: 1px solid #ddd;
-    overflow-x: auto;
+    overflow: auto;
     z-index: 1010;
     background-color: #fff;
     opacity: 0.98;
     cursor: initial;
 }
+
+
+
 #storage-ui-container.dark {
     border-left: 1px solid #222;
     background-color: #323737;
@@ -344,11 +354,11 @@ i.info {
     transition: all .7s;
 }
 .storage-edit-enabled #storage-ui-container {
-    top: 46px;
+    top: 41px;
 }
-.storage-caption-bar-enabled #storage-ui-container {
-    bottom: 46px;
-}
+/*.storage-caption-bar-enabled #storage-ui-container {*/
+    /*bottom: 46px;*/
+/*}*/
 .storage-ui #storage-ui-container {
     right: 0;
 }
@@ -375,7 +385,7 @@ i.info {
 }
 #storage-ui-container .body {
     clear: both;
-    height: calc(100% - 46px); /* Minus size of toolbox */
+    height: calc(100% - 100px) !important; /* Minus size of toolbox */
 }
 #storage-ui-container .toolbox {
     padding: 5px 0;
@@ -1243,10 +1253,4 @@ cursor: pointer !important;
 
 .storage-edit-container {
     padding: 0 0 0 0!important;
-}
-
-.leaflet-control-tilelayers-enable a {
-    background-position: -82px -2px;
-    background-color: #353c3e!important;
-    background-image: url("../img/24-white.png")!important;
 }
