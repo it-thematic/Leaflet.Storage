@@ -298,6 +298,7 @@ L.Storage.FeatureMixin = {
     addInteractions: function () {
         this.on('contextmenu editable:vertex:contextmenu', this._showContextMenu, this);
         this.on('click', this._onClick);
+        this.on('feature:property:save', this._onPropertySave);
     },
 
     _onClick: function (e) {
@@ -328,7 +329,7 @@ L.Storage.FeatureMixin = {
     },
 
     getInplaceToolbarActions: function (e) {
-        return [L.S.ToggleEditAction, L.S.DeleteFeatureAction];
+        return [L.S.ToggleEditAction, L.S.DeleteFeatureAction, L.S.CancelFeatureAction];
     },
 
     _showContextMenu: function (e) {

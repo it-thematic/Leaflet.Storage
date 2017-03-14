@@ -1,4 +1,4 @@
-L.Storage.ForestMixin = {
+L.Storage.FeatureForestMixin = {
     confirmCancel: function () {
         if (confirm(L._('Are you sure you want to cancel your changes in this feature?'))) {
             this.cancel();
@@ -16,22 +16,12 @@ L.Storage.ForestMixin = {
         }
     },
 
-    addInteractions: function () {
-        this.on('contextmenu editable:vertex:contextmenu', this._showContextMenu, this);
-        this.on('click', this._onClick);
-        this.on('feature:property:save', this._onPropertySave);
-    },
-
     _onPropertySave: function(e) {
         if ('id' in this.options) {
             this.options['id'] = e.target.id
         }
         if (this.state && this.state === '')
         L.DomEvent.stop(e);
-    },
-
-    getInplaceToolbarActions: function (e) {
-        return [L.S.ToggleEditAction, L.S.DeleteFeatureAction, L.S.CancelFeatureAction];
     },
 
     getActionUrl: function (feature) {
@@ -79,21 +69,9 @@ L.Storage.ForestMixin = {
     isReadOnly: function () {
         return this.datalayer && this.datalayer.isRemoteLayer() && !this.datalayer.isWFSTLayer();
     },
-
-    edit: function (e) {
-        if(this.map.editEnabled) {
-            if (!this.editEnabled()) this.enableEdit();
-            if (this.datalayer.isWFSTLayer()) {
-                this.datalayer.layer.editLayer(this);
-            }
-            L.Storage.FeatureMixin.edit.call(this, e);
-        }
-    }
 };
 
 
-L.Storage.Marker.include(L.Storage.ForestMixin);
-L.Storage.Polyline.include(L.Storage.ForestMixin);
-L.Storage.Polygon.include(L.Storage.ForestMixin);
-
-
+L.Storage.Marker.include(L.Storage.FeatureForestMixin);
+L.Storage.Polyline.include(L.Storage.FeatureForestMixin);
+L.Storage.Polygon.include(L.Storage.FeatureForestMixin);
