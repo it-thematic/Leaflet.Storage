@@ -1254,3 +1254,8 @@ cursor: pointer !important;
 .storage-edit-container {
     padding: 0 0 0 0!important;
 }
+.leaflet-control-tilelayers-enable a {
+    background-position: -82px -2px;
+    background-color: #353c3e!important;
+    background-image: url("../img/24-white.png")!important;
+}
