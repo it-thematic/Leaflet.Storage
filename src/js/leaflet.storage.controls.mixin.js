@@ -60,6 +60,22 @@ L.Storage.TileLayerControl.Mixin = {
                 $('#widget_legenda').show();
             }
         }, this);
+    },
+
+    openSwitcher: function (options) {
+        var container = L.DomUtil.get('tile_layer_container');
+        if (container) {
+            if (L.DomUtil.hasClass(container, 'leaflet-control-tilelayers')) {
+                this._tilelayers_container = L.DomUtil.create('ul', 'storage-tilelayer-switcher-container');
+                this.buildList(options);
+                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers');
+                L.DomUtil.addClass(container, 'leaflet-control-tilelayers-enable');
+            } else {
+                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers-enable');
+                L.DomUtil.addClass(container, 'leaflet-control-tilelayers');
+                this._map.ui.closePanel();
+            }
+        }
     }
 };
 L.Storage.TileLayerControl.include(L.Storage.TileLayerControl.Mixin);

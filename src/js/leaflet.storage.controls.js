@@ -745,6 +745,7 @@ L.Storage.TileLayerControl = L.Control.extend({
     onAdd: function () {
         var container = L.DomUtil.create('div', 'leaflet-control-tilelayers storage-control');
 
+        container.id = 'tile_layer_container';
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
         link.title = L._('Change map background');

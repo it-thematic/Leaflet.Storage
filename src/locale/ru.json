@@ -354,5 +354,5 @@
     "Are you sure you want to cancel your changes in this feature?" : "Вы уверены, что хотите отменить свои изменения в этом объекте?",
     "Enable editing layer": "Выбрать слой для редактирования",
     "Disable editing layer": "Завершить редактирование слоя",
-    "You have unsaved changes. Save?": "У вас есть несохранённые изменения. Сохранить"
+    "Layer {name} contain unsaved changes. Save?": "Слой {name} содержит несохранённые изменения. Сохранить?"
 }

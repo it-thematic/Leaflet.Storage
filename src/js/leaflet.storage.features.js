@@ -42,7 +42,7 @@ L.Storage.FeatureMixin = {
     preInit: function () {},
 
     isReadOnly: function () {
-        return this.datalayer && this.datalayer.isRemoteLayer() && !this.datalayer.isWFSTLayer();
+        return this.datalayer && this.datalayer.isRemoteLayer();
     },
 
     view: function(e) {
@@ -84,7 +84,7 @@ L.Storage.FeatureMixin = {
         var properties = [], property;
         for (var i = 0; i < this.datalayer._propertiesIndex.length; i++) {
             property = this.datalayer._propertiesIndex[i];
-            if (L.Util.indexOf(['name', 'description', 'id'], property) !== -1) {continue;}
+            if (L.Util.indexOf(['name', 'description'], property) !== -1) {continue;}
             properties.push(['properties.' + property, {label: property}]);
         }
         // We always want name and description for now (properties management to come)
@@ -182,28 +182,11 @@ L.Storage.FeatureMixin = {
         return false;
     },
 
-    confirmCancel: function () {
-        if (confirm(L._('Are you sure you want to cancel your changes in this feature?'))) {
-            this.cancel();
-            return true;
-        }
-        return false;
-    },
-
     del: function () {
         this.isDirty = true;
         this.map.closePopup();
         if (this.datalayer) {
             this.datalayer.removeLayer(this);
-            this.disconnectFromDataLayer(this.datalayer);
-        }
-    },
-
-    cancel: function() {
-        this.isDirty = false;
-        this.map.closePopup();
-        if (this.datalayer) {
-            this.datalayer.cancelLayer(this);
             this.disconnectFromDataLayer(this.datalayer);
         }
     },
@@ -345,7 +328,7 @@ L.Storage.FeatureMixin = {
     },
 
     getInplaceToolbarActions: function (e) {
-        return [L.S.ToggleEditAction, L.S.DeleteFeatureAction, L.S.CancelFeatureAction];
+        return [L.S.ToggleEditAction, L.S.DeleteFeatureAction];
     },
 
     _showContextMenu: function (e) {
@@ -594,9 +577,6 @@ L.Storage.PathMixin = {
     edit: function (e) {
         if(this.map.editEnabled) {
             if (!this.editEnabled()) this.enableEdit();
-            if (this.datalayer.isWFSTLayer()) {
-                this.datalayer.layer.editLayer(this);
-            }
             L.Storage.FeatureMixin.edit.call(this, e);
         }
     },

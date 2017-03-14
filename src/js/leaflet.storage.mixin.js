@@ -35,7 +35,7 @@ L.Storage.Map.include({
     
     disableEditLayer: function () {
         if (this.editedLayer.isDirty) {
-            if (confirm(L._('You have unsaved changes. Save?'))) {
+            if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: this.editedLayer.options.name}))) {
                 this.editedLayer.save();
                 return true;
             } else {
