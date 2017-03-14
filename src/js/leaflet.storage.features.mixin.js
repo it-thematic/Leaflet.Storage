@@ -17,15 +17,12 @@ L.Storage.FeatureForestMixin = {
     },
 
     _onPropertySave: function(e) {
-        if ('id' in this.options) {
-            this.options['id'] = e.target.id
-        }
-        if (this.state && this.state === '')
-        L.DomEvent.stop(e);
+        if ('id' in this.properties) { this.properties.id = e.id; }
+        if (this.datalayer.isWFSTLayer() && this.state != 'update') { this.state = 'update'; }
     },
 
     getActionUrl: function (feature) {
-        if (!feature.properties.id || !feature.state) { return; }
+        if (!this.datalayer.isWFSTLayer()) { return; }
         if (feature.state === 'insert') {
             template = '/row_create/{layer}/';
         } else {
@@ -56,8 +53,8 @@ L.Storage.FeatureForestMixin = {
                 callback: function (data, response) {
                     var container = L.DomUtil.create('div');
                     L.DomUtil.addClass(container, 'storage-edit-container');
-                    var cancel = L.DomUtil.get('cancel');
-                    container.innerHTML = data;
+                    var sub = L.DomUtil.create('div', 'storage-edit-subcontainer', container);
+                    sub.innerHTML = data;
                     that.map.ui.openPanel({data: {html: container}, className: 'dark'});
                     that.map.editedFeature = that;
                     if (!that.isOnScreen()) that.bringToCenter(e);

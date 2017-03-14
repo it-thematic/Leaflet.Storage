@@ -1254,6 +1254,13 @@ cursor: pointer !important;
 .storage-edit-container {
     padding: 0 0 0 0!important;
 }
+
+.storage-edit-subcontainer {
+    position: absolute;
+    width: calc(100% - 20px);
+    height: calc(100% - 60px);
+}
+
 .leaflet-control-tilelayers-enable a {
     background-position: -82px -2px;
     background-color: #353c3e!important;
