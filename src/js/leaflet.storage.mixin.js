@@ -35,11 +35,12 @@ L.Storage.Map.include({
     
     disableEditLayer: function () {
         if (this.editedLayer.isDirty) {
-            if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: this.editedLayer.options.name}))) {
+            if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: '"'+this.editedLayer.options.name+'"'}))) {
                 this.editedLayer.save();
                 return true;
             } else {
-                this.editedLayer.reset();
+
+                this.editedLayer.cancel();
             }
         }
         this.editedLayer = null;

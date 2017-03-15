@@ -84,5 +84,14 @@ L.S.Layer.WFST= L.WFST.extend({
           this.changes[id] = layer;
         }
         return this;
+    },
+
+    save: function(reload) {
+        this.datalayer.eachLayer(function (layer) {
+            if (!!layer.properties.id && layer.state == 'insert') {
+                layer.state = 'update';
+            }
+        });
+        L.WFST.prototype.save.call(this, reload);
     }
 });

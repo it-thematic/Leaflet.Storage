@@ -11,6 +11,11 @@ DataLayerMixin = {
         return L.Util.template(template, {})
     },
 
+    _objectDeleteUrl: function(layer) {
+        var template = '/row_delete/{layer}/{id}/';
+        return L.Util.template(template, {layer: layer.datalayer.options.laydescription, id:layer.properties.id})
+    },
+
     getLocalId: function () {
         return this.storage_id || 'tmp' + L.Util.stamp(this);
     },
@@ -38,6 +43,28 @@ DataLayerMixin = {
     allowEdit: function () {
         return !this.isRemoteLayer() ||
             (this.isRemoteLayer() && this.isWFSTLayer() && this.layer.isValid);
+    },
+
+    cancel: function() {
+        if (this.isWFSTLayer()) {
+            this.eachLayer(function (layer) {
+                if (!!layer.properties.id && layer.state == 'insert') {
+                    var form_url = this._objectDeleteUrl(layer);
+                    if (!form_url) {
+                        return;
+                    }
+
+                    var that = this;
+                    this.map.post(form_url, {
+                        data: '',
+                        callback: function (data) {
+                            if (data.success) console.log(data)
+                        }
+                    })
+                }
+            });
+        }
+        this.reset();
     }
 };
 

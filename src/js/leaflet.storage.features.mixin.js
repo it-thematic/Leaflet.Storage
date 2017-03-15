@@ -8,7 +8,9 @@ L.Storage.FeatureForestMixin = {
     },
 
     cancel: function() {
-        this.isDirty = false;
+        // TODO: forest убрал изменение свойства isDirty, т.к. при его смене на False меняется аналогичное свойство и у
+        // DataLayer
+        // this.isDirty = false;
         this.map.closePopup();
         if (this.datalayer) {
             this.datalayer.cancelLayer(this);
@@ -19,7 +21,7 @@ L.Storage.FeatureForestMixin = {
     _onPropertySave: function(e) {
         if (this.datalayer.isWFSTLayer() && this.state != 'update') {
             this.properties.id = e.id;
-            this.state = 'update';
+//            this.state = 'update';
             this.feature.properties.id = e.id;
             // TODO: для Filter GMLObjectID при записи транзакции, но не обязательно
             this.feature.id = this.datalayer.options.laydescription + '.' + e.id;
@@ -64,13 +66,13 @@ L.Storage.FeatureForestMixin = {
                     that.map.editedFeature = that;
                     if (!that.isOnScreen()) that.bringToCenter(e);
                 }
-            })
+            });
         }
     },
 
     isReadOnly: function () {
         return this.datalayer && this.datalayer.isRemoteLayer() && !this.datalayer.isWFSTLayer();
-    },
+    }
 };
 
 
