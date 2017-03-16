@@ -93,5 +93,22 @@ L.S.Layer.WFST= L.WFST.extend({
             }
         });
         L.WFST.prototype.save.call(this, reload);
+    },
+
+    removeLayer: function (layer) {
+        if (!!layer.properties.id && layer.state === this.state.insert) {
+            var form_url = this.datalayer._objectDeleteUrl(layer);
+            if (!form_url) {
+                return;
+            }
+            var that = this;
+            this.datalayer.map.post(form_url, {
+                data: '',
+                callback: function (data) {
+                    if (data.success) console.log(data)
+                }
+            })
+        }
+        L.WFST.prototype.removeLayer.call(this, layer);
     }
 });

@@ -21,7 +21,6 @@ L.Storage.FeatureForestMixin = {
     _onPropertySave: function(e) {
         if (this.datalayer.isWFSTLayer() && this.state != 'update') {
             this.properties.id = e.id;
-//            this.state = 'update';
             this.feature.properties.id = e.id;
             // TODO: для Filter GMLObjectID при записи транзакции, но не обязательно
             this.feature.id = this.datalayer.options.laydescription + '.' + e.id;

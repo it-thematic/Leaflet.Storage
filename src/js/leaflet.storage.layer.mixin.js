@@ -171,16 +171,17 @@ L.Storage.DataLayer.prototype.save = function () {
     });
 };
 
-L.Storage.DataLayer.prototype.importFromFile = function (f, type) {
+L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
     var reader = new FileReader(),
         that = this;
-    type = type || L.Util.detectFileType(f, 'utf8');
+    var type = type || L.Util.detectFileType(f, 'utf8');
     reader.readAsText(f);
     reader.onload = function (e) {
         var rawData = e.target.result;
         var formData = new FormData();
         formData.append('layer', that.options.laydescription);
         formData.append('data', rawData);
+        formData.append('clear', !!clear);
         that.map.post(that._importUrl(), {
             data: formData,
             callback: function (data, response) {

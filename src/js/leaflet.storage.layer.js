@@ -407,10 +407,10 @@ L.Storage.DataLayer = L.Class.extend({
 
     removeLayer: function (feature) {
         var id = L.stamp(feature);
-        feature.disconnectFromDataLayer(this);
         this._index.splice(this._index.indexOf(id), 1);
         delete this._layers[id];
         this.layer.removeLayer(feature);
+        feature.disconnectFromDataLayer(this);
         if (this.hasDataLoaded()) this.fire('datachanged');
     },
 
