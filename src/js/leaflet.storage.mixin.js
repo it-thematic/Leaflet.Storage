@@ -27,14 +27,13 @@ L.Storage.Map.include({
                     // При смене элемента в Select выбранный слой записывается в редактируемый
                     // Но если выбрать тот слой, который был по умолчанию, то приходится его записывать принудительно
                     if (!this.editedLayer) {this.editedLayer = checkedLayer}
-                    this.fire('seteditlayer');
             }, this);
 
         this.ui.openPanel({data: {html: container}, className: 'dark'})
     },
     
     disableEditLayer: function () {
-        if (this.editedLayer.isDirty) {
+        if (this.editedLayer && this.editedLayer.isDirty) {
             if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: '"'+this.editedLayer.options.name+'"'}))) {
                 this.editedLayer.save();
                 return true;
@@ -48,22 +47,17 @@ L.Storage.Map.include({
 });
 
 L.Storage.Map.addInitHook(function(){
-    var editedLayer = null;
-    var that = this;
+    var editedLayer = null,
+        that = this;
+
     try {
         Object.defineProperty(this, 'editedLayer', {
             get: function () {
                 return editedLayer;
             },
             set: function (datalayer) {
-                if (editedLayer && editedLayer !== datalayer) {
-                    editedLayer.clear();
-                }
+                if (!!datalayer && !datalayer.isVisible()) {datalayer.show();}
                 editedLayer = datalayer;
-                if (editedLayer) {
-                    if (!editedLayer.allowEdit()) { return; }
-                    if (!editedLayer.isVisible()) { editedLayer.show(); }
-                }
                 that.fire('seteditedlayer');
             }
         });

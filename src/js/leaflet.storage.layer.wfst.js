@@ -20,20 +20,39 @@ L.S.Layer.WFST= L.WFST.extend({
         catch (e) {
             // Certainly IE8, which has a limited version of defineProperty
         }
-        L.WFST.prototype.initialize.call(this,
-            {
-                url: datalayer.options.remoteData.url_wfst,
-                typeName: datalayer.options.laydescription,
-                showExisting: false,
-                maxFeatures: 100,
-                crs: L.CRS.EPSG4326,
-                geometryField: 'geometry',
-                style: {
-                    color: 'red',
-                    weight: 2
+
+        var showExisting = false;
+        try {
+            Object.defineProperty(this, 'showExisting', {
+                get: function () {
+                    return showExisting;
+                },
+                set: function (value) {
+                    showExisting = value;
+                    this.options.showExisting = showExisting;
+                    if (showExisting) {
+                        this.describeFeatureType();
+                    }
                 }
-            },
-            new L.Format.GeoJSON({crs: L.CRS.EPSG4326, geometryField: 'geometry'})
+            })
+        }
+        catch (e) {
+
+        }
+        var options = {
+            url: datalayer.options.remoteData.url_wfst,
+            typeName: datalayer.options.laydescription,
+            showExisting: this.showExisting,
+            maxFeatures: 100,
+            crs: L.CRS.EPSG4326,
+            geometryField: 'geometry',
+            style: {
+                color: 'red',
+                weight: 2
+            }
+        };
+
+        L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options)
         );
 
         var that = this;
@@ -45,6 +64,16 @@ L.S.Layer.WFST= L.WFST.extend({
         this.on('error', function(error) {
             that.isValid = false;
         });
+    },
+
+    postUpdate: function () {
+        this.options.url = this.datalayer.options.remoteData.url_wfst;
+        this.options.typeName = this.datalayer.options.laydescription;
+        this.isValid = true;
+        this.describeFeatureType();
+        if (!this.datalayer._tilelay) {
+            this.datalayer._tilelay = L.tileLayer(this.datalayer.options.remoteData.url, {attribution: '-'});
+        }
     },
 
     searchLayer: function (e) {

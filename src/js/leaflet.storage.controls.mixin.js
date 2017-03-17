@@ -167,8 +167,8 @@ L.Storage.DrawToolbar.prototype.appendToContainer = function (container) {
                 this.options.actions.push(L.S.AddPolygonShapeAction);
             }
         }
-        L.Toolbar.Control.prototype.appendToContainer.call(this, container);
     }
+    L.Toolbar.Control.prototype.appendToContainer.call(this, container);
 };
 
 // =====================================================================================================================

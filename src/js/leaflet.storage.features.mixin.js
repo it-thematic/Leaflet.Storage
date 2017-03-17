@@ -29,12 +29,16 @@ L.Storage.FeatureForestMixin = {
 
     getActionUrl: function (feature) {
         if (!this.datalayer.isWFSTLayer()) { return; }
-        if (feature.state === 'insert') {
-            template = '/row_create/{layer}/';
-        } else {
+        var template,
+            url;
+        if (!!feature.properties.id) {
             template = '/row_edit/{layer}/{id}/';
+            url = L.Util.template(template, {'layer': feature.datalayer.options.laydescription, 'id': feature.properties.id})
+        } else {
+            template = '/row_create/{layer}/';
+            url = L.Util.template(template, {'layer': feature.datalayer.options.laydescription})
         }
-        return L.Util.template(template, {'layer': feature.datalayer.options.laydescription, 'id': feature.properties.id})
+        return url
     },
 
     edit: function (e) {
