@@ -12,6 +12,22 @@ L.FormBuilder.DataLayerSwitcher.prototype.getOptions = function () {
     return options;
 };
 
+L.FormBuilder.LayerTypeChooser.include({
+    initialize: function(builder, field, options) {
+        this.selectOptions = [
+            ['Default', L._('Default')],
+            ['Cluster', L._('Clustered')],
+            ['Heat', L._('Heatmap')],
+            ['WFST', L._('WFST')]
+        ];
+        L.FormBuilder.Select.prototype.initialize.call(this, builder, field, options);
+    }
+});
+
+L.Storage.FormBuilder.addInitHook(function () {
+   this.defaultOptions.datalayers = {handler: 'DataLayersSwitcher', label: L._('Choose the edited layer')};
+});
+
 L.FormBuilder.DataLayersSwitcher = L.FormBuilder.Select.extend({
 
     getOptions: function () {

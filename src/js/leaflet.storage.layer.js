@@ -662,7 +662,8 @@ L.Storage.DataLayer = L.Class.extend({
     erase: function () {
         this.hide();
         delete this.map.datalayers[L.stamp(this)];
-        this.map.datalayers_index.splice(this.getRank(), 1);
+        var _rank = this.getRank();
+        if (_rank !== -1) { this.map.datalayers_index.splice(_rank, 1); }
         this.parentPane.removeChild(this.pane);
         this.map.updateDatalayersControl();
         this.fire('erase');
@@ -673,20 +674,21 @@ L.Storage.DataLayer = L.Class.extend({
     },
 
     reset: function () {
-        if (!this.storage_id) this.erase();
-
-        this.resetOptions();
-        this.parentPane.appendChild(this.pane);
-        if (this._leaflet_events_bk && !this._leaflet_events) {
-            this._leaflet_events = this._leaflet_events_bk;
+        if (!this.storage_id) { this.erase(); }
+        else {
+            this.resetOptions();
+            this.parentPane.appendChild(this.pane);
+            if (this._leaflet_events_bk && !this._leaflet_events) {
+                this._leaflet_events = this._leaflet_events_bk;
+            }
+            this.clear();
+            this.hide();
+            if (this.isRemoteLayer()) this.fetchRemoteData();
+            else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
+            this._loaded = true;
+            this.show();
+            this.isDirty = false;
         }
-        this.clear();
-        this.hide();
-        if (this.isRemoteLayer()) this.fetchRemoteData();
-        else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
-        this._loaded = true;
-        this.show();
-        this.isDirty = false;
     },
 
     redraw: function () {
@@ -775,19 +777,10 @@ L.Storage.DataLayer = L.Class.extend({
             this.options.remoteData = {};
         }
 
-        var wfstCallback = function(field){
-            if (this.options.type === 'WFST') {
-                if (field.helper.field == 'options.remoteData.url_wfst') {
-                    this.resetLayer(true);
-                    this.edit();
-                }
-
-            }
-        };
         var remoteDataFields = [
             ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
-            ['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST'}],//, callback: wfstCallback}],
+            ['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: redrawCallback}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],

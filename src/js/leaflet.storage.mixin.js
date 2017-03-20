@@ -42,6 +42,7 @@ L.Storage.Map.include({
                 this.editedLayer.cancel();
             }
         }
+        this.editedLayer.clear();
         this.editedLayer = null;
     }
 });

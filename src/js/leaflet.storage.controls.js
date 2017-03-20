@@ -377,7 +377,7 @@ L.Storage.EditControl = L.Control.extend({
 L.Control.Embed = L.Control.extend({
 
     options: {
-        position: 'bottomright'//TODO:ForestMap
+        position: 'topleft'
     },
 
     onAdd: function (map) {
@@ -581,20 +581,20 @@ L.Storage.DataLayer.include({
         var toggle = L.DomUtil.create('i', 'layer-toggle', container),
             zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container),
             edit = L.DomUtil.create('i', 'layer-edit show-on-edit', container),
-            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
+//            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
             remove = L.DomUtil.create('i', 'layer-delete show-on-edit', container);
         zoomTo.title = L._('Zoom to layer extent');
         toggle.title = L._('Show/hide layer');
         edit.title = L._('Edit');
-        table.title = L._('Edit properties in a table');
+ //       table.title = L._('Edit properties in a table');
         remove.title = L._('Delete layer');
         L.DomEvent.on(toggle, 'click', this.toggle, this);
         //-->TODO: ForestMap пока уберем
-        //L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
+        L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
         //-->TODO: ForestMap
 
         L.DomEvent.on(edit, 'click', this.edit, this);
-        L.DomEvent.on(table, 'click', this.tableEdit, this);
+//        L.DomEvent.on(table, 'click', this.tableEdit, this);
         L.DomEvent.on(remove, 'click', function () {
                     // TODO: ForestMap: нельзя удалить редактируемый слой
                     if (this == this.map.editedLayer) return;

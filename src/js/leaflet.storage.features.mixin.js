@@ -42,7 +42,7 @@ L.Storage.FeatureForestMixin = {
     },
 
     edit: function (e) {
-        if(this.map.editEnabled) {
+        if (this.map.editEnabled) {
             if (!this.editEnabled()) this.enableEdit();
             if (this.datalayer.isWFSTLayer()) {
                 this.datalayer.layer.editLayer(this);
@@ -66,10 +66,10 @@ L.Storage.FeatureForestMixin = {
                     var sub = L.DomUtil.create('div', 'storage-edit-subcontainer', container);
                     sub.innerHTML = data;
                     that.map.ui.openPanel({data: {html: container}, className: 'dark'});
-                    that.map.editedFeature = that;
-                    if (!that.isOnScreen()) that.bringToCenter(e);
                 }
             });
+            this.map.editedFeature = that;
+            if (!this.isOnScreen()) this.bringToCenter(e);
         }
     },
 

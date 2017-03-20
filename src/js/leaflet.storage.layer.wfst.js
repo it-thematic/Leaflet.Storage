@@ -47,7 +47,7 @@ L.S.Layer.WFST= L.WFST.extend({
             crs: L.CRS.EPSG4326,
             geometryField: 'geometry',
             style: {
-                color: 'red',
+                color: datalayer.getColor(),
                 weight: 2
             }
         };
@@ -58,7 +58,6 @@ L.S.Layer.WFST= L.WFST.extend({
         var that = this;
         this.on('save:success', function() {
             that.datalayer.clear();
-            that.datalayer._tilelay.redraw();
             that.fire('viewreset');
         });
         this.on('error', function(error) {

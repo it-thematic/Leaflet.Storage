@@ -150,6 +150,7 @@ L.Storage.DataLayer.prototype.save = function () {
     // Filename support is shaky, don't do it for now.
     var blob = new Blob([JSON.stringify(geojson)], {type: 'application/json'});
     formData.append('geojson', blob);
+    var that = this;
     this.map.post(this.getSaveUrl(), {
         data: formData,
         callback: function (data, response) {
@@ -157,8 +158,6 @@ L.Storage.DataLayer.prototype.save = function () {
             this._etag = response.getResponseHeader('ETag');
             this.setStorageId(data.id);
             this.updateOptions(data);
-            // TODO: При сохранении нового слоя параметры слоя не меняются, поэтому принудительно приходится обновлять
-            // TODO: параметры
             this.backupOptions();
             this.connectToMap();
             this._loaded = true;

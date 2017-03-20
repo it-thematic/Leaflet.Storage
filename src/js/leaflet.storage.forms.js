@@ -219,8 +219,7 @@ L.FormBuilder.LayerTypeChooser = L.FormBuilder.Select.extend({
     selectOptions: [
         ['Default', L._('Default')],
         ['Cluster', L._('Clustered')],
-        ['Heat', L._('Heatmap')],
-        ['WFST', L._('WFST')]
+        ['Heat', L._('Heatmap')]
     ]
 
 });
@@ -625,7 +624,6 @@ L.Storage.FormBuilder = L.FormBuilder.extend({
         popupTemplate: {handler: 'PopupTemplate', label: L._('Popup style'), inheritable: true},
         popupContentTemplate: {label: L._('Popup content template'), handler: 'Textarea', helpEntries: ['dynamicProperties', 'textFormatting'], placeholder: '# {name}', inheritable: true},
         datalayer: {handler: 'DataLayerSwitcher', label: L._('Choose the layer of the feature')},
-        datalayers: {handler: 'DataLayersSwitcher', label: L._('Choose the edited layer')},
         moreControl: {handler: 'Switch', label: L._('Do you want to display the «more» control?')},
         scrollWheelZoom: {handler: 'Switch', label: L._('Allow scroll wheel zoom?')},
         miniMap: {handler: 'Switch', label: L._('Do you want to display a minimap?')},
