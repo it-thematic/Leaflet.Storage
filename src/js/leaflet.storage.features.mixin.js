@@ -66,9 +66,9 @@ L.Storage.FeatureForestMixin = {
                     var sub = L.DomUtil.create('div', 'storage-edit-subcontainer', container);
                     sub.innerHTML = data;
                     that.map.ui.openPanel({data: {html: container}, className: 'dark'});
+                    that.map.editedFeature = that;
                 }
             });
-            this.map.editedFeature = that;
             if (!this.isOnScreen()) this.bringToCenter(e);
         }
     },

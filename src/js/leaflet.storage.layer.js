@@ -778,7 +778,7 @@ L.Storage.DataLayer = L.Class.extend({
         }
 
         var remoteDataFields = [
-            ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
+            ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL', callback: redrawCallback}],
             ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
             ['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: redrawCallback}],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],

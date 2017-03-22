@@ -57,7 +57,9 @@ L.S.Layer.WFST= L.WFST.extend({
 
         var that = this;
         this.on('save:success', function() {
-            that.datalayer.clear();
+            if (that.datalayer._tilelay) {
+                that.datalayer._tilelay.redraw();
+            }
             that.fire('viewreset');
         });
         this.on('error', function(error) {

@@ -112,10 +112,6 @@ L.Storage.DataLayer.prototype.show = function() {
 };
 
 L.Storage.DataLayer.prototype.hide = function() {
-    // if (this.map.editedLayer == this) {
-    //     this.map.ui.alert({content: 'Нельзя скрыть редактируемый слой', level: 'info', duration: 2000})
-    //     return;
-    // }
     if (this._tilelay) {
         this.map.removeLayer(this._tilelay);
     }
