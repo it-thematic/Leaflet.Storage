@@ -1266,3 +1266,22 @@ cursor: pointer !important;
     background-color: #353c3e!important;
     background-image: url("../img/24-white.png")!important;
 }
+
+/*
+  Leaflet-left : to TOP
+*/
+.leaflet-control {
+	float: left;
+	clear: none !important;
+}
+.leaflet-left {
+    left: 50px !important;
+    right: 10px !important;
+    height: 40px!important;
+    top: -47px !important;
+    width: auto;
+
+}
+.leaflet-left .leaflet-control{
+    margin-left: 3px !important;
+}
