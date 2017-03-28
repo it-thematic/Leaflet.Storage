@@ -1278,10 +1278,49 @@ cursor: pointer !important;
     left: 50px !important;
     right: 10px !important;
     height: 40px!important;
-    top: -47px !important;
     width: auto;
-
 }
 .leaflet-left .leaflet-control{
     margin-left: 3px !important;
 }
+.leaflet-bar a{
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: inline !important;
+}
+
+.leaflet-bar a, .leaflet-bar a:hover {
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    /* width: 26px; */
+    /* height: 26px; */
+    width: 36px;
+    line-height: 36px;
+    display: inline-block !important;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+}
+/*
+  переворачиваем zoom горизонтально
+*/
+.leaflet-touch .leaflet-bar a {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    margin: 1px 2px 1px 1px !important;
+}
+.leaflet-bar a:last-child,
+.leaflet-bar a:first-child
+{
+     border-bottom-left-radius: 1px;
+     border-bottom-right-radius: 1px;
+     border-bottom: none;
+}
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+    font-size: 22px !important;
+}
+/*
+  END : переворачиваем zoom горизонтально
+*/
