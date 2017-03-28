@@ -1277,6 +1277,8 @@ cursor: pointer !important;
     height: 40px!important;
     display: inline-flex;
     width: auto;
+    -webkit-box-sizing: inherit;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0.5); /* Параметры тени */
 }
 .leaflet-left .leaflet-control{
     margin-left: 3px !important;
