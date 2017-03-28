@@ -31,6 +31,8 @@ L.Storage.DataLayersControl.include(L.Storage.DataLayersControl.Mixin);
 
 
 L.Storage.TileLayerControl.Mixin = {
+    //TODO: ForestMap  - добавление на нижний толбар открытия легенды
+    //TODO:  замена  слоя происходит при нажатии  только на картинку
     addTileLayerElement: function (tilelayer, options) {
         var selectedClass = this._map.hasLayer(tilelayer) ? 'selected' : '',
             el = L.DomUtil.create('li', selectedClass, this._tilelayers_container),
@@ -238,5 +240,84 @@ L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
         container.innerHTML = '';
         this.appendToContainer(container);
     }
-
 });
+
+
+L.Storage.PKKControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    initialize: function (map, options) {
+        this.map = map;
+        L.Control.prototype.initialize.call(this, options);
+        var rosr = L.tileLayer.wms("https://pkk5.rosreestr.ru/arcgis/services/Cadastre/CadastreWMS/MapServer/WMSServer", {
+            wmsid: "rosr",
+            attribution: "rosr",
+            layers: "22,21,20,19,18,16,15,14,13,11,10,9,7,6,4,3,2,1",
+            format: "image/png",
+            version: "1.3.0",
+            transparent: "TRUE",
+            detectRetina: true
+        });
+        try {
+            Object.defineProperty(this, 'rosr', {
+                get: function () {
+                return rosr;
+                }
+            });
+        }
+        catch (e) {
+        // Certainly IE8, which has a limited version of defineProperty
+        }
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-pkk storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._('PKK');
+
+        L.DomEvent
+            .on(link, 'click', L.DomEvent.stop)
+            .on(link, 'click', this.onClick, this)
+            .on(link, 'dblclick', L.DomEvent.stopPropagation);
+
+        return container;
+    },
+
+    onClick: function () {
+        if (this.map.hasLayer(this.rosr)) {
+            this.map.removeLayer(this.rosr)
+        } else {
+            this.map.addLayer(this.rosr)
+        }
+    }
+});
+
+L.Storage.PrintControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-print storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._('Print map');
+
+        L.DomEvent
+            .on(link, 'click', L.DomEvent.stop)
+            .on(link, 'click', this.onClick, this)
+            .on(link, 'dblclick', L.DomEvent.stopPropagation);
+
+        return container;
+    },
+
+    onClick: function () {
+        window.print();
+    }
+});
+

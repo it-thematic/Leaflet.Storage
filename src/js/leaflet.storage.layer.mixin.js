@@ -169,8 +169,8 @@ L.Storage.DataLayer.prototype.save = function () {
 L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
     var reader = new FileReader(),
         that = this;
-    var type = type || L.Util.detectFileType(f, 'utf8');
-    reader.readAsText(f);
+    var type = type || L.Util.detectFileType(f);
+    reader.readAsText(f, 'utf8');
     reader.onload = function (e) {
         var rawData = e.target.result;
         var formData = new FormData();
@@ -180,8 +180,15 @@ L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
         that.map.post(that._importUrl(), {
             data: formData,
             callback: function (data, response) {
-                that.isDirty = true;
-                that.zoomTo();
+                if (data.status !== 'success') {
+                    this.map.ui.alert({content: data.note, level: 'error', duration: 30000});
+                } else {
+                    that.isDirty = true;
+                    that.zoomTo();
+                    if (data.note) {
+                        this.map.ui.alert({content: data.note, level: 'info', duration: 30000});
+                    }
+                }
             },
             context: that
         });

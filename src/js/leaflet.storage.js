@@ -224,12 +224,10 @@ L.Storage.Map.include({
     initControls: function () {
         this.helpMenuActions = {};
         this._controls = {};
-
         if (this.options.allowEdit && !this.options.noControl) {
             new L.Storage.EditControl(this).addTo(this);
             new L.S.EditingLayerToolbar({map: this}).addTo(this);
             new L.S.DrawToolbar({map: this}).addTo(this);
-
             var editActions = [
                 L.S.ImportAction,
                 L.S.EditPropertiesAction,
@@ -769,11 +767,11 @@ L.Storage.Map.include({
                         continue;
                     }
                     if (type === 'umap') {
-                        this.importFromFile(file, 'umap');
+                        this.importFromFile(file, 'umap', clearFlag.checked);
                     } else {
                         var importLayer = layer;
                         if (!layer) importLayer = this.createDataLayer({name: file.name});
-                        importLayer.importFromFile(file, type);
+                        importLayer.importFromFile(file, type, clearFlag.checked);
                     }
                 }
             } else {

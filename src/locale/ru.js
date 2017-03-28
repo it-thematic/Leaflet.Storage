@@ -356,7 +356,10 @@ var locale = {
     "Are you sure you want to cancel your changes in this feature?" : "Вы уверены, что хотите отменить свои изменения в этом объекте?",
     "Enable editing layer": "Выбрать слой для редактирования",
     "Disable editing layer": "Завершить редактирование слоя",
-    "Layer {name} contain unsaved changes. Save?": "Слой {name} содержит несохранённые изменения. Сохранить"
+    "Layer {name} contain unsaved changes. Save?": "Слой {name} содержит несохранённые изменения. Сохранить",
+    "PKK": "Кадастровая карта Росреестра",
+    "Print map": "Печать карты"
+
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");

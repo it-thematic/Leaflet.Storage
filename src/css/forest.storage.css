@@ -1267,6 +1267,18 @@ cursor: pointer !important;
     background-image: url("../img/24-white.png")!important;
 }
 
+.leaflet-control-pkk a {
+    background-position: -120px -122px;
+}
+
+.leaflet-control-print a {
+    background-image: url("../img/24-print.png");
+}
+
+.dark .leaflet-control-print a {
+    background-image: url("../img/24-print-white.png");
+}
+
 /*
   Leaflet-left : to TOP
 */
@@ -1278,10 +1290,11 @@ cursor: pointer !important;
     left: 50px !important;
     right: 10px !important;
     height: 40px!important;
-    top: -47px !important;
     width: auto;
 
 }
 .leaflet-left .leaflet-control{
     margin-left: 3px !important;
 }
+
+

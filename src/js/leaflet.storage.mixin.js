@@ -48,6 +48,8 @@ L.Storage.Map.include({
 });
 
 L.Storage.Map.addInitHook(function(){
+    new L.Storage.PKKControl(this).addTo(this);
+    new L.Storage.PrintControl(this).addTo(this);
     var editedLayer = null,
         that = this;
 
