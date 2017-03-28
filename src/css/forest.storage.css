@@ -1270,14 +1270,12 @@ cursor: pointer !important;
 /*
   Leaflet-left : to TOP
 */
-.leaflet-control {
-	float: left;
-	clear: none !important;
-}
-.leaflet-left {
+
+.leaflet-control-container  > .leaflet-left {
     left: 50px !important;
     right: 10px !important;
     height: 40px!important;
+    display: inline-flex;
     width: auto;
 }
 .leaflet-left .leaflet-control{
@@ -1292,8 +1290,6 @@ cursor: pointer !important;
 .leaflet-bar a, .leaflet-bar a:hover {
     background-color: #fff;
     border-bottom: 1px solid #ccc;
-    /* width: 26px; */
-    /* height: 26px; */
     width: 36px;
     line-height: 36px;
     display: inline-block !important;
