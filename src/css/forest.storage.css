@@ -1243,6 +1243,12 @@ cursor: pointer !important;
 /*
  edit button
 */
+.leaflet-control-edit-save, .leaflet-control-edit-cancel, .leaflet-control-edit-disable{
+    width: 36px !important;
+    height: 36px !important;
+}
+
+
 .leaflet-control-toolbar li .leaflet-toolbar-icon.disable-edit-layer {
     background-color: white!important;
 }
@@ -1277,25 +1283,46 @@ cursor: pointer !important;
 
 .dark .leaflet-control-print a {
     background-image: url("../img/24-print-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
 }
 
 /*
   Leaflet-left : to TOP
 */
 
-.leaflet-control-container  > .leaflet-left {
+.leaflet-left:first-child {
     left: 50px !important;
-    right: 10px !important;
-    height: 40px!important;
-    display: inline-flex;
-    width: auto;
+    right: 1px !important;
+    height: 50px !important;
+    display: flex;
     -webkit-box-sizing: inherit;
     box-shadow: 0 0 0 0 rgba(0,0,0,0.5); /* Параметры тени */
+
+    background-color: #323737;
+    padding: 5px;
+    line-height: 36px;
+    opacity: 0.50;
 }
-.leaflet-left .leaflet-control{
-    margin-left: 3px !important;
+
+.leaflet-control-edit-enable {
+    width: 36px;
+    height: 37px;
+    /*margin-left: auto !important;*/
 }
-.leaflet-bar a{
+
+.leaflet-left .leaflet-control {
+    margin: 1px !important;
+}
+
+/*.leaflet-left .leaflet-control:last-child {*/
+    /*margin-left: auto !important;*/
+/*}*/
+
+
+
+.leaflet-bar a {
     background-position: 50% 50%;
     background-repeat: no-repeat;
     display: inline !important;
@@ -1331,6 +1358,11 @@ cursor: pointer !important;
 .leaflet-control-zoom-out {
     font-size: 22px !important;
 }
+
+.leaflet-control-zoom-in {
+    margin-right: 2px;
+}
+
 /*
   END : переворачиваем zoom горизонтально
 */

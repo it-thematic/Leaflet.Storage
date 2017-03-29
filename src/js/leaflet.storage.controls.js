@@ -356,7 +356,7 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
 L.Storage.EditControl = L.Control.extend({
 
     options: {
-        position: 'topright'
+        position: 'topleft'
     },
 
     onAdd: function (map) {

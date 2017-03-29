@@ -217,6 +217,46 @@ L.Storage.DisableEditLayerAction = L.Storage.BaseAction.extend({
     }
 });
 
+L.Storage.SaveAction = L.Storage.BaseAction.extend({
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-edit-save button',
+        html: L._('Save current edits') + ' (Ctrl-S)',
+        tooltip: L._('Save current edits') + ' (Ctrl-S)'
+    },
+
+    addHooks: function () {
+        this.map.save()
+    }
+});
+
+L.Storage.CancelAction = L.Storage.BaseAction.extend({
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-edit-cancel button',
+        html: L._('Cancel'),
+        tooltip: L._('Cancel edits')
+    },
+
+    addHooks: function () {
+        this.map.askForReset()
+    }
+});
+
+L.Storage.DisabeAction = L.Storage.BaseAction.extend({
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-edit-disable',
+        html: L._('Disable editing'),
+        tooltip: L._('Disable editing')
+    },
+
+    addHooks: function () {
+        this.map.disableEdit();
+        this.map.ui.closePanel();
+    }
+});
+
 L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
 
     initialize: function (options) {
@@ -226,7 +266,7 @@ L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
     },
 
     appendToContainer: function (container) {
-        this.options.actions = [];
+        this.options.actions = [L.S.SaveAction, L.S.CancelAction, L.S.DisabeAction];
         if (!this.map.editedLayer) {
             this.options.actions.push(L.S.EnableEditLayerAction);
         } else {
@@ -242,8 +282,36 @@ L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
     }
 });
 
+L.Storage.EditLayerControl = L.Control.extend({
 
-L.Storage.PKKControl = L.Control.extend({
+    options: {
+        position: 'topright'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-layer-enable storage-control', map._buttonscontainer),
+            edit = L.DomUtil.create('a', '', container);
+        edit.href = '#';
+        edit.title = L._('Enable editing layer');
+
+        L.DomEvent
+            .addListener(edit, 'click', L.DomEvent.stop)
+            .addListener(edit, 'click', this.toogleEditing, map);
+        return container;
+    },
+
+    toogleEditing: function () {
+        if (!this.editedLayer) {
+            this.editLayer()
+        } else {
+            this.map.disableEditLayer()
+        }
+    }
+
+});
+
+
+L.Storage.pkkControl = L.Control.extend({
     options: {
         position: 'topleft'
     },
@@ -251,7 +319,7 @@ L.Storage.PKKControl = L.Control.extend({
     initialize: function (map, options) {
         this.map = map;
         L.Control.prototype.initialize.call(this, options);
-        var rosr = L.tileLayer.wms("https://pkk5.rosreestr.ru/arcgis/services/Cadastre/CadastreWMS/MapServer/WMSServer", {
+        var rosr = L.tileLayer.wms("http://pkk5.rosreestr.ru/arcgis/services/Cadastre/CadastreWMS/MapServer/WMSServer", {
             wmsid: "rosr",
             attribution: "rosr",
             layers: "22,21,20,19,18,16,15,14,13,11,10,9,7,6,4,3,2,1",
@@ -273,7 +341,7 @@ L.Storage.PKKControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-pkk storage-control');
+        var container = L.DomUtil.create('div', 'leaflet-control-pkk storage-control dark');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
@@ -296,13 +364,13 @@ L.Storage.PKKControl = L.Control.extend({
     }
 });
 
-L.Storage.PrintControl = L.Control.extend({
+L.Storage.printControl = L.Control.extend({
     options: {
         position: 'topleft'
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-print storage-control');
+        var container = L.DomUtil.create('div', 'leaflet-control-print storage-control dark');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
@@ -318,6 +386,72 @@ L.Storage.PrintControl = L.Control.extend({
 
     onClick: function () {
         window.print();
+    }
+});
+
+L.Storage.SaveControl = L.Control.extend({
+    options: {
+        position: 'topright'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-save storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        // link.title = L._('Save current edits') + ' (Ctrl-S)';
+        // link.innerHTML = L._('Save');
+
+        L.DomEvent
+            .addListener(link, 'click', L.DomEvent.stop)
+            .addListener(link, 'click', map.save, this);
+
+        return container;
+    }
+});
+
+L.Storage.CancelControl = L.Control.extend({
+    options: {
+        position: 'topright'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-cancel storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        // link.title = L._('Cancel edits');
+        // link.innerHTML = L._('Cancel');
+
+        L.DomEvent
+            .addListener(link, 'click', L.DomEvent.stop)
+            .addListener(link, 'click', map.askForReset, this);
+
+        return container;
+    }
+});
+
+L.Storage.DisableControl = L.Control.extend({
+    options: {
+        position: 'topright'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-disable storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        // link.title = L._('Disable editing');
+        // link.innerHTML = L._('Disable editing');
+
+        L.DomEvent
+            .addListener(link, 'click', L.DomEvent.stop)
+            .addListener(link, 'click', function (e) {
+                map.disableEdit(e);
+                map.ui.closePanel();
+            }, map);
+
+        return container;
     }
 });
 

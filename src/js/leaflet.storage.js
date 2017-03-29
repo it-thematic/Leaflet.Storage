@@ -45,12 +45,14 @@ L.Map.mergeOptions({
     captionBar: false,
     slideshow: {},
     clickable: true,
-    easing: true
+    easing: true,
+    printControl: true,
+    pkkControl: true
 });
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
+    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk'],
 
     initialize: function (el, geojson) {
 
@@ -252,6 +254,8 @@ L.Storage.Map.include({
         this._controls.measure = (new L.MeasureControl()).initHandler(this);
         this._controls.more = new L.S.MoreControls();
         this._controls.scale = L.control.scale();
+        this._controls.print = new L.Storage.printControl(this).addTo(this);
+        this._controls.pkk = new L.Storage.pkkControl(this).addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();
