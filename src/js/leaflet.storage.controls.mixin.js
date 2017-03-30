@@ -282,35 +282,6 @@ L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
     }
 });
 
-L.Storage.EditLayerControl = L.Control.extend({
-
-    options: {
-        position: 'topright'
-    },
-
-    onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-edit-layer-enable storage-control', map._buttonscontainer),
-            edit = L.DomUtil.create('a', '', container);
-        edit.href = '#';
-        edit.title = L._('Enable editing layer');
-
-        L.DomEvent
-            .addListener(edit, 'click', L.DomEvent.stop)
-            .addListener(edit, 'click', this.toogleEditing, map);
-        return container;
-    },
-
-    toogleEditing: function () {
-        if (!this.editedLayer) {
-            this.editLayer()
-        } else {
-            this.map.disableEditLayer()
-        }
-    }
-
-});
-
-
 L.Storage.pkkControl = L.Control.extend({
     options: {
         position: 'topleft'
@@ -455,3 +426,28 @@ L.Storage.DisableControl = L.Control.extend({
     }
 });
 
+L.Storage.EditLayerControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-layer storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._('Enable editing layer');
+
+        L.DomEvent
+            .addListener(link, 'click', L.DomEvent.stop)
+            .addListener(link, 'click', function (e) {
+                if (map.editedLayer) {
+                    map.disableEditLayer()
+                } else {
+                    map.editLayer()
+                }
+            }, map);
+
+        return container;
+    }
+
+});

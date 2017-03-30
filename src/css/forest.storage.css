@@ -322,7 +322,7 @@ i.info {
     height: calc(100% - 75px);
 }
 .storage-edit-enabled #storage-ui-container {
-    top: 46px;
+    top: 50px;
 }
 #storage-ui-container {
     width: 400px;
@@ -353,14 +353,8 @@ i.info {
     padding-right: 0;
     transition: all .7s;
 }
-.storage-edit-enabled #storage-ui-container {
-    top: 46px;
-}
-/*.storage-caption-bar-enabled #storage-ui-container {*/
-    /*bottom: 46px;*/
-/*}*/
 .storage-ui #storage-ui-container {
-    right: 0;
+    right: 1px;
 }
 .leaflet-top,
 .leaflet-right {
@@ -526,7 +520,7 @@ i.info {
 /* *********** */
 .storage-close-icon {
     background-repeat: no-repeat;
-    background-image: url("/static/storage/src/img/16.png?cb8888ec808e");
+    background-image: url("../img/16.png?cb8888ec808e");
     background-position: -52px -9px;
     display: inline;
     padding: 0 10px;
@@ -545,7 +539,7 @@ i.info {
 
 
 .dark .storage-close-icon {
-    background-image: url("/static/storage/src/img/16-white.png?cb8888ec808e");
+    background-image: url("../img/16-white.png?cb8888ec808e");
 }
 .dark .storage-close-link {
     border: 1px solid #202425;
@@ -1350,7 +1344,7 @@ cursor: pointer !important;
     background-color: #323737;
     padding: 5px;
     /*line-height: 36px;*/
-    opacity: 0.5;
+    opacity: 0.98;
 }
 
 /*
@@ -1372,4 +1366,66 @@ cursor: pointer !important;
 
 .leaflet-control-container > .leaflet-right{
     margin-top :50px !important;
+}
+/*
+======================================== Кнопка EDITLAYER сильно вправо ================================================
+*/
+.leaflet-control-edit-layer {
+    margin-right: -100px;
+}
+
+.storage-edit-enabled .leaflet-control-edit-layer {
+    margin-right: 0;
+}
+
+.leaflet-control-edit-layer a {
+    background-position: -1px -1px;
+}
+
+.leaflet-control-edit-layer.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #353c3e;
+}
+
+.storage-edit-enabled .leaflet-control-edit-layer {
+    display: block;
+}
+
+.storage-edit-layer-enabled .leaflet-control-edit-layer a,
+.storage-edit-layer-enabled .leaflet-control-edit-layer.dark a {
+    background-color: #ff0000;
+    margin-right: 0;
+}
+
+.storage-is-dirty .leaflet-control-edit-layer a,
+.storage-is-dirty .leaflet-control-edit-layer.dark a {
+    background-color: #00ff00;
+}
+
+.leaflet-left .leaflet-control-edit-layer {
+    float: right !important;
+}
+/*
+========================================================================================================================
+*/
+
+
+/*
+======================================== Кнопки СОХРАНИТЬ, ОТМЕНИТЬ, ОТМЕНИТЬ РЕДАКТИРОВАНИЕ ===========================
+*/
+
+
+
+/*
+========================================================================================================================
+*/
+
+
+/*Опускаем правый контейнер с кнопками редактирования*/
+.leaflet-control-container > .leaflet-right{
+    margin-top: 50px;
+}
+
+.leaflet-right .leaflet-control {
+    margin-right: 5px!important;
 }

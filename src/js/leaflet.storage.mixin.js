@@ -27,6 +27,7 @@ L.Storage.Map.include({
                     // При смене элемента в Select выбранный слой записывается в редактируемый
                     // Но если выбрать тот слой, который был по умолчанию, то приходится его записывать принудительно
                     if (!this.editedLayer) {this.editedLayer = checkedLayer}
+                    L.DomUtil.addClass(document.body, 'storage-edit-layer-enabled');
             }, this);
 
         this.ui.openPanel({data: {html: container}, className: 'dark'})
@@ -44,6 +45,7 @@ L.Storage.Map.include({
         }
         this.editedLayer.clear();
         this.editedLayer = null;
+        L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
     },
 
     initButtonsBar: function () {

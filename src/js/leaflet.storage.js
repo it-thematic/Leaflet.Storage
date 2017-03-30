@@ -228,7 +228,8 @@ L.Storage.Map.include({
         this._controls = {};
         if (this.options.allowEdit && !this.options.noControl) {
             new L.Storage.EditControl(this).addTo(this);
-            new L.S.EditingLayerToolbar({map: this}).addTo(this);
+            new L.Storage.EditLayerControl(this).addTo(this);
+            // new L.S.EditingLayerToolbar({map: this}).addTo(this);
             new L.S.DrawToolbar({map: this}).addTo(this);
             var editActions = [
                 L.S.ImportAction,
