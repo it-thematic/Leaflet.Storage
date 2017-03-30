@@ -1288,39 +1288,11 @@ cursor: pointer !important;
     border: 1px solid #1b1f20;
 }
 
+
+
 /*
-  Leaflet-left : to TOP
+  переворачиваем zoom горизонтально
 */
-
-.leaflet-left:first-child {
-    left: 50px !important;
-    right: 1px !important;
-    height: 50px !important;
-    display: flex;
-    -webkit-box-sizing: inherit;
-    box-shadow: 0 0 0 0 rgba(0,0,0,0.5); /* Параметры тени */
-
-    background-color: #323737;
-    padding: 5px;
-    line-height: 36px;
-    opacity: 0.50;
-}
-
-.leaflet-control-edit-enable {
-    width: 36px;
-    height: 37px;
-    /*margin-left: auto !important;*/
-}
-
-.leaflet-left .leaflet-control {
-    margin: 1px !important;
-}
-
-/*.leaflet-left .leaflet-control:last-child {*/
-    /*margin-left: auto !important;*/
-/*}*/
-
-
 
 .leaflet-bar a {
     background-position: 50% 50%;
@@ -1338,9 +1310,7 @@ cursor: pointer !important;
     text-decoration: none;
     color: black;
 }
-/*
-  переворачиваем zoom горизонтально
-*/
+
 .leaflet-touch .leaflet-bar a {
     width: 36px;
     height: 36px;
@@ -1365,4 +1335,45 @@ cursor: pointer !important;
 
 /*
   END : переворачиваем zoom горизонтально
+*/
+
+/*
+  leaflet-top leaflet-left : to TOP  ГОРИЗОНТАЛЬНО
+*/
+
+.leaflet-left:first-child {
+    left: 50px !important;
+    right: 1px !important;
+    height: 50px !important;
+    -webkit-box-sizing: inherit;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0.5); /* Параметры тени */
+    background-color: #323737;
+    padding: 5px;
+    /*line-height: 36px;*/
+    opacity: 0.5;
+}
+
+/*
+  Кнопка Edit сильно вправо
+*/
+
+.leaflet-left .leaflet-control-edit-enable {
+    float: right !important;
+}
+
+.leaflet-control-container + .leaflet-control {
+    float: left;
+    clear: none !important;
+    margin-left: 1px !important;
+    margin-top: 1px;
+}
+
+.leaflet-control-container > .leaflet-left div {
+    float: left;
+    clear: none;
+    margin-left: 1px;
+    margin-top: 1px;
+}
+/*
+  end
 */
