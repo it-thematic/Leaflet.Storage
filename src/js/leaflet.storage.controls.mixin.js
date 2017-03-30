@@ -266,7 +266,7 @@ L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
     },
 
     appendToContainer: function (container) {
-        this.options.actions = [L.S.SaveAction, L.S.CancelAction, L.S.DisabeAction];
+        this.options.actions = [];
         if (!this.map.editedLayer) {
             this.options.actions.push(L.S.EnableEditLayerAction);
         } else {

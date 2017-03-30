@@ -1361,15 +1361,7 @@ cursor: pointer !important;
     float: right !important;
 }
 
-.leaflet-control-container + .leaflet-control {
-    float: left;
-    clear: none !important;
-    margin-left: 1px !important;
-    margin-top: 1px;
-}
-
 .leaflet-control-container > .leaflet-left div {
-    float: left;
     clear: none;
     margin-left: 1px;
     margin-top: 1px;
@@ -1377,3 +1369,7 @@ cursor: pointer !important;
 /*
   end
 */
+
+.leaflet-control-container > .leaflet-right{
+    margin-top :50px !important;
+}
