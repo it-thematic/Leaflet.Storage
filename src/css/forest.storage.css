@@ -1469,8 +1469,17 @@ cursor: pointer !important;
 
 .leaflet-control-edit-save,
 .leaflet-control-edit-cancel,
-.leaflet-control-edit-disable {
+.leaflet-control-edit-disable{
     margin-right: -250px;
+}
+button.leaflet-control-edit-cancel {
+    margin-right: 0px !important;
+}
+button.leaflet-control-edit-save {
+    margin-right: 0px !important;
+}
+button.leaflet-control-edit-disable{
+    margin-right: 0px !important;
 }
 
 .storage-edit-enabled .leaflet-control-edit-save,
