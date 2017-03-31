@@ -206,7 +206,7 @@ L.Storage.Map.include({
             this.ui.on('panel:closed panel:open', function () {
                 this.editedFeature = null;
             }, this);
-            this.initEditBar();
+            // this.initEditBar();
         }
         this.initShortcuts();
 
@@ -229,7 +229,9 @@ L.Storage.Map.include({
         if (this.options.allowEdit && !this.options.noControl) {
             new L.Storage.EditControl(this).addTo(this);
             new L.Storage.EditLayerControl(this).addTo(this);
-            // new L.S.EditingLayerToolbar({map: this}).addTo(this);
+            new L.Storage.SaveControl(this).addTo(this);
+            new L.Storage.CancelControl(this).addTo(this);
+            new L.Storage.DisableControl(this).addTo(this);
             new L.S.DrawToolbar({map: this}).addTo(this);
             var editActions = [
                 L.S.ImportAction,

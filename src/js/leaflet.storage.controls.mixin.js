@@ -217,46 +217,6 @@ L.Storage.DisableEditLayerAction = L.Storage.BaseAction.extend({
     }
 });
 
-L.Storage.SaveAction = L.Storage.BaseAction.extend({
-    options: {
-        helpMenu: true,
-        className: 'leaflet-control-edit-save button',
-        html: L._('Save current edits') + ' (Ctrl-S)',
-        tooltip: L._('Save current edits') + ' (Ctrl-S)'
-    },
-
-    addHooks: function () {
-        this.map.save()
-    }
-});
-
-L.Storage.CancelAction = L.Storage.BaseAction.extend({
-    options: {
-        helpMenu: true,
-        className: 'leaflet-control-edit-cancel button',
-        html: L._('Cancel'),
-        tooltip: L._('Cancel edits')
-    },
-
-    addHooks: function () {
-        this.map.askForReset()
-    }
-});
-
-L.Storage.DisabeAction = L.Storage.BaseAction.extend({
-    options: {
-        helpMenu: true,
-        className: 'leaflet-control-edit-disable',
-        html: L._('Disable editing'),
-        tooltip: L._('Disable editing')
-    },
-
-    addHooks: function () {
-        this.map.disableEdit();
-        this.map.ui.closePanel();
-    }
-});
-
 L.Storage.EditingLayerToolbar = L.Toolbar.Control.extend({
 
     initialize: function (options) {
@@ -341,7 +301,7 @@ L.Storage.printControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-print storage-control dark');
+        var container = L.DomUtil.create('div', 'leaflet-control-print storage-control');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
@@ -362,16 +322,16 @@ L.Storage.printControl = L.Control.extend({
 
 L.Storage.SaveControl = L.Control.extend({
     options: {
-        position: 'topright'
+        position: 'topleft'
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-edit-save storage-control');
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-save edit-button');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
-        // link.title = L._('Save current edits') + ' (Ctrl-S)';
-        // link.innerHTML = L._('Save');
+        link.title = L._('Save current edits') + ' (Ctrl-S)';
+        link.innerHTML = L._('Save');
 
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stop)
@@ -383,20 +343,20 @@ L.Storage.SaveControl = L.Control.extend({
 
 L.Storage.CancelControl = L.Control.extend({
     options: {
-        position: 'topright'
+        position: 'topleft'
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-edit-cancel storage-control');
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-cancel edit-button');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
-        // link.title = L._('Cancel edits');
-        // link.innerHTML = L._('Cancel');
+        link.title = L._('Cancel edits');
+        link.innerHTML = L._('Cancel');
 
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stop)
-            .addListener(link, 'click', map.askForReset, this);
+            .addListener(link, 'click', map.askForReset, map);
 
         return container;
     }
@@ -404,22 +364,22 @@ L.Storage.CancelControl = L.Control.extend({
 
 L.Storage.DisableControl = L.Control.extend({
     options: {
-        position: 'topright'
+        position: 'topleft'
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-edit-disable storage-control');
+        var container = L.DomUtil.create('div', 'leaflet-control-edit-disable');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
-        // link.title = L._('Disable editing');
-        // link.innerHTML = L._('Disable editing');
+        link.title = L._('Disable editing');
+        link.innerHTML = L._('Disable editing');
 
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stop)
             .addListener(link, 'click', function (e) {
-                map.disableEdit(e);
-                map.ui.closePanel();
+                this.disableEdit(e);
+                this.ui.closePanel();
             }, map);
 
         return container;

@@ -1172,9 +1172,9 @@ body.content #storage-ui-container {
 
 .leaflet-control-zoom,
 .storage-control {
-    background: none no-repeat scroll center center #F8F8F9;
+    /*background: none no-repeat scroll center center #F8F8F9;*/
     border-radius: 0px !important;
-    border: 1px solid #bbb;
+    /*border: 1px solid #bbb;*/
 }
 
 /*TODO: при наведении элемента меняем цвет*/
@@ -1237,12 +1237,6 @@ cursor: pointer !important;
 /*
  edit button
 */
-.leaflet-control-edit-save, .leaflet-control-edit-cancel, .leaflet-control-edit-disable{
-    width: 36px !important;
-    height: 36px !important;
-}
-
-
 .leaflet-control-toolbar li .leaflet-toolbar-icon.disable-edit-layer {
     background-color: white!important;
 }
@@ -1364,6 +1358,7 @@ cursor: pointer !important;
   end
 */
 
+/*Опустили правый блок вниз на ширину панели*/
 .leaflet-control-container > .leaflet-right{
     margin-top :50px !important;
 }
@@ -1372,6 +1367,10 @@ cursor: pointer !important;
 */
 .leaflet-control-edit-layer {
     margin-right: -100px;
+}
+
+.leaflet-left .leaflet-control-edit-layer {
+    float: right !important;
 }
 
 .storage-edit-enabled .leaflet-control-edit-layer {
@@ -1401,10 +1400,6 @@ cursor: pointer !important;
 .storage-is-dirty .leaflet-control-edit-layer.dark a {
     background-color: #00ff00;
 }
-
-.leaflet-left .leaflet-control-edit-layer {
-    float: right !important;
-}
 /*
 ========================================================================================================================
 */
@@ -1413,8 +1408,94 @@ cursor: pointer !important;
 /*
 ======================================== Кнопки СОХРАНИТЬ, ОТМЕНИТЬ, ОТМЕНИТЬ РЕДАКТИРОВАНИЕ ===========================
 */
+.edit-button {
+    min-width: 100px;
+    min-height: 36px;
+    line-height: 36px;
 
+    letter-spacing: 1px;
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+}
 
+.leaflet-control .edit-button {
+    color: #eeeeec;
+}
+
+/*========== СОХРАНИТЬ =========*/
+
+.leaflet-control-edit-save a,
+.leaflet-control-edit-disable a,
+.leaflet-control-edit-cancel a {
+    display: block;
+    height: 36px;
+    line-height: 36px;
+    color: #efefef;
+    border: none;
+    font-size: 11px;
+    /*margin-left: 10px;*/
+    float: right;
+}
+
+.leaflet-control-edit-save a,
+.leaflet-control-edit-cancel a {
+    color: #f8f8f8;
+    width: auto;;
+    height: 36px;
+    line-height: 36px;
+    min-height: 36px;
+    padding: 0 10px;
+    min-width: 100px;
+}
+
+.leaflet-control-edit-cancel a
+{
+    background-color: #C60F13;
+}
+
+.leaflet-control-edit-save a
+{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #215d9c;
+}
+
+.storage-is-dirty .leaflet-control-edit-save a
+{
+    opacity: 1;
+    cursor: pointer;
+}
+
+.leaflet-control-edit-save,
+.leaflet-control-edit-cancel,
+.leaflet-control-edit-disable {
+    margin-right: -250px;
+}
+
+.storage-edit-enabled .leaflet-control-edit-save,
+.storage-edit-enabled .leaflet-control-edit-disable,
+.storage-edit-enabled .storage-is-dirty .leaflet-control-edit-cancel {
+    margin-right: 0;
+}
+
+.storage-is-dirty .leaflet-control-edit-disable a {
+    display: none;
+}
+
+.leaflet-control-edit-save a:hover,
+.leaflet-control-edit-cancel a:hover,
+.leaflet-control-edit-disable a:hover
+{
+    color: #efefef;
+}
+
+.leaflet-left .leaflet-control-edit-save,
+.leaflet-left .leaflet-control-edit-disable,
+.leaflet-left .leaflet-control-edit-cancel
+{
+    float: right !important;
+}
 
 /*
 ========================================================================================================================
@@ -1428,4 +1509,8 @@ cursor: pointer !important;
 
 .leaflet-right .leaflet-control {
     margin-right: 5px!important;
+}
+
+.storage-edit-enabled .leaflet-top {
+    top: 0;
 }
