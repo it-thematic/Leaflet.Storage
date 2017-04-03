@@ -46,16 +46,10 @@ L.Storage.Map.include({
         this.editedLayer.clear();
         this.editedLayer = null;
         L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
-    },
-
-    initButtonsBar: function () {
-        var container = this._buttonscontainer = L.DomUtil.create('div', 'storage-main-toolbox with-transition dark', this._controlContainer);
     }
 });
 
 L.Storage.Map.addInitHook(function(){
-    // new L.Storage.PKKControl(this).addTo(this);
-    // new L.Storage.PrintControl(this).addTo(this);
     var editedLayer = null,
         that = this;
 

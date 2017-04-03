@@ -272,7 +272,7 @@ L.Storage.pkkControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-pkk storage-control dark');
+        var container = L.DomUtil.create('div', 'leaflet-control-pkk storage-control');
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
@@ -292,6 +292,7 @@ L.Storage.pkkControl = L.Control.extend({
         } else {
             this.map.addLayer(this.rosr)
         }
+        L.DomUtil.classIf(this.getContainer(), 'dark', this.map.hasLayer(this.rosr))
     }
 });
 
@@ -335,7 +336,7 @@ L.Storage.SaveControl = L.Control.extend({
 
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stop)
-            .addListener(link, 'click', map.save, this);
+            .addListener(link, 'click', map.save, map);
 
         return container;
     }

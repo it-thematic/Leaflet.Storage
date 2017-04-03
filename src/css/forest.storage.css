@@ -1265,11 +1265,18 @@ cursor: pointer !important;
     background-position: -120px -122px;
 }
 
+.leaflet-control-pkk.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
+}
+
 .leaflet-control-print a {
     background-image: url("../img/24-print.png");
 }
 
-.dark .leaflet-control-print a {
+.leaflet-control-print.dark a {
     background-image: url("../img/24-print-white.png");
     background-color: #2a2e30;
     color: #eeeeec;

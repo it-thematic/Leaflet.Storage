@@ -524,13 +524,9 @@ L.Storage.DataLayersControl = L.Control.extend({
         var datalayerLi = L.DomUtil.create('li', '', container);
         if (draggable) L.DomUtil.element('i', {className: 'drag-handle', title: L._('Drag to reorder')}, datalayerLi);
         datalayer.renderToolbox(datalayerLi);
-
-
         var title = L.DomUtil.add('span', 'layer-title', datalayerLi, datalayer.options.name);
-        //TODO: ForestMap : назначение обозначения для открытия табличного представления
-        title.id =  datalayer.options.laydescription;
 
-        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);//TODO:ForestMap datalayerLi.id = 'browse_data_toggle_' + datalayer.storage_id;
+        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
 
         title.innerHTML = datalayer.options.name;

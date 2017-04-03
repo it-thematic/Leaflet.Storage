@@ -52,6 +52,14 @@ L.S.Layer.WFST= L.WFST.extend({
             }
         };
 
+        // if (this.datalayer.options.remoteData.url) {
+        //     if (this.datalayer.options.remoteData.url.match('/*\/{[xyz]}\/{[xyz]}\/{[xyz]}*')) {
+        //         if (!this.datalayer._tilelay) {
+        //             this.datalayer._tilelay = L.tileLayer(this.datalayer.options.remoteData.url, {attribution: '-'});
+        //         }
+        //     }
+        // }
+
         L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options)
         );
 
@@ -72,8 +80,15 @@ L.S.Layer.WFST= L.WFST.extend({
         this.options.typeName = this.datalayer.options.laydescription;
         this.isValid = true;
         this.describeFeatureType();
-        if (!this.datalayer._tilelay) {
-            this.datalayer._tilelay = L.tileLayer(this.datalayer.options.remoteData.url, {attribution: '-'});
+        if (this.datalayer.options.remoteData.url) {
+            if (this.datalayer.options.remoteData.url.match('/*\/{[xyz]}\/{[xyz]}\/{[xyz]}*')) {
+                if (this.datalayer._tilelay) {
+                    this.datalayer._tilelay.setUrl(this.datalayer.options.remoteData.url, false)
+                }
+                if (!this.datalayer._tilelay) {
+                    this.datalayer._tilelay = L.tileLayer(this.datalayer.options.remoteData.url, {attribution: '-'});
+                }
+            }
         }
     },
 
