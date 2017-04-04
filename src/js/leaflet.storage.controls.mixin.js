@@ -94,53 +94,56 @@ L.Storage.SearchControl.Mixin = {
         var container = L.DomUtil.create('div', 'leaflet-control-search storage-control'),
             self = this;
 
-        L.DomEvent.disableClickPropagation(container);
-        var link = L.DomUtil.create('a', 'findForestMap', container);
-        link.href = '#';
+        /*
+        * получение формы фильтра лесничества и тд
+        * */
+        map.ajax({
+                verb: 'GET',
+                uri: '/ajaxforestry/',
+                callback: function (data, response) {
+                    var sub = L.DomUtil.create('div', 'storage-forets-filter', container);
+                    sub.innerHTML = data;
+                }
+        });
 
-        // TODO: ForestMap закрытие выезжающей панели для поиска
-            // L.DomEvent.on(link, 'click', function (e) {
-            //     L.DomEvent.stop(e);
-            //     self.openPanel(map);
-            // });
-        // TODO: ForestMap закрытие выезжающей панели для поиска
         return container;
     },
 
+
     openPanel: function (map) {
-        // var options = {
-        //     limit: 10,
-        //     noResultLabel: L._('No results'),
-        // }
-        // if (map.options.photonUrl) options.url = map.options.photonUrl;
-        // var container = L.DomUtil.create('div', '');
-        //
-        // var title = L.DomUtil.create('h3', '', container);
-        // title.textContent = L._('Search location');
-        // var input = L.DomUtil.create('input', 'photon-input', container);
-        //
-        // /*
-		 //  ForestMap : Для  вставки списка лесничеств
-        // */
-        // var input1 = L.DomUtil.create('div', 'listForesteryMap', container);
-        //
-        // var resultsContainer = L.DomUtil.create('div', 'photon-autocomplete', container);
-        // this.search = new L.S.Search(map, input, options);
-        // var id = Math.random();
-        // this.search.on('ajax:send', function () {
-        //     map.fire('dataloading', {id: id});
-        // });
-        // this.search.on('ajax:return', function () {
-        //     map.fire('dataload', {id: id});
-        // });
-        // this.search.resultsContainer = resultsContainer;
-        // mainZamena();
-        // map.ui.once('panel:ready', function () {
-        //
-        //     input.focus();
-        //
-        // });
-        // map.ui.openPanel({data: {html: container}});
+        var options = {
+            limit: 10,
+            noResultLabel: L._('No results'),
+        }
+        if (map.options.photonUrl) options.url = map.options.photonUrl;
+        var container = L.DomUtil.create('div', '');
+
+        var title = L.DomUtil.create('h3', '', container);
+        title.textContent = L._('Search location');
+        var input = L.DomUtil.create('input', 'photon-input', container);
+
+        /*
+		  ForestMap : Для  вставки списка лесничеств
+        */
+        var input1 = L.DomUtil.create('div', 'listForesteryMap', container);
+
+        var resultsContainer = L.DomUtil.create('div', 'photon-autocomplete', container);
+        this.search = new L.S.Search(map, input, options);
+        var id = Math.random();
+        this.search.on('ajax:send', function () {
+            map.fire('dataloading', {id: id});
+        });
+        this.search.on('ajax:return', function () {
+            map.fire('dataload', {id: id});
+        });
+        this.search.resultsContainer = resultsContainer;
+        mainZamena();
+        map.ui.once('panel:ready', function () {
+
+            input.focus();
+
+        });
+        map.ui.openPanel({data: {html: container}});
 
     }
 };
