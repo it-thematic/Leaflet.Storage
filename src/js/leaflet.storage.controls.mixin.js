@@ -25,6 +25,7 @@ L.Storage.DataLayersControl.Mixin = {
 
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
         title.innerHTML = datalayer.options.name;
+        this.map.fire('control:addDataLayer',datalayerLi);
     }
 };
 L.Storage.DataLayersControl.include(L.Storage.DataLayersControl.Mixin);

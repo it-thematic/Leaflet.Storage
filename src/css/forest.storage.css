@@ -1403,10 +1403,6 @@ cursor: pointer !important;
     margin-right: 0;
 }
 
-.storage-is-dirty .leaflet-control-edit-layer a,
-.storage-is-dirty .leaflet-control-edit-layer.dark a {
-    background-color: #00ff00;
-}
 /*
 ========================================================================================================================
 */
@@ -1529,4 +1525,26 @@ button.leaflet-control-edit-disable{
 
 .storage-edit-enabled .leaflet-top {
     top: 0;
+}
+
+/*
+======================================== ПАНЕЛЬ СОХРАНЕНИЯ СЛОЯ ========================================================
+ */
+.storage-confirm-box {
+    z-index: 10001;
+    position: absolute;
+    margin: 0 calc(50% - 500px/2);
+    width: 500px;
+    padding: 40px 20px;
+    border: 1px solid #222;
+    background-color: #323737;
+    color: #efefef;
+    font-size: 0.8em;
+    visibility: hidden;
+    top: -100%;
+}
+
+.storage-confirm-on .storage-confirm-box {
+    visibility: visible;
+    top: 100px;
 }

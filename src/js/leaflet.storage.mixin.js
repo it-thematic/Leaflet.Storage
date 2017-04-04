@@ -35,17 +35,49 @@ L.Storage.Map.include({
     
     disableEditLayer: function () {
         if (this.editedLayer && this.editedLayer.isDirty) {
-            if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: '"'+this.editedLayer.options.name+'"'}))) {
-                this.editedLayer.save();
-                return true;
-            } else {
-
-                this.editedLayer.cancel();
-            }
+            var box = L.DomUtil.create('div', 'storage-confirm-box dark', document.body);
+            var builder = new L.S.FormBuilder(this, [
+                ['saved', {
+                    handler: L.FormBuilder.ControlChoice,
+                    label: L._('Layer {name} contain unsaved changes. Save?', {name: '"'+this.editedLayer.options.name+'"'}),
+                    choices: [
+                        [true, L._('Save')],
+                        [false, L._('Cancel')],
+                        ['null', L._('Close')]
+                    ],
+                    callback: function (e) {
+                        L.DomUtil.removeClass(document.body, 'storage-confirm-on');
+                        var value = e.helper.toJS();
+                        if (value == null) {
+                            return;
+                        }
+                        if (!!value) { this.editedLayer.save();
+                        } else {
+                            if (!!!value) { this.editedLayer.cancel();}
+                        }
+                        this.editedLayer.clear();
+                        this.editedLayer = null;
+                        L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
+                    }
+                }]
+            ]);
+            var form = builder.build();
+            var checked = form.querySelector('input[type="radio"]:checked');
+            if (checked) checked.checked = false;
+            box.appendChild(form);
+            L.DomUtil.addClass(document.body, 'storage-confirm-on');
         }
-        this.editedLayer.clear();
-        this.editedLayer = null;
-        L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
+        //     if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: '"'+this.editedLayer.options.name+'"'}))) {
+        //         this.editedLayer.save();
+        //         return true;
+        //     } else {
+        //
+        //         this.editedLayer.cancel();
+        //     }
+        // }
+        // this.editedLayer.clear();
+        // this.editedLayer = null;
+        // L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
     }
 });
 
