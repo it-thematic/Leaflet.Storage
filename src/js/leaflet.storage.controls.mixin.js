@@ -25,7 +25,6 @@ L.Storage.DataLayersControl.Mixin = {
 
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
         title.innerHTML = datalayer.options.name;
-        this.map.fire('control:addDataLayer',datalayerLi);
     }
 };
 L.Storage.DataLayersControl.include(L.Storage.DataLayersControl.Mixin);
@@ -95,16 +94,25 @@ L.Storage.SearchControl.Mixin = {
         var container = L.DomUtil.create('div', 'leaflet-control-search storage-control'),
             self = this;
 
-         /*
-         * получение формы фильтра лесничества и тд
-         * */
-        $.ajax({
+        /*
+        * получение формы фильтра лесничества и тд
+        * */
+         $.ajax({
            type : "GET",
            url: '/ajaxforestry/',
            success: function (data) {
                $('.leaflet-control-search').html(data)
            }
         });
+        // map.ajax({
+        //         verb: 'GET',
+        //         uri: '/ajaxforestry/',
+        //         callback: function (data, response) {
+        //             var sub = L.DomUtil.create('div', 'storage-forets-filter', container);
+        //             sub.text= data;
+        //             container.
+        //         }
+        // });
 
         return container;
     },
