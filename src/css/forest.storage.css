@@ -1337,7 +1337,6 @@ cursor: pointer !important;
 */
 
 .leaflet-left:first-child {
-    left: 50px !important;
     right: 1px !important;
     height: 50px !important;
     -webkit-box-sizing: inherit;
@@ -1345,7 +1344,9 @@ cursor: pointer !important;
     background-color: #323737;
     padding: 5px;
     /*line-height: 36px;*/
-    opacity: 0.98;
+    opacity: 0.8;
+    padding-left: 60px;
+    top:1px;
 }
 
 /*

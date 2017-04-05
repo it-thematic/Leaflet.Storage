@@ -97,22 +97,13 @@ L.Storage.SearchControl.Mixin = {
         /*
         * получение формы фильтра лесничества и тд
         * */
-         $.ajax({
-           type : "GET",
-           url: '/ajaxforestry/',
-           success: function (data) {
-               $('.leaflet-control-search').html(data)
-           }
+        map.ajax({
+                verb: 'GET',
+                uri: '/ajaxforestry/',
+                callback: function (data, response) {
+                     $('.leaflet-control-search').html(data)
+                }
         });
-        // map.ajax({
-        //         verb: 'GET',
-        //         uri: '/ajaxforestry/',
-        //         callback: function (data, response) {
-        //             var sub = L.DomUtil.create('div', 'storage-forets-filter', container);
-        //             sub.text= data;
-        //             container.
-        //         }
-        // });
 
         return container;
     },
