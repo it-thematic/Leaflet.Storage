@@ -91,20 +91,16 @@ L.Storage.LocateControl.include(L.Storage.LocateControl.Mixin);
 
 L.Storage.SearchControl.Mixin = {
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-search storage-control'),
-            self = this;
 
+        var container = L.DomUtil.create('div', 'leaflet-control-search storage-control');
+        //
         /*
         * получение формы фильтра лесничества и тд
         * */
-        map.ajax({
-                verb: 'GET',
-                uri: '/ajaxforestry/',
-                callback: function (data, response) {
-                     $('.leaflet-control-search').html(data)
-                }
-        });
-
+        map.xhr._ajax({verb: 'GET', uri: '/ajaxforestry/', callback: function (data) {
+            $('.leaflet-control-search').html(data)
+        }});
+        // container.display = 'block';
         return container;
     },
 
