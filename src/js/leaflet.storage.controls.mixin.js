@@ -100,7 +100,6 @@ L.Storage.SearchControl.Mixin = {
         map.xhr._ajax({verb: 'GET', uri: '/ajaxforestry/', callback: function (data) {
             $('.leaflet-control-search').html(data)
         }});
-        // container.display = 'block';
         return container;
     },
 
