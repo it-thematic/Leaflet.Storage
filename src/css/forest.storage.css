@@ -1549,3 +1549,27 @@ button.leaflet-control-edit-disable{
     visibility: visible;
     top: 100px;
 }
+
+/*
+  Преобразование кнопки search в панель
+*/
+.leaflet-control-search
+{
+    background: none;
+    border-radius: 0;
+    border: 0;
+
+}
+.leaflet-control-search:hover
+{
+    background: none !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+}
+
+.leaflet-control-search div{
+    float: left;
+}
+/*
+ END
+*/
