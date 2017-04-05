@@ -1172,9 +1172,7 @@ body.content #storage-ui-container {
 
 .leaflet-control-zoom,
 .storage-control {
-    /*background: none no-repeat scroll center center #F8F8F9;*/
     border-radius: 0px !important;
-    /*border: 1px solid #bbb;*/
 }
 
 /*TODO: при наведении элемента меняем цвет*/
@@ -1345,7 +1343,7 @@ cursor: pointer !important;
     padding: 5px;
     /*line-height: 36px;*/
     opacity: 0.8;
-    padding-left: 60px;
+    padding-left: 71px;
     top:1px;
 }
 
@@ -1569,6 +1567,7 @@ button.leaflet-control-edit-disable{
 
 .leaflet-control-search div{
     float: left;
+    margin-left: 2px;
 }
 /*
  END
