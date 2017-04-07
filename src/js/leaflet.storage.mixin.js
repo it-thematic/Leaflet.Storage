@@ -127,6 +127,7 @@ L.Storage.Map.prototype.askForReset = function(e) {
 
 L.Storage.Map.prototype.disableEdit = function() {
     if (this.isDirty) return;
+    if (this.editedLayer) this.disableEditLayer();
     L.DomUtil.removeClass(document.body, 'storage-edit-enabled');
     this.editedFeature = null;
     this.editedLayer = null;

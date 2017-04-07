@@ -358,7 +358,8 @@ var locale = {
     "Disable editing layer": "Завершить редактирование слоя",
     "Layer {name} contain unsaved changes. Save?": "Слой {name} содержит несохранённые изменения. Сохранить?",
     "PKK": "Кадастровая карта Росреестра",
-    "Print map": "Печать карты"
+    "Print map": "Печать карты",
+    "Load existing": "Загружать существующие объекты"
 
 };
 L.registerLocale("ru", locale);

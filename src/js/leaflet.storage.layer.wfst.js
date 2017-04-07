@@ -31,7 +31,16 @@ L.S.Layer.WFST= L.WFST.extend({
                     showExisting = value;
                     this.options.showExisting = showExisting;
                     if (showExisting) {
-                        this.describeFeatureType();
+                        this.loadFeatures(this.options.filter)
+                        // var that = this;
+                        // this.requestFeatures(this.options.filter, function(rt) {
+                        //     var pd = JSON.parse(rt);
+                        //     for (var i = 0; i < pd.features.length; i++) {
+                        //         pd.features[i].state = 'exist';
+                        //     }
+                        //     that.datalayer.addData(pd);
+                        //     that.datalayer.map.fitBounds(that.getBounds())
+                        // })
                     }
                 }
             })

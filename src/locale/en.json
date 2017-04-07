@@ -356,5 +356,6 @@
     "Disable editing layer": "Disable editing layer",
     "Layer {name} contain unsaved changes. Save?": "Layer {name} contain unsaved changes. Save?",
     "PKK": "Public cadastral card of the Federal Registration Service",
-    "Print map": "Print map"
+    "Print map": "Print map",
+    "Load existing": "Load existing"
 }

@@ -786,6 +786,13 @@ L.Storage.DataLayer = L.Class.extend({
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
             ['options.remoteData.licence', {label: L._('Licence'), helpText: L._('Please be sure the licence is compliant with your use.')}]
         ];
+        if (this.isWFSTLayer()) {
+            remoteDataFields.push(['options.remoteData.loadexisting', {handler: 'Switch', label: L._('Load existing'),
+                callback: function (e) {
+                    this.layer.showExisting = e.helper.toJS();
+                }
+            }])
+        }
         if (this.map.options.urls.ajax_proxy) {
             remoteDataFields.push(['options.remoteData.proxy', {handler: 'Switch', label: L._('Proxy request'), helpEntries: 'proxyRemoteData'}]);
         }
