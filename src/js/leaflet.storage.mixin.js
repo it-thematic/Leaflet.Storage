@@ -32,7 +32,7 @@ L.Storage.Map.include({
 
         this.ui.openPanel({data: {html: container}, className: 'dark'})
     },
-    
+
     disableEditLayer: function () {
         if (this.editedLayer && this.editedLayer.isDirty) {
             var box = L.DomUtil.create('div', 'storage-confirm-box dark', document.body);
@@ -66,18 +66,11 @@ L.Storage.Map.include({
             if (checked) checked.checked = false;
             box.appendChild(form);
             L.DomUtil.addClass(document.body, 'storage-confirm-on');
+        } else {
+            this.editedLayer.clear();
+            this.editedLayer = null;
+            L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
         }
-        //     if (confirm(L._('Layer {name} contain unsaved changes. Save?', {name: '"'+this.editedLayer.options.name+'"'}))) {
-        //         this.editedLayer.save();
-        //         return true;
-        //     } else {
-        //
-        //         this.editedLayer.cancel();
-        //     }
-        // }
-        // this.editedLayer.clear();
-        // this.editedLayer = null;
-        // L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
     }
 });
 

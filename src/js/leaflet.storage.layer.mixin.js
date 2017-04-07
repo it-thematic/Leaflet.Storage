@@ -64,7 +64,7 @@ DataLayerMixin = {
                 }
             });
         }
-        this.reset();
+        // this.reset();
     }
 };
 
