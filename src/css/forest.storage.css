@@ -1551,8 +1551,6 @@ button.leaflet-control-edit-disable{
     background: none;
     border-radius: 0;
     border: 0;
-    width: auto;
-
 }
 .leaflet-control-search:hover
 {
@@ -1567,7 +1565,8 @@ button.leaflet-control-edit-disable{
 }
 /*
  END
-*/.storage-confirm-on input[type='radio'] + label:hover {
+*/
+.storage-confirm-on input[type='radio'] + label:hover {
     background-color: #215d9c;
     box-shadow: inset 0 0 6px 0px #2c3233;
     color: #ededed;

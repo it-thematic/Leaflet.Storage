@@ -52,7 +52,9 @@ L.Map.mergeOptions({
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk'],
+    HIDDABLE_CONTROLS: ['search', 'fullscreen',  'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk'],
+        // 'embed',
+        // 'zoom'
 
     initialize: function (el, geojson) {
 
