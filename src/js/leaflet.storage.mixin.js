@@ -35,6 +35,7 @@ L.Storage.Map.include({
 
     disableEditLayer: function () {
         if (this.editedLayer && this.editedLayer.isDirty) {
+            var that = this;
             var box = L.DomUtil.create('div', 'storage-confirm-box dark', document.body);
             var builder = new L.S.FormBuilder(this, [
                 ['saved', {
@@ -51,12 +52,12 @@ L.Storage.Map.include({
                         if (value == null) {
                             return;
                         }
-                        if (!!value) { this.editedLayer.save();
+                        if (!!value) { that.editedLayer.save();
                         } else {
-                            if (!!!value) { this.editedLayer.cancel();}
+                            if (!!!value) { that.editedLayer.cancel();}
                         }
-                        this.editedLayer.clear();
-                        this.editedLayer = null;
+                        that.editedLayer.clear();
+                        that.editedLayer = null;
                         L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
                     }
                 }]

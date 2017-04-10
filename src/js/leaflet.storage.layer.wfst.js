@@ -6,6 +6,21 @@ L.S.Layer.WFST= L.WFST.extend({
     initialize: function (datalayer) {
         this.datalayer = datalayer;
 
+        var options = {
+            url: datalayer.options.remoteData.url_wfst,
+            typeName: datalayer.options.laydescription,
+            showExisting: this.showExisting,
+            maxFeatures: 100,
+            crs: L.CRS.EPSG4326,
+            geometryField: 'geometry',
+            style: {
+                color: datalayer.getColor(),
+                weight: 2
+            }
+        };
+
+        L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options));
+
         var isValid = true;
         try {
             Object.defineProperty(this, 'isValid', {
@@ -21,26 +36,20 @@ L.S.Layer.WFST= L.WFST.extend({
             // Certainly IE8, which has a limited version of defineProperty
         }
 
-        var showExisting = false;
         try {
             Object.defineProperty(this, 'showExisting', {
                 get: function () {
-                    return showExisting;
+                    return this.options.showExisting;
                 },
                 set: function (value) {
-                    showExisting = value;
-                    this.options.showExisting = showExisting;
-                    if (showExisting) {
-                        this.loadFeatures(this.options.filter)
-                        // var that = this;
-                        // this.requestFeatures(this.options.filter, function(rt) {
-                        //     var pd = JSON.parse(rt);
-                        //     for (var i = 0; i < pd.features.length; i++) {
-                        //         pd.features[i].state = 'exist';
-                        //     }
-                        //     that.datalayer.addData(pd);
-                        //     that.datalayer.map.fitBounds(that.getBounds())
-                        // })
+                    this.options.showExisting = value;
+                    if (value) {
+                        this.requestFeatures(null, function(rt) {
+                            that._parseFeature(rt);
+                            that.isValid = true;
+                        })
+                    } else {
+                        this.datalayer.clear();
                     }
                 }
             })
@@ -48,29 +57,27 @@ L.S.Layer.WFST= L.WFST.extend({
         catch (e) {
 
         }
-        var options = {
-            url: datalayer.options.remoteData.url_wfst,
-            typeName: datalayer.options.laydescription,
-            showExisting: this.showExisting,
-            maxFeatures: 100,
-            crs: L.CRS.EPSG4326,
-            geometryField: 'geometry',
-            style: {
-                color: datalayer.getColor(),
-                weight: 2
-            }
-        };
 
-        // if (this.datalayer.options.remoteData.url) {
-        //     if (this.datalayer.options.remoteData.url.match('/*\/{[xyz]}\/{[xyz]}\/{[xyz]}*')) {
-        //         if (!this.datalayer._tilelay) {
-        //             this.datalayer._tilelay = L.tileLayer(this.datalayer.options.remoteData.url, {attribution: '-'});
-        //         }
-        //     }
-        // }
+        try {
+            Object.defineProperty(this, 'maxFeatures', {
+                get: function () {
+                    return this.options.maxFeatures;
+                },
+                set: function (value) {
+                    this.options.maxFeatures = value;
+                    if (this.showExisting) {
+                        this.datalayer.clear();
+                        this.requestFeatures(null, function(rt) {
+                            that._parseFeature(rt);
+                            that.isValid = true;
+                        })
+                    }
+                }
+            })
+        }
+        catch (e) {
 
-        L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options)
-        );
+        }
 
         var that = this;
         this.on('save:success', function() {
@@ -110,16 +117,21 @@ L.S.Layer.WFST= L.WFST.extend({
                 filter_id.append(id);
                 var that = this;
                 this.requestFeatures(filter_id,function(rt) {
-                    var pd = JSON.parse(rt);
-                    for (var i = 0; i < pd.features.length; i++) {
-                        pd.features[i].state = 'exist';
-                    }
-                    that.datalayer.addData(pd);
-                    that.datalayer.map.fitBounds(that.getBounds())
+                    that._parseFeature(rt);
                 })},
             context: this
         });
     },
+
+    _parseFeature: function(responseText) {
+        var pd = JSON.parse(responseText);
+        for (var i = 0; i < pd.features.length; i++) {
+            pd.features[i].state = 'exist';
+        }
+        this.datalayer.addData(pd);
+        this.datalayer.map.fitBounds(this.getBounds())
+    },
+
 
     addLayer: function (layer) {
         L.FeatureGroup.prototype.addLayer.call(this, layer);
