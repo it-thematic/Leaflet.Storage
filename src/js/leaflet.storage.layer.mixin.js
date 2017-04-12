@@ -16,6 +16,10 @@ DataLayerMixin = {
         return L.Util.template(template, {layer: layer.datalayer.options.laydescription, id:layer.properties.id})
     },
 
+    _createTileLayer: function () {
+        this._tilelay = L.tileLayer(this.options.remoteData.url, {attribution: '-'});
+     },
+
     getLocalId: function () {
         return this.storage_id || 'tmp' + L.Util.stamp(this);
     },
@@ -94,8 +98,7 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
     if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
 
     if (!this._tilelay) {
-        this._tilelay = new L.TileLayer(this.options.remoteData.url);
-        this._tilelay.options.attribution = '-';
+        this._createTileLayer();
         if (this.map.hasLayer(this.layer)) {
             this.map.addLayer(this._tilelay)
         }

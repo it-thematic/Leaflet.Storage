@@ -16,11 +16,16 @@ L.S.Layer.WFST= L.WFST.extend({
             style: {
                 color: datalayer.getColor(),
                 weight: 2
-            }
+            },
+            // step: function () {
+            //     $('.loader').show();
+            // },
+            // complete: function () {
+            //     $('.loader').hide();
+            // }
         };
 
         L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options));
-
         var isValid = true;
         try {
             Object.defineProperty(this, 'isValid', {
@@ -100,9 +105,8 @@ L.S.Layer.WFST= L.WFST.extend({
             if (this.datalayer.options.remoteData.url.match('/*\/{[xyz]}\/{[xyz]}\/{[xyz]}*')) {
                 if (this.datalayer._tilelay) {
                     this.datalayer._tilelay.setUrl(this.datalayer.options.remoteData.url, false)
-                }
-                if (!this.datalayer._tilelay) {
-                    this.datalayer._tilelay = L.tileLayer(this.datalayer.options.remoteData.url, {attribution: '-'});
+                } else {
+                    this.datalayer._createTileLayer();
                 }
             }
         }

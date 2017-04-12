@@ -76,7 +76,6 @@ L.Storage.Map.include({
         this.xhr.on('datalaod', function (e) {
             this.fire('datalaod', e);
         });
-
         this.initLoader();
         this.name = this.options.name;
         this.description = this.options.description;
@@ -1490,7 +1489,7 @@ L.Storage.Map.include({
     },
 
     initLoader: function () {
-        this.loader = new L.Control.Loading();
+        this.loader = new L.Control.Loading({spinjs: true});
         this.loader.onAdd(this);
     },
 
