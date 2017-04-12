@@ -1563,6 +1563,45 @@ button.leaflet-control-edit-disable{
     float: left;
     margin-left: 2px;
 }
+   /*элементы формы общей фильтрации по лесничеству  , уч. лесни. кв вд*/
+.element_form_input select{
+    height: 36px;
+    width: 150px;
+    border: 0;
+    margin-left: 2px;
+    z-index: 4000;
+    position: static;
+    /*background-color: red;*/
+}
+
+.element_form_input input{
+    height: 36px;
+    width: 35px;
+    border: 1px;
+    margin-left: 2px;
+    border-radius: 0;
+    background-color: inherit;
+    color: white;
+}
+
+.forest-control-filter,
+.forest-control-rosreestr{
+    background: none no-repeat scroll center center #F8F8F9;
+    border: 1px solid #bbb;
+    margin-top: 0px !important;
+    display: block;
+}
+.forest-control-filter a {
+    background-position: -42px -122px;
+    display: block;
+}
+
+.forest-control-rosreestr a
+{
+    background-position: -80px -122px;
+    display: block;
+}
+
 /*
  END
 */

@@ -93,14 +93,27 @@ L.Storage.SearchControl.Mixin = {
     onAdd: function (map) {
 
         var container = L.DomUtil.create('div', 'leaflet-control-search storage-control');
-        //
-        /*
-        * получение формы фильтра лесничества и тд
-        * */
-        map.xhr._ajax({verb: 'GET', uri: '/ajaxforestry/', callback: function (data) {
-            $('.leaflet-control-search').html(data)
-        }});
+        var elementFormInput = L.DomUtil.create('div', 'element_form_input', container);
+            var widForestry =  L.DomUtil.create('select', 'widForestry', elementFormInput);
+            widForestry.setAttribute('data-live-search','true');
+            widForestry.setAttribute('id','widForestry');
+            var widLforestry =  L.DomUtil.create('select', 'widLforestry', elementFormInput);
+            widLforestry.setAttribute('data-live-search','true');
+            widLforestry.setAttribute('id', 'widLforestry');
+            var widNblock =  L.DomUtil.create('input', 'widNblock', elementFormInput);
+            widNblock.setAttribute('id','widNblock');
+            var widNparcel =  L.DomUtil.create('input', 'widNparcel', elementFormInput);
+            widNparcel.setAttribute('id','widNparcel');
+
+        var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
+        var geomForest =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
+        geomForest.setAttribute('id','geomForest');
+        var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
+        var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
+        infoRosreet.setAttribute('id','infoRosreestr');
+
         return container;
+
     },
 
 
