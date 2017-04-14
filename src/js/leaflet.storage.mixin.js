@@ -18,7 +18,7 @@ L.Storage.Map.include({
             .on(editLink, 'click', function (e) {
                 L.DomEvent.stop(e);
                     var checkedLayer = builder.helpers['datalayers'].toJS();
-                    if ( checkedLayer.isWFSTLayer() && !checkedLayer.layer.isValid) {
+                    if (!checkedLayer.allowEdit()) {
                         var msg = 'Выбранный слой не доступен для редактироваия';
                         this.ui.alert({content: msg, level: 'error', duration: 3000});
                         return;
@@ -33,7 +33,14 @@ L.Storage.Map.include({
         this.ui.openPanel({data: {html: container}, className: 'dark'})
     },
 
-    disableEditLayer: function () {
+    disableEditLayer: function (e) {
+        L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
+        this.editedLayer.clear();
+        this.editedLayer = null;
+        // this.askForReset(e)
+    },
+
+    askForDisable: function (e) {
         if (this.editedLayer && this.editedLayer.isDirty) {
             var that = this;
             var box = L.DomUtil.create('div', 'storage-confirm-box dark', document.body);
@@ -52,13 +59,12 @@ L.Storage.Map.include({
                         if (value == null) {
                             return;
                         }
-                        if (!!value) { that.editedLayer.save();
+                        if (value) {
+                            that.editedLayer.save();
                         } else {
-                            if (!!!value) { that.editedLayer.cancel();}
+                            that.editedLayer.cancel();
                         }
-                        that.editedLayer.clear();
-                        that.editedLayer = null;
-                        L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
+                        that.disableEditLayer();
                     }
                 }]
             ]);
@@ -68,9 +74,7 @@ L.Storage.Map.include({
             box.appendChild(form);
             L.DomUtil.addClass(document.body, 'storage-confirm-on');
         } else {
-            this.editedLayer.clear();
-            this.editedLayer = null;
-            L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
+            this.disableEditLayer();
         }
     }
 });
@@ -120,7 +124,6 @@ L.Storage.Map.prototype.defaultDataLayer = function(){
 
 L.Storage.Map.prototype.askForReset = function(e) {
     if (!confirm(L._('Are you sure you want to cancel your changes?'))) return;
-    if (this.editedLayer) { this.disableEditLayer(); }
     this.reset();
     this.disableEdit(e);
     this.ui.closePanel();
@@ -128,8 +131,8 @@ L.Storage.Map.prototype.askForReset = function(e) {
 
 L.Storage.Map.prototype.disableEdit = function() {
     if (this.isDirty) return;
-    if (this.editedLayer) this.disableEditLayer();
     L.DomUtil.removeClass(document.body, 'storage-edit-enabled');
+    L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
     this.editedFeature = null;
     this.editedLayer = null;
     this.editEnabled = false;
