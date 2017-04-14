@@ -1577,9 +1577,9 @@ button.leaflet-control-edit-disable{
 .element_form_input input{
     height: 36px;
     width: 35px;
-    border: 1px;
+    /*border: 1px;*/
     margin-left: 2px;
-    border-radius: 0;
+    /*border-radius: 0;*/
     background-color: inherit;
     color: white;
 }
