@@ -144,6 +144,13 @@ L.Storage.DrawToolbar.prototype.appendToContainer = function (container) {
     L.Toolbar.Control.prototype.appendToContainer.call(this, container);
 };
 
+L.Storage.DeleteVertexAction.Mixin = {
+    onClick: function () {
+        if (this.vertex.editor.vertexCanBeDeleted(this.vertex)) this.vertex.delete();
+    }
+};
+L.Storage.DeleteVertexAction.include(L.Storage.DeleteVertexAction.Mixin);
+
 // =====================================================================================================================
 // New stroage actions
 // =====================================================================================================================

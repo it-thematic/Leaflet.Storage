@@ -37,7 +37,6 @@ L.Storage.Map.include({
         L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
         this.editedLayer.clear();
         this.editedLayer = null;
-        // this.askForReset(e)
     },
 
     askForDisable: function (e) {
@@ -131,6 +130,7 @@ L.Storage.Map.prototype.askForReset = function(e) {
 
 L.Storage.Map.prototype.disableEdit = function() {
     if (this.isDirty) return;
+    if (this.editedLayer) { this.editedLayer.clear(); }
     L.DomUtil.removeClass(document.body, 'storage-edit-enabled');
     L.DomUtil.removeClass(document.body, 'storage-edit-layer-enabled');
     this.editedFeature = null;
