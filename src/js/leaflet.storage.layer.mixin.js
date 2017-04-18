@@ -210,14 +210,11 @@ L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
         formData.append('type', type);
         that.map.post(that._importUrl(), {
             data: formData,
-            // responseType: 'Blob',
-            // contentType: false,
-            // processData: false,
             callback: function (data, response) {
                 if (data.status !== 'success') {
                     this.map.ui.alert({content: data.note, level: 'error', duration: 30000});
                 } else {
-                    that.isDirty = true;
+                    if (that.isWFSTLayer()) { that.isDirty = true; }
                     that.zoomTo();
                     if (data.note) {
                         this.map.ui.alert({content: data.note, level: 'info', duration: 30000});

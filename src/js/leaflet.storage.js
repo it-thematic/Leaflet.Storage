@@ -47,12 +47,13 @@ L.Map.mergeOptions({
     clickable: true,
     easing: true,
     printControl: true,
-    pkkControl: true
+    pkkControl: true,
+    importControl: true
 });
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['search', 'fullscreen',  'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk'],
+    HIDDABLE_CONTROLS: ['search', 'fullscreen',  'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk', 'import'],
         // 'embed',
         // 'zoom'
 
@@ -235,7 +236,7 @@ L.Storage.Map.include({
             new L.Storage.DisableControl(this).addTo(this);
             new L.S.DrawToolbar({map: this}).addTo(this);
             var editActions = [
-                L.S.ImportAction,
+                // L.S.ImportAction,
                 L.S.EditPropertiesAction,
                 L.S.ChangeTileLayerAction,
                 L.S.ManageDatalayersAction,
@@ -260,6 +261,7 @@ L.Storage.Map.include({
         this._controls.scale = L.control.scale();
         this._controls.print = new L.Storage.printControl(this).addTo(this);
         this._controls.pkk = new L.Storage.pkkControl(this).addTo(this);
+        this._controls.import = new L.Storage.importControl(this).addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();

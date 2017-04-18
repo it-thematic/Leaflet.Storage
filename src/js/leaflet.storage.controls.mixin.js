@@ -394,3 +394,26 @@ L.Storage.EditLayerControl = L.Control.extend({
     }
 
 });
+
+L.Storage.importControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-upload storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._('Import data') + ' (Ctrl+I)';
+
+        L.DomEvent
+            .on(link, 'click', L.DomEvent.stop)
+            .on(link, 'click', map.importPanel, map);
+        return container;
+    },
+
+    onClick: function () {
+        window.print();
+    }
+});

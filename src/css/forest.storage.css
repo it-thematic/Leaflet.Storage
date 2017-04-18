@@ -1283,6 +1283,16 @@ cursor: pointer !important;
     border: 1px solid #1b1f20;
 }
 
+.leaflet-control-upload a {
+    background-position: -160px 0;
+}
+
+.leaflet-control-upload.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
+}
 
 
 /*********************************************/
@@ -1343,7 +1353,7 @@ cursor: pointer !important;
     /*line-height: 36px;*/
     opacity: 0.8;
     padding-left: 71px;
-    top:1px;
+    /*top:1px;*/
 }
 
 /*********************************************/
