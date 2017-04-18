@@ -16,13 +16,7 @@ L.S.Layer.WFST= L.WFST.extend({
             style: {
                 color: datalayer.getColor(),
                 weight: 2
-            },
-            // step: function () {
-            //     $('.loader').show();
-            // },
-            // complete: function () {
-            //     $('.loader').hide();
-            // }
+            }
         };
 
         L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options));
@@ -40,7 +34,7 @@ L.S.Layer.WFST= L.WFST.extend({
         catch (e) {
             // Certainly IE8, which has a limited version of defineProperty
         }
-
+        var that = this;
         try {
             Object.defineProperty(this, 'showExisting', {
                 get: function () {
@@ -84,11 +78,11 @@ L.S.Layer.WFST= L.WFST.extend({
 
         }
 
-        var that = this;
         this.on('save:success', function() {
             if (that.datalayer._tilelay) {
                 that.datalayer._tilelay.redraw();
             }
+            that.datalayer.clear();
             that.fire('viewreset');
         });
         this.on('error', function(error) {
@@ -136,6 +130,26 @@ L.S.Layer.WFST= L.WFST.extend({
         this.datalayer.map.fitBounds(this.getBounds())
     },
 
+    _deleteUrl: function(layer) {
+        var template = '/row_delete/{layer}/{id}/';
+        return L.Util.template(template, {layer: layer.datalayer.options.laydescription, id:layer.properties.id})
+    },
+
+    _deleteLayer: function (layer) {
+        if (!!layer.properties.id && layer.state === this.state.insert) {
+            var form_url = this.datalayer._deleteUrl(layer);
+            if (!form_url) {
+                return;
+            }
+            var that = this;
+            this.datalayer.map.post(form_url, {
+                data: '',
+                callback: function (data) {
+                    if (data.success) console.log(data)
+                }
+            })
+        }
+    },
 
     addLayer: function (layer) {
         L.FeatureGroup.prototype.addLayer.call(this, layer);
@@ -166,19 +180,15 @@ L.S.Layer.WFST= L.WFST.extend({
     },
 
     removeLayer: function (layer) {
-        if (!!layer.properties.id && layer.state === this.state.insert) {
-            var form_url = this.datalayer._objectDeleteUrl(layer);
-            if (!form_url) {
-                return;
-            }
-            var that = this;
-            this.datalayer.map.post(form_url, {
-                data: '',
-                callback: function (data) {
-                    if (data.success) console.log(data)
-                }
-            })
-        }
+        this._deleteLayer(layer);
         L.WFST.prototype.removeLayer.call(this, layer);
+    },
+
+    clearLayers: function () {
+        for (var id in this.changes) {
+            var layer = this.changes[id];
+            this._deleteLayer(layer)
+        }
+        L.WFST.prototype.clearLayers.call(this);
     }
 });

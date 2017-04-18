@@ -113,45 +113,6 @@ L.Storage.SearchControl.Mixin = {
         infoRosreet.setAttribute('id','infoRosreestr');
 
         return container;
-
-    },
-
-
-    openPanel: function (map) {
-        var options = {
-            limit: 10,
-            noResultLabel: L._('No results'),
-        }
-        if (map.options.photonUrl) options.url = map.options.photonUrl;
-        var container = L.DomUtil.create('div', '');
-
-        var title = L.DomUtil.create('h3', '', container);
-        title.textContent = L._('Search location');
-        var input = L.DomUtil.create('input', 'photon-input', container);
-
-        /*
-		  ForestMap : Для  вставки списка лесничеств
-        */
-        var input1 = L.DomUtil.create('div', 'listForesteryMap', container);
-
-        var resultsContainer = L.DomUtil.create('div', 'photon-autocomplete', container);
-        this.search = new L.S.Search(map, input, options);
-        var id = Math.random();
-        this.search.on('ajax:send', function () {
-            map.fire('dataloading', {id: id});
-        });
-        this.search.on('ajax:return', function () {
-            map.fire('dataload', {id: id});
-        });
-        this.search.resultsContainer = resultsContainer;
-        mainZamena();
-        map.ui.once('panel:ready', function () {
-
-            input.focus();
-
-        });
-        map.ui.openPanel({data: {html: container}});
-
     }
 };
 L.Storage.SearchControl.include(L.Storage.SearchControl.Mixin);
@@ -182,6 +143,13 @@ L.Storage.DrawToolbar.prototype.appendToContainer = function (container) {
     }
     L.Toolbar.Control.prototype.appendToContainer.call(this, container);
 };
+
+L.Storage.DeleteVertexAction.Mixin = {
+    onClick: function () {
+        if (this.vertex.editor.vertexCanBeDeleted(this.vertex)) this.vertex.delete();
+    }
+};
+L.Storage.DeleteVertexAction.include(L.Storage.DeleteVertexAction.Mixin);
 
 // =====================================================================================================================
 // New stroage actions
@@ -406,13 +374,17 @@ L.Storage.EditLayerControl = L.Control.extend({
 
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
-        link.title = L._('Enable editing layer');
+        if (map.editedLayer) {
+            link.title = L._('Enable editing layer');
+        } else {
+            link.title = L._('Disable editing layer');
+        }
 
         L.DomEvent
             .addListener(link, 'click', L.DomEvent.stop)
             .addListener(link, 'click', function (e) {
                 if (map.editedLayer) {
-                    map.disableEditLayer()
+                    map.askForDisable(e)
                 } else {
                     map.editLayer()
                 }
