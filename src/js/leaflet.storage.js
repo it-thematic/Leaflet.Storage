@@ -708,7 +708,7 @@ L.Storage.Map.include({
             clearLabel = L.DomUtil.create('label', '', container),
             submitInput = L.DomUtil.create('input', '', container),
             map = this, option,
-            types = ['geojson', 'csv', 'gpx', 'kml', 'osm', 'georss', 'umap'];
+            types = ['geojson', 'csv', 'gpx', 'kml', 'osm', 'georss', 'umap', 'excel'];
         title.innerHTML = L._('Import data');
         fileInput.type = 'file';
         fileInput.multiple = 'multiple';

@@ -169,19 +169,68 @@ L.Storage.DataLayer.prototype.save = function () {
     });
 };
 
+// L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
+//     var reader = new FileReader(),
+//         that = this;
+//     var type = type || L.Util.detectFileType(f);
+//     reader.onload = function (e) {
+//         var rawData = e.target.result;
+//         var formData = new FormData();
+//         formData.append('layer', that.options.laydescription);
+//         formData.append('data', rawData);
+//         formData.append('clear', !!clear);
+//         formData.append('type', type);
+//         that.map.post(that._importUrl(), {
+//             data: formData,
+//             responseType: 'Blob',
+//
+//             callback: function (data, response) {
+//                 if (data.status !== 'success') {
+//                     this.map.ui.alert({content: data.note, level: 'error', duration: 30000});
+//                 } else {
+//                     that.isDirty = true;
+//                     that.zoomTo();
+//                     if (data.note) {
+//                         this.map.ui.alert({content: data.note, level: 'info', duration: 30000});
+//                     }
+//                 }
+//             },
+//             context: that
+//         });
+//     };
+//     reader.readAsText(f);
+// };
+
 L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
     var reader = new FileReader(),
         that = this;
     var type = type || L.Util.detectFileType(f);
-    reader.readAsText(f, 'utf8');
     reader.onload = function (e) {
-        var rawData = e.target.result;
+
+        var hex = function(arrayBuffer) {
+            var i, x, hex_tab = "0123456789abcdef",
+              res = [],
+              binarray = new Uint8Array(arrayBuffer);
+            for (i = 0; i < binarray.length; i++) {
+              x = binarray[i];
+              res[i] = hex_tab.charAt((x >> 4) & 0xF) +
+                hex_tab.charAt((x >> 0) & 0xF);
+            }
+            return res.join('');
+          };
+
+        var arr = new Uint8Array(e.target.result);
+        var rawData = hex(arr)
         var formData = new FormData();
         formData.append('layer', that.options.laydescription);
         formData.append('data', rawData);
         formData.append('clear', !!clear);
+        formData.append('type', type);
         that.map.post(that._importUrl(), {
             data: formData,
+            // responseType: 'Blob',
+            // contentType: false,
+            // processData: false,
             callback: function (data, response) {
                 if (data.status !== 'success') {
                     this.map.ui.alert({content: data.note, level: 'error', duration: 30000});
@@ -196,6 +245,7 @@ L.Storage.DataLayer.prototype.importFromFile = function (f, type, clear) {
             context: that
         });
     };
+    reader.readAsArrayBuffer(f);
 };
 
 
