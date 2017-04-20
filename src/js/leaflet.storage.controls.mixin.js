@@ -417,3 +417,24 @@ L.Storage.importControl = L.Control.extend({
         window.print();
     }
 });
+
+L.Storage.tablesemanticControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-table-semantic storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._('Открыть  семантику');
+
+        $(link).click('a', function (evt) {
+            evt.preventDefault();
+            dlgForest.ShowForestMapData(evt,'actions', ''); //TODO : выдьпть первый слой
+            return false;
+        });
+        return container;
+    }
+});

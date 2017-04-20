@@ -1294,6 +1294,17 @@ cursor: pointer !important;
     border: 1px solid #1b1f20;
 }
 
+.leaflet-control-table-semantic a {
+    background-position: -2px -120px;
+}
+
+.leaflet-control-table-semantic.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
+}
+
 
 /*********************************************/
   /*переворачиваем zoom горизонтально*/

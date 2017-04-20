@@ -48,12 +48,13 @@ L.Map.mergeOptions({
     easing: true,
     printControl: true,
     pkkControl: true,
-    importControl: true
+    importControl: true,
+    tablesemanticControl : true
 });
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['search', 'fullscreen',  'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk', 'import'],
+    HIDDABLE_CONTROLS: ['search', 'fullscreen',  'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk', 'import','tablesemantic'],
         // 'embed',
         // 'zoom'
 
@@ -262,6 +263,7 @@ L.Storage.Map.include({
         this._controls.print = new L.Storage.printControl(this).addTo(this);
         this._controls.pkk = new L.Storage.pkkControl(this).addTo(this);
         this._controls.import = new L.Storage.importControl(this).addTo(this);
+        this._controls.tablesemantic = new L.Storage.tablesemanticControl(this).addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();
