@@ -1295,12 +1295,12 @@ cursor: pointer !important;
 }
 
 .leaflet-control-table-semantic a {
-    background-image: url("../img/24-table_list.png");
+    background-image: url("../img/24-list.png");
 }
 
 .leaflet-control-table-semantic.dark a {
     /*background-image: url("../img/24-white.png");*/
-    background-image: url("../img/24-table_list.png");
+    background-image: url("../img/24-list.png");
     background-color: #2a2e30;
     color: #eeeeec;
     border: 1px solid #1b1f20;
