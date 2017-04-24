@@ -105,13 +105,21 @@ L.Storage.SearchControl.Mixin = {
             var widNparcel =  L.DomUtil.create('input', 'widNparcel', elementFormInput);
             widNparcel.setAttribute('id','widNparcel');
 
+            //так как на  форма лежит на карте , а на карту повешен  обработчик onlick
+            // то  при выборе данного  элемента запретить событие onclick
+            $(elementFormInput).click('input', function (evt) {
+                return false
+            });
+            $(elementFormInput).click('select', function (evt) {
+                return false
+            });
+
         var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
         var geomForest =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
         geomForest.setAttribute('id','geomForest');
         var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
         var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
         infoRosreet.setAttribute('id','infoRosreestr');
-
         return container;
     }
 };
