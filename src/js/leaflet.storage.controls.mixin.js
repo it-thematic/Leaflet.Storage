@@ -113,13 +113,34 @@ L.Storage.SearchControl.Mixin = {
             $(elementFormInput).click('select', function (evt) {
                 return false
             });
+            $(elementFormInput).dblclick('input', function (evt) {
+                return false
+            });
+            $(elementFormInput).dblclick('select', function (evt) {
+                return false
+            });
+           
 
         var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
         var geomForest =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
         geomForest.setAttribute('id','geomForest');
+        $(geomForest).dblclick("a", function (evt) {
+                return false
+            });
+        $(geomForest).click("a", function (evt) {
+                return false
+            });
+
         var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
         var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
         infoRosreet.setAttribute('id','infoRosreestr');
+        $(infoRosreet).dblclick("a", function (evt) {
+                return false
+            });
+        $(infoRosreet).click("a", function (evt) {
+                return false
+            });
+
         return container;
     }
 };
