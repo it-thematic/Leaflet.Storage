@@ -1215,6 +1215,9 @@ a.storage-control-text {
     line-height: 24px;
     border-radius: 0px!important;
 }
+.leaflet-control-browse .storage-browse-datalayers {
+    max-height: 50em;
+}
 
 .layer-table-semantic {
 background-image: url("../img/marker.png") !important;
