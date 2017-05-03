@@ -461,7 +461,7 @@ L.Storage.tablesemanticControl = L.Control.extend({
 
         $(link).click('a', function (evt) {
             evt.preventDefault();
-            dlgForest.ShowForestMapData(evt,'actions', ''); //TODO : выдьпть первый слой
+            dlgForest.ShowForestMapData(evt,MAP.options.datalayers[0].laydescription, '');
             return false;
         });
         return container;
