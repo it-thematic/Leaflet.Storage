@@ -137,7 +137,7 @@ L.S.Layer.WFST= L.WFST.extend({
 
     _deleteLayer: function (layer) {
         if (!!layer.properties.id && layer.state === this.state.insert) {
-            var form_url = this.datalayer._deleteUrl(layer);
+            var form_url = this._deleteUrl(layer);
             if (!form_url) {
                 return;
             }
