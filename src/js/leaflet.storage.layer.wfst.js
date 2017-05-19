@@ -43,6 +43,8 @@ L.S.Layer.WFST= L.WFST.extend({
                 set: function (value) {
                     this.options.showExisting = value;
                     if (value) {
+                        this.options.typeName = this.datalayer.options.laydescription;
+                        this.options.typeNSName = this.namespaceName(this.options.typeName);
                         this.requestFeatures(null, function(rt) {
                             that._parseFeature(rt);
                             that.isValid = true;

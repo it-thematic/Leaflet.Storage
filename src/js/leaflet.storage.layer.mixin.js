@@ -20,7 +20,8 @@ DataLayerMixin = {
     },
 
     isWFSTLayer: function () {
-        return this.isRemoteLayer() && this.options.type === 'WFST';
+//        return this.isRemoteLayer() && this.options.type === 'WFST';
+        return this.options.type === 'WFST';
     },
 
     featuresToRemoteData: function () {
