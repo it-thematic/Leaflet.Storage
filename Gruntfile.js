@@ -30,7 +30,8 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'node_modules/osmtogeojson/', src: ['osmtogeojson.js'], dest: 'reqs/osmtogeojson/'},
           {expand: true, cwd: 'node_modules/georsstogeojson/', src: ['GeoRSSToGeoJSON.js'], dest: 'reqs/georsstogeojson/'},
           {expand: true, cwd: 'node_modules/togpx/', src: ['togpx.js'], dest: 'reqs/togpx/'},
-          {expand: true, cwd: 'node_modules/tokml/', src: ['tokml.js'], dest: 'reqs/tokml/'}
+          {expand: true, cwd: 'node_modules/tokml/', src: ['tokml.js'], dest: 'reqs/tokml/'},
+          {expand: true, cwd: 'node_modules/leaflet-wfst/dist', src: ['Leaflet-WFST.src.js'], dest: 'reqs/wfst'}
         ]
       }
     }
