@@ -93,6 +93,8 @@ L.Storage.SearchControl.Mixin = {
     onAdd: function (map) {
 
         var container = L.DomUtil.create('div', 'leaflet-control-search storage-control');
+        //блокируем область
+        L.DomEvent.disableClickPropagation(container);
         var elementFormInput = L.DomUtil.create('div', 'element_form_input', container);
             var widForestry =  L.DomUtil.create('select', 'widForestry', elementFormInput);
             widForestry.setAttribute('data-live-search','true');
@@ -104,22 +106,8 @@ L.Storage.SearchControl.Mixin = {
             widNblock.setAttribute('id','widNblock');
             var widNparcel =  L.DomUtil.create('input', 'widNparcel', elementFormInput);
             widNparcel.setAttribute('id','widNparcel');
+         
 
-            //так как на  форма лежит на карте , а на карту повешен  обработчик onlick
-            // то  при выборе данного  элемента запретить событие onclick
-            $(elementFormInput).click('input', function (evt) {
-                return false
-            });
-            $(elementFormInput).click('select', function (evt) {
-                return false
-            });
-            $(elementFormInput).dblclick('input', function (evt) {
-                return false
-            });
-            $(elementFormInput).dblclick('select', function (evt) {
-                return false
-            });
-           
 
         var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
         var geomForest =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
