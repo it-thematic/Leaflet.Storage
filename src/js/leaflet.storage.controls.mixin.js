@@ -455,3 +455,186 @@ L.Storage.tablesemanticControl = L.Control.extend({
         return container;
     }
 });
+
+L.Storage.searchcontextControl = L.Control.extend({
+    options:{
+        position : "topleft"
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-searchcontext storage-control');
+        //блокируем область
+        L.DomEvent.disableClickPropagation(container);
+        var aisumz_search = L.DomUtil.create('div','aisumz-search', container);
+        var search_input =  L.DomUtil.create('input', 'search-input', aisumz_search);
+            search_input.setAttribute('data-live-search','true');
+            search_input.setAttribute('id','search_input');
+            search_input.setAttribute('placeholder',"Поиск по кадастровому номеру");
+
+
+        var search_cadnum = L.DomUtil.create('a', '', container);
+        search_cadnum.setAttribute('id','search_cadnum');
+
+         $(search_cadnum).click('a', function (evt) {
+            evt.preventDefault();
+            dlgForest.SearchContextCadNumber(evt,$(search_input).val(),'dizovo_umz_umzparcel');
+            return false;
+        });
+
+         $(search_input).on('keydown',function (evt) {
+             if (evt.keyCode === L.S.Keys.ENTER) {
+                evt.preventDefault();
+                dlgForest.SearchContextCadNumber(evt,$(search_input).val(),'dizovo_umz_umzparcel');
+                return false;
+             }
+         });
+
+        return container;
+    }
+
+});
+
+
+L.Storage.reportControls = L.Control.extend({
+    geometry: null,
+    editable: null,
+    VK_DELETE: 46,
+    lreport : null,
+
+    options: {
+        position: 'topleft'
+    },
+
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-report storage-control');
+
+        var poly = L.DomUtil.create('a', 'poly', container);
+        poly.href = '#';
+        poly.title = 'Нарисовать полигон';
+
+        L.DomEvent
+            .on(poly, 'click', L.DomEvent.stop)
+            .on(poly, 'click', this.preCreateReport, this);
+        return container;
+    },
+
+    preCreateReport: function () {
+        if (!lsel.isEmpty()) lreport.addLayer(L.polygon(lsel.getLatLngs()));
+        if (lreport.getLayers().length != 0) {
+            this.askCreate()
+        } else {
+            this.geometry = this.createGeometry();
+        }
+    },
+
+     createReport: function () {
+        console.log(lreport.toGeoJSON());
+
+        var geojson = lreport.toGeoJSON();
+        var formData = new FormData();
+        formData.append('geojson', JSON.stringify(geojson));
+
+        var param = {};
+        for (var pair of formData.entries()) {
+            param[pair[0]] = pair[1]
+        }
+        window.open(this._getUrlReport(jQuery.param(param)), '_blank');
+        lreport.clearLayers()
+    },
+        askCreate: function () {
+        var that = this;
+        var box = L.DomUtil.create('div', 'report-confirm-box dark', document.body);
+        var builder = new L.S.FormBuilder(this._map, [
+            ['add', {
+                handler: L.FormBuilder.ControlChoice,
+                label: 'Добавить объект?',
+                choices: [
+                    [true, 'Добавить объект'],
+                    [false, 'Сформировать отчет'],
+                    ['null', 'Очистить']
+                ],
+                callback: function (e) {
+                    L.DomUtil.removeClass(document.body, 'report-confirm-on');
+                    var value = e.helper.toJS();
+                    if (value == null) {
+                        lreport.clearLayers();
+                        return;
+                    }
+                    if (!value) {
+                        that.createReport();
+                    } else {
+                        that.createGeometry();
+                    }
+                }
+            }]
+        ]);
+        var form = builder.build();
+        var checked = form.querySelector('input[type="radio"]:checked');
+        if (checked) checked.checked = false;
+        box.appendChild(form);
+        L.DomUtil.addClass(document.body, 'report-confirm-on');
+    },
+
+    createGeometry: function () {
+        return this.editable.startPolygon();
+    },
+
+     _onToggleEdit: function (e) {
+        e.layer.toggleEdit(e);
+    },
+
+    _onNewHole: function (e) {
+        e.layer.newHole(e.latlng)
+    },
+
+    _onDelete: function (e) {
+        if (e.layer._latlngs && e.layer._latlngs.length < e.layer.editor.MIN_VERTEX) lreport.removeLayer(e.layer)
+    },
+
+    _getUrlReport: function (param) {
+        var template, url;
+        template = '/spatialreport/?{param}';
+        url = L.Util.template(template, {param: param});
+        return url;
+    },
+
+     initialize: function (map, options) {
+        L.Control.prototype.initialize.call(this, map, options);
+        lreport = L.featureGroup([]).addTo(map);
+        this.editable = new L.Editable(map, {
+            featuresLayer: lreport
+        });
+
+        this.editable.on('editable:drawing:cancel', this._onDelete);
+
+        lreport
+            .on('click', L.DomEvent.stop)
+            .on('click', function (e) {
+                if (e.originalEvent.shiftKey) this._onToggleEdit(e);
+                if (e.originalEvent.ctrlKey) this._onNewHole(e);
+            }, this);
+
+        L.DomEvent.addListener(document, 'keydown', function (e) {
+            if (e.keyCode === L.S.Keys.ESC) {
+                if (this.editable.drawing()) this.editable.stopDrawing();
+            }
+            if (e.keyCode === L.S.Keys.ENTER) {
+                if (this.editable.drawing()) this.editable.commitDrawing();
+            }
+            if (e.keyCode === this.VK_DELETE) {
+                var _layers = lreport.getLayers();
+                for (var i in _layers) {
+                    if (_layers[i].editEnabled()) {
+                        lreport.removeLayer(_layers[i]);
+                    }
+                }
+                delete _layers;
+            }
+        }, this);
+    },
+
+
+
+});
+

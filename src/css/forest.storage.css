@@ -1588,6 +1588,7 @@ button.leaflet-control-edit-disable{
     float: left;
     margin-left: 2px;
 }
+
    /*элементы формы общей фильтрации по лесничеству  , уч. лесни. кв вд*/
 .element_form_input select{
     height: 36px;
@@ -1608,6 +1609,75 @@ button.leaflet-control-edit-disable{
     background-color: inherit;
     color: white;
 }
+/*
+      SearchContext
+*/
+/*.leaflet-control-searchcontext{*/
+    /*!*background:  none;*!*/
+    /*!*border-radius: 0;*!*/
+    /*!*border: 0;*!*/
+/*}*/
+/*.leaflet-control-searchcontext:hover*/
+/*{*/
+    /*!*background: none !important;*!*/
+    /*!*border-radius: 0 !important;*!*/
+    /*!*border: 0 !important;*!*/
+/*}*/
+
+/*.leaflet-control-searchcontext div{*/
+    /*!*float: left;*!*/
+    /*!*margin-left: 2px;*!*/
+/*}*/
+.leaflet-control-searchcontext{
+    width: 200px;
+    height:  38px;
+    display: inline-flex;
+    background: none !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    background: #2a2e30;
+}
+.leaflet-control-searchcontext a {
+    background-image: url("../img/24-list.png");
+}
+
+.leaflet-control-searchcontext.dark a {
+    /*background-image: url("../img/24-white.png");*/
+    background-image: url("../img/24-list.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
+}
+
+
+.serach_context_form input{
+    /*height: 36px;*/
+    /*width: 85px;*/
+    /*!*border: 1px;*!*/
+    /*margin-left: 2px;*/
+    /*!*border-radius: 0;*!*/
+    /*background-color: inherit;*/
+    /*color: white;*/
+    float: right;
+    height: 36px;
+    display: inline-block;
+    background-color: #55585a;
+
+}
+.aisumz-search{
+    height: 37px;
+}
+.search-input{
+    height: 100%;
+}
+.search-buttons{
+    height: 100%;
+    width: 35px;
+}
+#search_cadnum{
+    height: 100%;
+    width: 100%;
+}
 
 .forest-control-filter,
 .forest-control-rosreestr{
@@ -1615,6 +1685,8 @@ button.leaflet-control-edit-disable{
     border: 1px solid #bbb;
     margin-top: 0px !important;
     display: block;
+    /*height: 37px;*/
+    /*width: 37px;*/
 }
 .forest-control-filter a {
     background-position: -42px -122px;
