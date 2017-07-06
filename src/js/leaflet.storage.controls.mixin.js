@@ -462,17 +462,20 @@ L.Storage.searchcontextControl = L.Control.extend({
     },
 
     onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-searchcontext storage-control');
+        var container = L.DomUtil.create('div', 'leaflet-control-searchcontextCadNum storage-control');
         //блокируем область
         L.DomEvent.disableClickPropagation(container);
-        var aisumz_search = L.DomUtil.create('div','aisumz-search', container);
-        var search_input =  L.DomUtil.create('input', 'search-input', aisumz_search);
+
+
+        var aisumz_search = L.DomUtil.create('div','umz-search', container);
+          var search_input =  L.DomUtil.create('input', 'search_input', aisumz_search);
             search_input.setAttribute('data-live-search','true');
             search_input.setAttribute('id','search_input');
             search_input.setAttribute('placeholder',"Поиск по кадастровому номеру");
 
 
-        var search_cadnum = L.DomUtil.create('a', '', container);
+        var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
+        var search_cadnum =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
         search_cadnum.setAttribute('id','search_cadnum');
 
          $(search_cadnum).click('a', function (evt) {
@@ -487,6 +490,24 @@ L.Storage.searchcontextControl = L.Control.extend({
                 dlgForest.SearchContextCadNumber(evt,$(search_input).val(),'dizovo_umz_umzparcel');
                 return false;
              }
+         });
+         $('.search-input').on('keyup',function (e) {
+                if (e.which ===17) {
+                    e.preventDefault();
+                    $('.search-input').focus();
+                }
+                else{
+                    if (e.keyCode === L.S.Keys.ESC){
+                        $('.search-input').cleanData();
+                    }
+                    else {
+                        if (e.which !== 0 && !e.ctrlKey && !e.metaKey && !e.altKey && e.keyCode !== 114 && e.keyCode !== 70) {
+                            dlgForest.SearchContextCadNumber(e, $(search_input).val(), 'dizovo_umz_umzparcel');
+                        }
+                    }
+                }
+                return false;
+
          });
 
         return container;
