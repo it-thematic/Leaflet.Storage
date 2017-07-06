@@ -470,7 +470,7 @@ L.Storage.searchcontextControl = L.Control.extend({
         var aisumz_search = L.DomUtil.create('div','umz-search', container);
           var search_input =  L.DomUtil.create('input', 'search_input', aisumz_search);
             search_input.setAttribute('data-live-search','true');
-            search_input.setAttribute('id','search_input');
+            // search_input.setAttribute('id','search_input');
             search_input.setAttribute('placeholder',"Поиск по кадастровому номеру");
 
 
