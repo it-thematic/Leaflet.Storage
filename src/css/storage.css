@@ -9,6 +9,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    cursor: default !important;
 }
 
 .clearafter:after {
@@ -98,9 +99,9 @@ a.storage-control-text {
     font-size: 0.8em;
 }
 .leaflet-control-edit-enable a {
-    background-image: url("../img/24-white.png");
+    background-image: url("../img/24.png");
     background-position: -1px -1px;
-    background-color: #353c3e;
+    background-color: #fff;
 }
 
 
@@ -168,7 +169,7 @@ ul.photon-autocomplete {
     margin-top: 0;
     vertical-align: top;
     border-bottom: none;
-    background-color: #323737;
+    background-color: #fff;
     border-right: 1px solid #eee;
     background-repeat: no-repeat;
     background-image: url("../img/24.png");
@@ -176,11 +177,11 @@ ul.photon-autocomplete {
 }
 
 .leaflet-control-toolbar li .leaflet-toolbar-icon.dark {
-    background-image: url("../img/24-white.png");
+    background-image: url("../img/24.png");
 }
 
 .leaflet-control-toolbar .leaflet-toolbar-icon.dark:hover {
-    background-color: #353c3e;
+    background-color: #ccc;
 }
 
 

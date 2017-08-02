@@ -11,17 +11,22 @@ hr, input, textarea {
 /* *********** */
 /*    forms    */
 /* *********** */
-input[type="text"], input[type="password"], input[type="date"],
+
+a {
+    color: #666 !important;
+}
+
+input, input[type="text"], input[type="password"], input[type="date"],
 input[type="datetime"], input[type="email"], input[type="number"],
 input[type="search"], input[type="tel"], input[type="time"],
 input[type="url"], textarea {
-    background-color: white;
-    border: 1px solid #CCCCCC;
-    border-radius: 2px 2px 2px 2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
-    color: rgba(0, 0, 0, 0.75);
+    background-color: white !important;
+    border: 1px solid #ccc !important;
+    border-radius: 2px;
+/*    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;*/
+    color: #666 !important;
     display: block;
-    font-family: inherit;
+/*    font-family: inherit;*/
     font-size: 14px;
     height: 32px;
     margin: 0 0 14px;
@@ -45,9 +50,9 @@ select {
     width: 100%;
     height: 28px;
     line-height: 28px;
-    color: #efefef;
-    border: 1px solid #222;
-    background-color: #393F3F;
+    color: #666 !important;
+    border: 1px solid #ccc !important;
+    background-color: #fff;
     margin-top: 5px;
 }
 select[multiple="multiple"] {
@@ -55,7 +60,7 @@ select[multiple="multiple"] {
 }
 .button, input[type="submit"] {
     display: block;
-    margin-bottom: 14px;
+/*    margin-bottom: 14px;*/
     text-align: center;
     border-radius: 2px;
     font-weight: normal;
@@ -64,16 +69,17 @@ select[multiple="multiple"] {
     width: 100%;
     min-height: 32px;
     line-height: 32px;
+    height: auto;
     border: none;
     text-decoration: none;
 }
 .dark .button {
-    background-color: #2a2e30;
-    color: #eeeeec;
-    border: 1px solid #1b1f20;
+    background-color: #fff;
+    color: #666;
+    border: 1px solid #ccc;
 }
 .dark .button:hover, .dark input[type="submit"]:hover {
-    background-color: #2e3436;
+    background-color: #fff;
 }
 .help-text, .helptext {
     display: block;
@@ -91,6 +97,7 @@ input + .help-text {
     min-height: 36px;
     line-height: 28px;
     margin-bottom: 14px;
+    height: auto;
 }
 .formbox.with-switch {
     padding-top: 2px;
@@ -120,11 +127,15 @@ input + .error {
     font-size: 11px;
     border-radius: 0 2px;
 }
+
+input[type="file"] {
+    height: auto;
+}
 input[type="file"] + .error {
     margin-top: 0;
 }
 .fieldset {
-    border: 1px solid #222;
+    border: 1px solid #ccc;
     margin-bottom: 5px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
@@ -146,10 +157,10 @@ input[type="file"] + .error {
     text-align: center;
     display: block;
     cursor: pointer;
-    background-color: #232729;
+    background-color: #fff;
     height: 30px;
     line-height: 30px;
-    color: #fff;
+    color: #666;
     margin: 0;
     font-family: fira_sanslight;
     font-size: 1.2em;
@@ -172,7 +183,7 @@ input.switch:empty ~ label {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+/*    text-shadow: 0 1px rgba(0, 0, 0, 0.1);*/
     width: 80px;
 }
 input.switch:empty ~ label:before,
@@ -241,8 +252,9 @@ input.switch:checked ~ label:after {
     width: calc(100% / 4);
 }
 .dark .storage-multiplechoice label {
-    border: 1px solid black;
-    background-color: #2c3233;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: #fff;
 }
 .storage-multiplechoice input[type='radio']:checked + label {
     background-color: #215d9c;
@@ -342,9 +354,9 @@ i.info {
 
 
 #storage-ui-container.dark {
-    border-left: 1px solid #222;
-    background-color: #323737;
-    color: #efefef;
+    border-left: 1px solid #eee;
+    background-color: #fff;
+    color: #666;
 }
 #storage-ui-container.fullwidth {
     width: 100%;
@@ -539,20 +551,22 @@ i.info {
 
 
 .dark .storage-close-icon {
-    background-image: url("../img/16-white.png?cb8888ec808e");
+    background-image: url("../img/16.png?cb8888ec808e");
 }
 .dark .storage-close-link {
-    border: 1px solid #202425;
-    color: #eeeeec;
+    border: 1px solid #ccc !important;
+    color: #666 !important;
     padding: 0 7px;
     line-height: 32px;
-    background-color: #323737;
+    background-color: #fff;
 }
 .dark .storage-close-link:hover {
-    background-color: #2e3436;
+    background-color: #ccc !important;
+    border: 1px solid #aaa !important;
+    color: #444 !important;
 }
 .storage-alert .storage-close-link {
-    color: #fff;
+    color: #666;
     float: right;
     padding-right: 10px;
 }
@@ -1298,12 +1312,12 @@ cursor: pointer !important;
 }
 
 .leaflet-control-table-semantic a {
-    background-image: url("../img/24-list.png");
+    background-image: url("../img/table.png");
 }
 
 .leaflet-control-table-semantic.dark a {
     /*background-image: url("../img/24-white.png");*/
-    background-image: url("../img/24-list.png");
+    background-image: url("../img/table.png");
     background-color: #2a2e30;
     color: #eeeeec;
     border: 1px solid #1b1f20;
@@ -1368,7 +1382,6 @@ cursor: pointer !important;
     /*line-height: 36px;*/
     opacity: 0.8;
     padding-left: 71px;
-
 }
 
 /*********************************************/
@@ -1377,6 +1390,7 @@ cursor: pointer !important;
 
 .leaflet-left .leaflet-control-edit-enable {
     float: right !important;
+    background-color: #fff !important;
 }
 
 .leaflet-control-container > .leaflet-left div {
@@ -1385,12 +1399,22 @@ cursor: pointer !important;
     margin-top: 1px;
 }
 
+.leaflet-top, .leaflet-left, .ui-widget  {
+    opacity: 1 !important;
+    background-color: #fff !important;
+}
+
+#dialog {
+    margin: 10px !important;
+}
+
 /*********************************************/
 /*Опустили правый блок вниз на ширину панели*/
 /*********************************************/
 .leaflet-control-container > .leaflet-right{
     margin-top :50px !important;
 }
+
 /*********************************************/
 /*======================================== Кнопка EDITLAYER сильно вправо ================================================*/
 /*********************************************/
@@ -1433,7 +1457,7 @@ cursor: pointer !important;
     min-width: 100px;
     min-height: 36px;
     line-height: 36px;
-
+    color: black !important;
     letter-spacing: 1px;
     text-align: center;
     font-size: 11px;
@@ -1441,7 +1465,7 @@ cursor: pointer !important;
 }
 
 .leaflet-control .edit-button {
-    color: #eeeeec;
+/*    color: #333 !important;*/
 }
 
 /*========== СОХРАНИТЬ =========*/
@@ -1576,6 +1600,7 @@ button.leaflet-control-edit-disable{
     background: none;
     border-radius: 0;
     border: 0;
+    width: auto;
 }
 .leaflet-control-search:hover
 {
@@ -1618,11 +1643,62 @@ button.leaflet-control-edit-disable{
     border: 1px solid #bbb;
     margin-top: 0px !important;
     display: block;
+    margin-right: 50px;
     /*height: 37px;*/
     /*width: 37px;*/
 }
 .forest-control-filter a {
     background-position: -42px -122px;
+    display: block;
+}
+
+.leaflet-control {
+    border: none !important;
+    margin-left: 3px !important;
+}
+
+.leaflet-control:hover {
+    border-radius: 1px !important;
+}
+
+.search_input {
+    border-radius: 2px !important;
+    padding: 5px !important;
+    border: 1px solid #ccc !important;
+    background-color: #eee !important;
+}
+
+.search_input:focus {
+    background-color: #fff !important;
+}
+
+.widNblock, .widNparcel, .widForestry, .widLforestry {
+    border-radius: 2px !important;
+    color: #666 !important;
+    border: 1px solid #ccc !important;
+    float: left !important;
+}
+
+.widNblock, .widNparcel {
+    background-color: #eee !important;
+    padding: 5px !important;
+    width: 50px !important;
+}
+
+.widNblock:focus, .widNparcel:focus {
+    background-color: #fff !important;
+    padding: 5px !important;
+
+}
+
+.leaflet-control-searchcontextCadNum {
+    float: right !important;
+}
+
+#geomForest {
+    background: url("../img/mapsearch.png");
+    background-repeat: no-repeat;
+    background-position: center;
     display: block;
 }
 

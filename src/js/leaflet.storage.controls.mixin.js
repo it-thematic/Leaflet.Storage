@@ -70,12 +70,12 @@ L.Storage.TileLayerControl.Mixin = {
             if (L.DomUtil.hasClass(container, 'leaflet-control-tilelayers')) {
                 this._tilelayers_container = L.DomUtil.create('ul', 'storage-tilelayer-switcher-container');
                 this.buildList(options);
-                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers');
-                L.DomUtil.addClass(container, 'leaflet-control-tilelayers-enable');
+//                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers');
+//                L.DomUtil.addClass(container, 'leaflet-control-tilelayers-enable');
             } else {
-                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers-enable');
-                L.DomUtil.addClass(container, 'leaflet-control-tilelayers');
-                this._map.ui.closePanel();
+//                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers-enable');
+//                L.DomUtil.addClass(container, 'leaflet-control-tilelayers');
+//                this._map.ui.closePanel();
             }
         }
     }
@@ -106,6 +106,11 @@ L.Storage.SearchControl.Mixin = {
             widNblock.setAttribute('id','widNblock');
             var widNparcel =  L.DomUtil.create('input', 'widNparcel', elementFormInput);
             widNparcel.setAttribute('id','widNparcel');
+        
+        widNblock.setAttribute('placeholder', 'кв.');
+        widNparcel.setAttribute('placeholder', 'выд.');
+        widForestry.setAttribute('placeholder', 'Лесничество');
+        widLforestry.setAttribute('placeholder', 'Уч. лесничество');
          
 
 
@@ -119,15 +124,15 @@ L.Storage.SearchControl.Mixin = {
                 return false
             });
 
-        var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
-        var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
-        infoRosreet.setAttribute('id','infoRosreestr');
-        $(infoRosreet).dblclick("a", function (evt) {
-                return false
-            });
-        $(infoRosreet).click("a", function (evt) {
-                return false
-            });
+//        var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
+//        var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
+//        infoRosreet.setAttribute('id','infoRosreestr');
+//        $(infoRosreet).dblclick("a", function (evt) {
+//                return false
+//            });
+//        $(infoRosreet).click("a", function (evt) {
+//                return false
+//            });
 
         return container;
     }
@@ -532,7 +537,7 @@ L.Storage.reportControls = L.Control.extend({
 
         var poly = L.DomUtil.create('a', 'poly', container);
         poly.href = '#';
-        poly.title = 'Нарисовать полигон';
+        poly.title = 'Пространственный отчет';
 
         L.DomEvent
             .on(poly, 'click', L.DomEvent.stop)

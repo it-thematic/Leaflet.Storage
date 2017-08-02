@@ -464,7 +464,10 @@ L.Storage.DataLayersControl = L.Control.extend({
         toggle.href = '#';
 
         L.DomEvent
-            .on(toggle, 'click', L.DomEvent.stop);
+            .on(toggle, 'click', L.DomEvent.stop)
+            .on(toggle, 'click', this.openPanel, this)
+            .on(toggle, 'dblclick', L.DomEvent.stopPropagation);
+
 
         L.DomEvent
             .on(link, 'click', L.DomEvent.stop)
@@ -474,32 +477,32 @@ L.Storage.DataLayersControl = L.Control.extend({
             this.update();
         }, this);
 
-        if (!L.Browser.touch) {
-            L.DomEvent.disableClickPropagation(container);
-            L.DomEvent.on(container, 'mousewheel', L.DomEvent.stopPropagation);
-            L.DomEvent.on(container, 'MozMousePixelScroll', L.DomEvent.stopPropagation);
-            L.DomEvent.on(container, {
-                mouseenter: this.expand,
-                mouseleave: this.collapse
-            }, this);
-        } else {
-            L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-            L.DomEvent.on(toggle, 'click', L.DomEvent.stop)
-                      .on(toggle, 'click', this.expand, this);
-            map.on('click', this.collapse, this);
-        }
+//        if (!L.Browser.touch) {
+//            L.DomEvent.disableClickPropagation(container);
+//            L.DomEvent.on(container, 'mousewheel', L.DomEvent.stopPropagation);
+//            L.DomEvent.on(container, 'MozMousePixelScroll', L.DomEvent.stopPropagation);
+//            L.DomEvent.on(container, {
+////                mouseenter: this.expand,
+////                mouseleave: this.collapse
+//            }, this);
+//        } else {
+//            L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
+//            L.DomEvent.on(toggle, 'click', L.DomEvent.stop)
+////                      .on(toggle, 'click', this.expand, this);
+////            map.on('click', this.collapse, this);
+//        }
 
         return container;
     },
 
     onAdd: function (map) {
         if (!this._container) this._initLayout(map);
-        if (map.options.datalayersControl === 'expanded') this.expand();
+//        if (map.options.datalayersControl === 'expanded') this.expand();
         return this._container;
     },
 
     onRemove: function (map) {
-        this.collapse();
+//        this.collapse();
     },
 
     update: function () {
@@ -511,14 +514,14 @@ L.Storage.DataLayersControl = L.Control.extend({
         }
     },
 
-    expand: function () {
-        L.DomUtil.addClass(this._container, 'expanded');
-    },
-
-    collapse: function () {
-        if (this._map.options.datalayersControl === 'expanded') return;
-        L.DomUtil.removeClass(this._container, 'expanded');
-    },
+//    expand: function () {
+//        L.DomUtil.addClass(this._container, 'expanded');
+//    },
+//
+//    collapse: function () {
+//        if (this._map.options.datalayersControl === 'expanded') return;
+//        L.DomUtil.removeClass(this._container, 'expanded');
+//    },
 
     addDataLayer: function (container, datalayer, draggable) {
         var datalayerLi = L.DomUtil.create('li', '', container);
@@ -538,7 +541,7 @@ L.Storage.DataLayersControl = L.Control.extend({
     },
 
     openPanel: function () {
-        if (!this.map.editEnabled) return;
+        //if (!this.map.editEnabled) return;
         var container = L.DomUtil.create('ul', 'storage-browse-datalayers');
         this.map.eachDataLayerReverse(function (datalayer) {
             this.addDataLayer(container, datalayer, true);
@@ -763,7 +766,7 @@ L.Storage.TileLayerControl = L.Control.extend({
         this._map.eachTileLayer(function (tilelayer) {
             this.addTileLayerElement(tilelayer, options);
         }, this);
-        this._map.ui.openPanel({data: {html: this._tilelayers_container}, className: options.className});
+        this._map.ui.openPanel({data: {html: this._tilelayers_container}, className: 'dark'});
     },
 
     //TODO: ForestMap  - добавление на нижний толбар открытия легенды

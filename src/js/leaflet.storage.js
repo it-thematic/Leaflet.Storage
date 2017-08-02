@@ -22,7 +22,7 @@ L.Map.mergeOptions({
     embedControl: true,
     zoomControl: true,
     datalayersControl: true,
-    searchControl: true,
+    
     editInOSMControl: false,
     editInOSMControlOptions: false,
     scaleControl: true,
@@ -50,7 +50,8 @@ L.Map.mergeOptions({
     pkkControl: true,
     importControl: true,
     tablesemanticControl : true,
-    searchcontextControl  : true
+    searchcontextControl  : true,
+    searchControl: true
     // reportControl : true
 });
 
