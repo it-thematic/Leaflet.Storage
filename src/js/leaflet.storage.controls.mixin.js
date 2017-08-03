@@ -491,7 +491,7 @@ L.Storage.searchcontextControl = L.Control.extend({
                 return false;
              }
          });
-         $(search_input).on('keyup',function (e) {
+         $('.search-input').on('keyup',function (e) {
                 if (e.which ===17) {
                     e.preventDefault();
                     $('.search-input').focus();
