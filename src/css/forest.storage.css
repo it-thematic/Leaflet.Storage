@@ -1546,7 +1546,9 @@ cursor: pointer !important;
 }
 
 #submitbutton {
-    color: limegreen !important;
+    color: darkgreen !important;
+    border: 2px solid darkgreen !important;
+    margin-top: 15px !important;
 }
 
 #submitbutton:hover {
@@ -1555,7 +1557,10 @@ cursor: pointer !important;
 }
 
 #cancel {
-    color: red !important;
+    color: darkred !important;
+    border: 2px solid darkred !important;
+    margin-top: 5px !important;
+    bottom: 15px !important;
 }
 
 #cancel:hover {
