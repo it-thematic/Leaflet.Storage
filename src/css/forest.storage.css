@@ -8,12 +8,39 @@ hr, input, textarea {
     margin: 0;
 }
 
+#map {
+    cursor: default !important;
+}
+
 /* *********** */
 /*    forms    */
 /* *********** */
 
 a {
     color: #666 !important;
+}
+
+.leaflet-control-edit-enable a {
+    background-image: url("../img/24.png") !important;
+    background-color: #fff !important;
+}
+
+leaflet-control-toolbar > li > .leaflet-toolbar-icon,
+.storage-toolbar a,
+.storage-toolbar a:hover {
+    background-color: #fff !important;
+}
+
+.leaflet-toolbar-icon {
+    background-color: #fff !important;
+}
+
+.leaflet-control-toolbar li .leaflet-toolbar-icon.dark {
+    background-image: url("../img/24.png") !important;
+}
+
+.leaflet-control-toolbar .leaflet-toolbar-icon.dark:hover {
+    background-color: #ccc !important;
 }
 
 input, input[type="text"], input[type="password"], input[type="date"],
@@ -1445,7 +1472,7 @@ cursor: pointer !important;
 
 .storage-edit-layer-enabled .leaflet-control-edit-layer a,
 .storage-edit-layer-enabled .leaflet-control-edit-layer.dark a {
-    background-color: #ff0000;
+    background-color: #ccc;
     margin-right: 0;
 }
 
@@ -1486,7 +1513,7 @@ cursor: pointer !important;
 .leaflet-control-edit-save a,
 .leaflet-control-edit-cancel a {
     color: #f8f8f8;
-    width: auto;;
+    width: auto;
     height: 36px;
     line-height: 36px;
     min-height: 36px;
@@ -1497,6 +1524,7 @@ cursor: pointer !important;
 .leaflet-control-edit-cancel a
 {
     background-color: #C60F13;
+    color: #fff !important;
 }
 
 .leaflet-control-edit-save a
@@ -1504,6 +1532,7 @@ cursor: pointer !important;
     opacity: 0.5;
     cursor: not-allowed;
     background-color: #215d9c;
+    color: #fff !important;
 }
 
 .storage-is-dirty .leaflet-control-edit-save a
@@ -1625,6 +1654,10 @@ button.leaflet-control-edit-disable{
     /*background-color: red;*/
 }
 
+.leaflet-measure-control {
+    color: #444 !important;
+}
+
 .element_form_input input{
     height: 36px;
     width: 35px;
@@ -1635,6 +1668,9 @@ button.leaflet-control-edit-disable{
     color: white;
 }
 
+#FilterDIalog, #EditRowDIalog {
+    color: #666 !important;
+}
 
 
 .forest-control-filter,

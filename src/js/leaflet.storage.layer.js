@@ -81,7 +81,9 @@ L.S.Layer.Heat = L.HeatLayer.extend({
         if (layer instanceof L.Marker) {
             var latlng = layer.getLatLng(), alt;
             if (this.datalayer.options.heat && this.datalayer.options.heat.intensityProperty) {
+                /** IT */
                 alt = parseFloat(layer.properties[this.datalayer.options.heat.intensityProperty || 0]);
+                /** */
                 latlng = new L.LatLng(latlng.lat, latlng.lng, alt);
             }
             this.addLatLng(latlng);
@@ -407,10 +409,11 @@ L.Storage.DataLayer = L.Class.extend({
 
     removeLayer: function (feature) {
         var id = L.stamp(feature);
+        feature.disconnectFromDataLayer(this); // 03.08.2017 from last UMAP commit
         this._index.splice(this._index.indexOf(id), 1);
         delete this._layers[id];
         this.layer.removeLayer(feature);
-        feature.disconnectFromDataLayer(this);
+//        feature.disconnectFromDataLayer(this);
         if (this.hasDataLoaded()) this.fire('datachanged');
     },
 
@@ -672,24 +675,44 @@ L.Storage.DataLayer = L.Class.extend({
         this.clear();
         delete this._loaded;
     },
-
+    
+    /** #TODO: umap */
     reset: function () {
-        if (!this.storage_id) { this.erase(); }
-        else {
-            this.resetOptions();
-            this.parentPane.appendChild(this.pane);
-            if (this._leaflet_events_bk && !this._leaflet_events) {
-                this._leaflet_events = this._leaflet_events_bk;
-            }
-            this.clear();
-            this.hide();
-            if (this.isRemoteLayer()) this.fetchRemoteData();
-            else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
-            this._loaded = true;
-            this.show();
-            this.isDirty = false;
+        if (!this.storage_id) this.erase();
+
+        this.resetOptions();
+        this.parentPane.appendChild(this.pane);
+        if (this._leaflet_events_bk && !this._leaflet_events) {
+            this._leaflet_events = this._leaflet_events_bk;
         }
+        this.clear();
+        this.hide();
+        if (this.isRemoteLayer()) this.fetchRemoteData();
+        else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
+        this._loaded = true;
+        this.show();
+        this.isDirty = false;
     },
+    
+    /** */
+
+//    reset: function () {
+//        if (!this.storage_id) { this.erase(); }
+//        else {
+//            this.resetOptions();
+//            this.parentPane.appendChild(this.pane);
+//            if (this._leaflet_events_bk && !this._leaflet_events) {
+//                this._leaflet_events = this._leaflet_events_bk;
+//            }
+//            this.clear();
+//            this.hide();
+//            if (this.isRemoteLayer()) this.fetchRemoteData();
+//            else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
+//            this._loaded = true;
+//            this.show();
+//            this.isDirty = false;
+//        }
+//    },
 
     redraw: function () {
         this.hide();

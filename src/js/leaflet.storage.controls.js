@@ -126,7 +126,7 @@ L.Storage.DrawPolygonAction = L.Storage.BaseAction.extend({
     options: {
         helpMenu: true,
         className: 'storage-draw-polygon dark',
-        tooltip: L._('Draw a polygon')
+        tooltip: L._('Нарисовать полигон')
     },
 
     addHooks: function () {
