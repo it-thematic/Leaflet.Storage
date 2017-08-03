@@ -1431,6 +1431,10 @@ cursor: pointer !important;
     background-color: #fff !important;
 }
 
+.tabledata {
+    color: #666 !important;
+}
+
 #dialog {
     margin: 10px !important;
 }
@@ -1541,6 +1545,25 @@ cursor: pointer !important;
     cursor: pointer;
 }
 
+#submitbutton {
+    color: limegreen !important;
+}
+
+#submitbutton:hover {
+    background-color: darkgreen !important;
+    color: white !important;
+}
+
+#cancel {
+    color: red !important;
+}
+
+#cancel:hover {
+    background-color: darkred !important;
+    color: white !important;
+}
+
+
 .leaflet-control-edit-save,
 .leaflet-control-edit-cancel,
 .leaflet-control-edit-disable{
@@ -1570,7 +1593,7 @@ button.leaflet-control-edit-disable{
 .leaflet-control-edit-cancel a:hover,
 .leaflet-control-edit-disable a:hover
 {
-    color: #efefef;
+    color: #444 !important;
 }
 
 .leaflet-left .leaflet-control-edit-save,
