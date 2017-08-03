@@ -498,7 +498,7 @@ L.Storage.searchcontextControl = L.Control.extend({
                 }
                 else{
                     if (e.keyCode === L.S.Keys.ESC){
-                        $('.search_cadnum').innerText = '';
+                        $('.search-input').cleanData();
                     }
                     else {
                         if (e.which !== 0 && !e.ctrlKey && !e.metaKey && !e.altKey && e.keyCode !== 114 && e.keyCode !== 70) {
