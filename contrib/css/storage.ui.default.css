@@ -172,7 +172,7 @@ input.switch:empty ~ label {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    text-shadow: 0 1px rgba(0, 0, 0, 0.1);
+/*    text-shadow: 0 1px rgba(0, 0, 0, 0.1);*/
     width: 80px;
 }
 input.switch:empty ~ label:before,

@@ -70,12 +70,12 @@ L.Storage.TileLayerControl.Mixin = {
             if (L.DomUtil.hasClass(container, 'leaflet-control-tilelayers')) {
                 this._tilelayers_container = L.DomUtil.create('ul', 'storage-tilelayer-switcher-container');
                 this.buildList(options);
-                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers');
-                L.DomUtil.addClass(container, 'leaflet-control-tilelayers-enable');
+//                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers');
+//                L.DomUtil.addClass(container, 'leaflet-control-tilelayers-enable');
             } else {
-                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers-enable');
-                L.DomUtil.addClass(container, 'leaflet-control-tilelayers');
-                this._map.ui.closePanel();
+//                L.DomUtil.removeClass(container, 'leaflet-control-tilelayers-enable');
+//                L.DomUtil.addClass(container, 'leaflet-control-tilelayers');
+//                this._map.ui.closePanel();
             }
         }
     }
@@ -106,8 +106,11 @@ L.Storage.SearchControl.Mixin = {
             widNblock.setAttribute('id','widNblock');
             var widNparcel =  L.DomUtil.create('input', 'widNparcel', elementFormInput);
             widNparcel.setAttribute('id','widNparcel');
-         
+        
+        widNblock.setAttribute('placeholder', 'кв.');
+        widNparcel.setAttribute('placeholder', 'выд.');
 
+        
 
         var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
         var geomForest =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
@@ -118,16 +121,32 @@ L.Storage.SearchControl.Mixin = {
         $(geomForest).click("a", function (evt) {
                 return false
             });
+        
+        /** Sophya 4.08.2017*/
+        
+        var queryButtonContainer = L.DomUtil.create('div', 'forest-control-query storage-control leaflet-control', container);
+        queryButtonContainer.id = 'queryButtonContainer';
+        queryButtonContainer.setAttribute('style', 'width: 35px; height: 35px; margin-right: 50px;');
+//        var queryButton = L.DomUtil.create('a', 'queryForestMap');
+//        queryButton.id = 'queryBtn';
+//        queryButton.href = '#';
+//        queryButton.title = 'Запрос';
+        
+        $(queryButtonContainer).click('a', function (evt) {
+            return false
+        })
+        
+        /** */
 
-        var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
-        var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
-        infoRosreet.setAttribute('id','infoRosreestr');
-        $(infoRosreet).dblclick("a", function (evt) {
-                return false
-            });
-        $(infoRosreet).click("a", function (evt) {
-                return false
-            });
+//        var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
+//        var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);
+//        infoRosreet.setAttribute('id','infoRosreestr');
+//        $(infoRosreet).dblclick("a", function (evt) {
+//                return false
+//            });
+//        $(infoRosreet).click("a", function (evt) {
+//                return false
+//            });
 
         return container;
     }
@@ -532,7 +551,7 @@ L.Storage.reportControls = L.Control.extend({
 
         var poly = L.DomUtil.create('a', 'poly', container);
         poly.href = '#';
-        poly.title = 'Нарисовать полигон';
+        poly.title = 'Пространственный отчет';
 
         L.DomEvent
             .on(poly, 'click', L.DomEvent.stop)
