@@ -499,14 +499,14 @@ L.Storage.searchcontextControl = L.Control.extend({
 
          $(search_cadnum).click('a', function (evt) {
             evt.preventDefault();
-            dlgForest.SearchContextCadNumber(evt,$(search_input).val(),'dizovo_umz_umzparcel');
+            dlgForest.SearchContextCadNumber(evt,$(search_input).val(),MAP.layerSearchCadNum);
             return false;
         });
 
          $(search_input).on('keydown',function (evt) {
              if (evt.keyCode === L.S.Keys.ENTER) {
                 evt.preventDefault();
-                dlgForest.SearchContextCadNumber(evt,$(search_input).val(),'dizovo_umz_umzparcel');
+                dlgForest.SearchContextCadNumber(evt,$(search_input).val(),MAP.layerSearchCadNum);
                 return false;
              }
          });
@@ -521,7 +521,7 @@ L.Storage.searchcontextControl = L.Control.extend({
                     }
                     else {
                         if (e.which !== 0 && !e.ctrlKey && !e.metaKey && !e.altKey && e.keyCode !== 114 && e.keyCode !== 70) {
-                            dlgForest.SearchContextCadNumber(e, $(search_input).val(), 'dizovo_umz_umzparcel');
+                            dlgForest.SearchContextCadNumber(e, $(search_input).val(), MAP.layerSearchCadNum);
                         }
                     }
                 }
