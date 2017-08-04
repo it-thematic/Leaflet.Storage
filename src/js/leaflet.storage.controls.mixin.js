@@ -109,10 +109,8 @@ L.Storage.SearchControl.Mixin = {
         
         widNblock.setAttribute('placeholder', 'кв.');
         widNparcel.setAttribute('placeholder', 'выд.');
-        widForestry.setAttribute('placeholder', 'Лесничество');
-        widLforestry.setAttribute('placeholder', 'Уч. лесничество');
-         
 
+        
 
         var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
         var geomForest =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
@@ -123,6 +121,22 @@ L.Storage.SearchControl.Mixin = {
         $(geomForest).click("a", function (evt) {
                 return false
             });
+        
+        /** Sophya 4.08.2017*/
+        
+        var queryButtonContainer = L.DomUtil.create('div', 'forest-control-query storage-control leaflet-control', container);
+        queryButtonContainer.id = 'queryButtonContainer';
+        queryButtonContainer.setAttribute('style', 'width: 35px; height: 35px; margin-right: 50px;');
+//        var queryButton = L.DomUtil.create('a', 'queryForestMap');
+//        queryButton.id = 'queryBtn';
+//        queryButton.href = '#';
+//        queryButton.title = 'Запрос';
+        
+        $(queryButtonContainer).click('a', function (evt) {
+            return false
+        })
+        
+        /** */
 
 //        var elementFormButRosreestr = L.DomUtil.create('div', 'forest-control-rosreestr storage-control leaflet-control', container);
 //        var infoRosreet =L.DomUtil.create('a', 'findForestMap', elementFormButRosreestr);

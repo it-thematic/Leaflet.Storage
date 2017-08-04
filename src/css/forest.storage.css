@@ -636,7 +636,7 @@ hr, input, textarea {
     -webkit-box-sizing:border-box;
     box-sizing: border-box;
     margin: 0;
-    font-family: 'fira_sanslight', sans-serif;
+/*    font-family: 'fira_sanslight', sans-serif;*/
 }
 body, div, ul, li, a, section, nav,
 h1, h2, h3, h4, h5, h6, label, hr {
@@ -662,7 +662,7 @@ hr {
     border-width: 1px 0 0;
 }
 h1, h2, h3, h4, h5 {
-    font-family: 'fira_sansbold', sans-serif;
+/*    font-family: 'fira_sansbold', sans-serif;*/
     font-weight: normal;
 }
 h1, h2 {
@@ -677,7 +677,7 @@ p {
     margin-bottom: 14px;
 }
 strong {
-    font-family: 'fira_sansbold';
+/*    font-family: 'fira_sansbold';*/
     font-weight: normal;
 }
 
@@ -877,7 +877,7 @@ nav h1 a {
     background-position: left center;
     background-repeat: no-repeat;
     background-size: 60px auto;
-    font-family: 'fira_sansbold';
+/*    font-family: 'fira_sansbold';*/
     font-size: 30px;
     font-weight: normal;
     height: 70px;
@@ -915,7 +915,7 @@ footer a {
     background-position: left center;
     background-repeat: no-repeat;
     background-size: 60px auto;
-    font-family: 'fira_sansbold';
+/*    font-family: 'fira_sansbold';*/
     font-size: 30px;
     font-weight: normal;
     height: 140px;
@@ -1439,6 +1439,14 @@ cursor: pointer !important;
     margin: 10px !important;
 }
 
+#rosreestrDialog {
+    width: auto !important;
+    color: #666 !important;
+    font-family: sans-serif !important;
+    text-decoration: none !important;
+    text-shadow: none !important;
+}
+
 /*********************************************/
 /*Опустили правый блок вниз на ширину панели*/
 /*********************************************/
@@ -1648,6 +1656,18 @@ button.leaflet-control-edit-disable{
     visibility: visible;
     top: 100px;
 }
+
+
+.forest-control-query {
+    background-image: url('../img/query.png') !important;
+    border-radius: 2px !important;
+}
+
+.forest-control-query:hover {
+    background-color: #ccc !important;
+    background-image: url('../img/query.png') !important;
+}
+
 
 /*********************************************/
   /*Преобразование кнопки search в панель*/
