@@ -51,7 +51,8 @@ L.Map.mergeOptions({
     importControl: true,
     tablesemanticControl : true,
     searchcontextControl  : true,
-    searchControl: true
+    searchControl: true,
+    layerSearchCadNum : 'umzparcel', //TODO : noga  - грубая фильтрация :  добавить возможность считать данное значение из JSON -options карты
     // reportControl : true
 });
 
@@ -83,6 +84,7 @@ L.Storage.Map.include({
         });
         this.initLoader();
         this.name = this.options.name;
+        this.layerSearchCadNum = this.options.layerSearchCadNum;
         this.description = this.options.description;
         this.demoTileInfos = this.options.demoTileInfos;
         if (geojson.geometry) this.options.center = geojson.geometry;
@@ -1056,7 +1058,8 @@ L.Storage.Map.include({
         'embedControl',
         'measureControl',
         'tilelayersControl',
-        'easing'
+        'easing',
+        'layerSearchCadNum'
     ],
 
     exportOptions: function () {
