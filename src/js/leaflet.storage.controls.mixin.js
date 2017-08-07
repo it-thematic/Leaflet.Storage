@@ -13,7 +13,8 @@ L.Storage.MoreControls.include(L.Storage.MoreControls.Mixin);
 L.Storage.DataLayersControl.Mixin = {
     addDataLayer: function (container, datalayer, draggable) {
         var datalayerLi = L.DomUtil.create('li', '', container);
-        if (draggable) L.DomUtil.element('i', {className: 'drag-handle', title: L._('Drag to reorder')}, datalayerLi);
+        //TODO: IT : пока уберем  - корректное перемещение слоя
+        // if (draggable) L.DomUtil.element('i', {className: 'drag-handle', title: L._('Drag to reorder')}, datalayerLi);
         datalayer.renderToolbox(datalayerLi);
 
 
