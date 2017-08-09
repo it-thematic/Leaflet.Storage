@@ -578,19 +578,20 @@ L.Storage.DataLayer.include({
 
     renderToolbox: function (container) {
         var toggle = L.DomUtil.create('i', 'layer-toggle', container),
-            zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container),
+            // zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container), TODO : пока уберем переопределили на легенду
             edit = L.DomUtil.create('i', 'layer-edit show-on-edit', container),
 //            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
             remove = L.DomUtil.create('i', 'layer-delete show-on-edit', container);
-        zoomTo.title = L._('Zoom to layer extent');
+        // zoomTo.title = L._('Zoom to layer extent');
         toggle.title = L._('Show/hide layer');
         edit.title = L._('Edit');
  //       table.title = L._('Edit properties in a table');
         remove.title = L._('Delete layer');
         L.DomEvent.on(toggle, 'click', this.toggle, this);
         //-->TODO: ForestMap пока уберем
-        L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
+        // L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
         //-->TODO: ForestMap
+
 
         L.DomEvent.on(edit, 'click', this.edit, this);
 //        L.DomEvent.on(table, 'click', this.tableEdit, this);

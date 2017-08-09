@@ -17,15 +17,32 @@ L.Storage.DataLayersControl.Mixin = {
         // if (draggable) L.DomUtil.element('i', {className: 'drag-handle', title: L._('Drag to reorder')}, datalayerLi);
         datalayer.renderToolbox(datalayerLi);
 
+        //Вешаем легенду
+        var zoomTo = L.DomUtil.create('i', 'layer-zoom_to', datalayerLi, datalayer.options.name);
+        zoomTo.id =  datalayer.options.laydescription;
+        zoomTo.title = L._('Показать легенду');
+
 
         var title = L.DomUtil.add('span', 'layer-title', datalayerLi, datalayer.options.name);
         //TODO: ForestMap : назначение обозначения для открытия табличного представления
         title.id =  datalayer.options.laydescription;
 
+
         datalayerLi.id = 'browse_data_toggle_' + datalayer.storage_id;
 
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
         title.innerHTML = datalayer.options.name;
+
+        //отобразить легенду
+        L.DomEvent.on(zoomTo, 'click', function () {
+            var namelayer = zoomTo.id;
+            if (namelayer != '')
+            {
+                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.PNG');
+                $('#widget_legenda').show();
+            }
+        }, this);
+
     }
 };
 L.Storage.DataLayersControl.include(L.Storage.DataLayersControl.Mixin);
