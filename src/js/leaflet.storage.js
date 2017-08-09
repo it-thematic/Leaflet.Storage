@@ -52,7 +52,7 @@ L.Map.mergeOptions({
     tablesemanticControl : true,
     searchcontextControl  : true,
     searchControl: true,
-    layerSearchCadNum : 'umzparcel', //TODO : noga  - грубая фильтрация :  добавить возможность считать данное значение из JSON -options карты
+    layerSearchCadNum : ''//'umzparcel', //TODO : noga  - грубая фильтрация :  добавить возможность считать данное значение из JSON -options карты
     // reportControl : true
 });
 
