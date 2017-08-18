@@ -795,7 +795,7 @@ L.Storage.TileLayerControl = L.Control.extend({
             var namelayer = widget_f.id;
             if (namelayer != '')
             {
-                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.PNG');
+                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.png');
                 $('#widget_legenda').show();
             }
         }, this);

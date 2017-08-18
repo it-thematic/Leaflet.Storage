@@ -38,7 +38,7 @@ L.Storage.DataLayersControl.Mixin = {
             var namelayer = zoomTo.id;
             if (namelayer != '')
             {
-                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.PNG');
+                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.png');
                 $('#widget_legenda').show();
             }
         }, this);
@@ -76,7 +76,7 @@ L.Storage.TileLayerControl.Mixin = {
             var namelayer = widget_f.id;
             if (namelayer != '')
             {
-                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.PNG');
+                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.png');
                 $('#widget_legenda').show();
             }
         }, this);
@@ -140,11 +140,9 @@ L.Storage.SearchControl.Mixin = {
                 return false
             });
         
-        /** Sophya 4.08.2017*/
-        
         var queryButtonContainer = L.DomUtil.create('div', 'forest-control-query storage-control leaflet-control', container);
         queryButtonContainer.id = 'queryButtonContainer';
-        queryButtonContainer.setAttribute('style', 'width: 35px; height: 35px; margin-right: 50px;');
+        queryButtonContainer.setAttribute('style', 'width: 35px; height: 35px;');
 //        var queryButton = L.DomUtil.create('a', 'queryForestMap');
 //        queryButton.id = 'queryBtn';
 //        queryButton.href = '#';
@@ -152,7 +150,7 @@ L.Storage.SearchControl.Mixin = {
         
         $(queryButtonContainer).click('a', function (evt) {
             return false
-        })
+        });
         
         /** */
 
@@ -508,18 +506,19 @@ L.Storage.searchcontextControl = L.Control.extend({
           var search_input =  L.DomUtil.create('input', 'search_input', aisumz_search);
             search_input.setAttribute('data-live-search','true');
             // search_input.setAttribute('id','search_input');
-            search_input.setAttribute('placeholder',"Поиск по номеру");
+            search_input.setAttribute('placeholder',"   Поиск ...");
+            search_input.setAttribute('type',"text");
 
 
-        var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
-        var search_cadnum =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
-        search_cadnum.setAttribute('id','search_cadnum');
+        // var elementFormButFilter = L.DomUtil.create('div', 'forest-control-filter storage-control leaflet-control', container);
+        // var search_cadnum =L.DomUtil.create('a', 'findForestMap', elementFormButFilter);
+        // search_cadnum.setAttribute('id','search_cadnum');
 
-         $(search_cadnum).click('a', function (evt) {
-            evt.preventDefault();
-            dlgForest.SearchContextCadNumber(evt,$(search_input).val(),MAP.layerSearchCadNum);
-            return false;
-        });
+        //  $(search_cadnum).click('a', function (evt) {
+        //     evt.preventDefault();
+        //     dlgForest.SearchContextCadNumber(evt,$(search_input).val(),MAP.layerSearchCadNum);
+        //     return false;
+        // });
 
          $(search_input).on('keydown',function (evt) {
              if (evt.keyCode === L.S.Keys.ENTER) {

@@ -1408,7 +1408,7 @@ cursor: pointer !important;
     padding: 5px;
     /*line-height: 36px;*/
     opacity: 0.8;
-    padding-left: 71px;
+    padding-left: 52px;
 }
 
 /*********************************************/
@@ -1537,6 +1537,12 @@ cursor: pointer !important;
 {
     background-color: #C60F13;
     color: #fff !important;
+}
+
+.leaflet-control-edit-disable a{
+    background-color: #c65753;
+    color: #fff !important;
+    padding: 0px 10px 10px 10px;
 }
 
 .leaflet-control-edit-save a
@@ -1727,7 +1733,7 @@ button.leaflet-control-edit-disable{
     border: 1px solid #bbb;
     margin-top: 0px !important;
     display: block;
-    margin-right: 50px;
+    margin-right: 5px;
     /*height: 37px;*/
     /*width: 37px;*/
 }
@@ -1745,16 +1751,19 @@ button.leaflet-control-edit-disable{
     border-radius: 1px !important;
 }
 
-.search_input {
-    border-radius: 2px !important;
-    padding: 5px !important;
-    border: 1px solid #ccc !important;
-    background-color: #eee !important;
-}
+/*.search_input {*/
+    /*border-radius: 2px !important;*/
+    /*padding: 5px !important;*/
+    /*border: 1px solid #ccc !important;*/
+    /*background-color: #eee !important;*/
+/*}*/
 
-.search_input:focus {
-    background-color: #fff !important;
-}
+/*.search_input:focus {*/
+    /*background-color: #fff !important;*/
+/*}*/
+
+
+
 
 .widNblock, .widNparcel, .widForestry, .widLforestry {
     border-radius: 2px !important;
@@ -1826,7 +1835,27 @@ button.leaflet-control-edit-disable{
 }
 
 .leaflet-control-searchcontextCadNum input{
-    height: 37px;
-    width: 250px;
+    height: 35px;
+    width: 80px;
+    font-size: 12px;
+
 }
 /**/
+
+.leaflet-control-searchcontextCadNum > input[type=text] {
+    /*width: 130px;*/
+    /*-webkit-transition: width 0.8s linear;*/
+     transition: width 1s linear;
+}
+
+.umz-search input[type=text] {
+    /*width: 130px;*/
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+/* When the input field gets focus, change its width to 100% */
+.umz-search input[type=text]:focus {
+    width: 130px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
