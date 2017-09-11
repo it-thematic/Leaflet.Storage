@@ -1,6 +1,7 @@
 DataLayerMixin = {
     _tilelay: null,
     _vectorlay: null,
+    _vectorStyle: null,
 
     _objectUrl: function(e, layer){
         var template = './api_identify?lat={lat}&lng={lng}&f=json&lay={lay}';
@@ -9,7 +10,7 @@ DataLayerMixin = {
 
     _importUrl: function () {
         var template = './api_import';
-        return L.Util.template(template, {})
+        return L.Util.template(template, {});
     },
 
     _createTileLayer: function () {
@@ -25,12 +26,30 @@ DataLayerMixin = {
         }
      },
 
-    _createVectorLayer: function () {
-        this._vectorlay = L.mapboxGL({
-            local: true,
-            preserveDrawingBuffer: true,
-            style: L.Util.template('/static/styles/{layer}.json', {'layer': this.options.laydescription})
+    _createVectorLayer: function (created) {
+        var _url = L.Util.template('/static/styles/{layer}.json', {
+            'layer': this.options.laydescription
         });
+
+        if (!this._vectorStyle) {
+            this.map.get(_url, {
+                callback: (data) => {
+                    this._vectorStyle = data;
+                    this._vectorStyle.sprite = L.Util.template('{location}/static/sprite/sprite', {'location': window.location.origin});
+                    this._vectorlay = L.mapboxGL({
+                        local: true,
+                        style: this._vectorStyle
+                    });
+                    if (created && typeof(created) === 'function') created();
+                }
+            })
+        } else {
+            this._vectorlay = L.mapboxGL({
+                local: true,
+                style: this._vectorStyle
+            });
+            if (created && typeof(created) === 'function') created();
+        }
      },
 
     _deleteVectorLayer: function () {
@@ -109,10 +128,11 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
 
     if (this.options.remoteData.format === 'pbf') {
         if (!this._vectorlay) {
-            this._createVectorLayer();
-            if (this.map.hasLayer(this.layer)) {
-                this.map.addLayer(this._vectorlay);
-            }
+            this._createVectorLayer(() => {
+                if (this.map.hasLayer(this.layer)) {
+                    this.map.addLayer(this._vectorlay);
+                }
+            });
         }
     } else {
         if (!this._tilelay) {
