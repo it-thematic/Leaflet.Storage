@@ -1,5 +1,6 @@
 DataLayerMixin = {
     _tilelay: null,
+    _vectorlay: null,
 
     _objectUrl: function(e, layer){
         var template = './api_identify?lat={lat}&lng={lng}&f=json&lay={lay}';
@@ -13,6 +14,32 @@ DataLayerMixin = {
 
     _createTileLayer: function () {
         this._tilelay = L.tileLayer(this.options.remoteData.url, {attribution: '-'});
+     },
+
+    _deleteTileLayer: function () {
+        if (this._tilelay) {
+            if (this.map.hasLayer(this._tilelay)) {
+                this.map.removeLayer(this._tilelay);
+            }
+            delete this._tilelay;
+        }
+     },
+
+    _createVectorLayer: function () {
+        this._vectorlay = L.mapboxGL({
+            local: true,
+            preserveDrawingBuffer: true,
+            style: L.Util.template('/static/styles/{layer}.json', {'layer': this.options.laydescription})
+        });
+     },
+
+    _deleteVectorLayer: function () {
+        if (this._vectorlay) {
+            if (this.map.hasLayer(this._vectorlay)) {
+                this.map.removeLayer(this._vectorlay);
+            }
+            delete this._vectorlay;
+        }
      },
 
     getLocalId: function () {
@@ -80,10 +107,19 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
         url = this.map.localizeUrl(this.options.remoteData.url);
     if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
 
-    if (!this._tilelay) {
-        this._createTileLayer();
-        if (this.map.hasLayer(this.layer)) {
-            this.map.addLayer(this._tilelay)
+    if (this.options.remoteData.format === 'pbf') {
+        if (!this._vectorlay) {
+            this._createVectorLayer();
+            if (this.map.hasLayer(this.layer)) {
+                this.map.addLayer(this._vectorlay);
+            }
+        }
+    } else {
+        if (!this._tilelay) {
+            this._createTileLayer();
+            if (this.map.hasLayer(this.layer)) {
+                this.map.addLayer(this._tilelay);
+            }
         }
     }
 };
@@ -91,8 +127,12 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
 L.Storage.DataLayer.prototype.show = function() {
     if(!this.isLoaded()) this.fetchData();
     this.map.addLayer(this.layer);
-    if (this._tilelay && !this.map.hasLayer(this._tilelay)){
-          this.map.addLayer(this._tilelay);
+    if (this._tilelay && !this.map.hasLayer(this._tilelay)) {
+        this.map.addLayer(this._tilelay);
+    }
+
+    if (this._vectorlay && !this.map.hasLayer(this._vectorlay)){
+          this.map.addLayer(this._vectorlay);
     }
     this.fire('show');
 };
@@ -101,6 +141,12 @@ L.Storage.DataLayer.prototype.hide = function() {
     if (this._tilelay) {
         this.map.removeLayer(this._tilelay);
     }
+
+    if (this._vectorlay) {
+
+        this.map.removeLayer(this._vectorlay);
+    }
+
     this.map.removeLayer(this.layer);
     this.fire('hide');
 };

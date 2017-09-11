@@ -97,7 +97,11 @@ L.S.Layer.WFST= L.WFST.extend({
         this.options.typeName = this.datalayer.options.laydescription;
         this.isValid = true;
         this.describeFeatureType();
-        if (this.datalayer.options.remoteData.url) {
+        if (this.datalayer.options.remoteData.format === 'pbf') {
+             delete this.datalayer._deleteTileLayer();
+             this.datalayer._createVectorLayer();
+        } else {
+            delete this.datalayer._deleteVectorLayer();
             if (this.datalayer.options.remoteData.url.match('/*\/{[xyz]}\/{[xyz]}\/{[xyz]}*')) {
                 if (this.datalayer._tilelay) {
                     this.datalayer._tilelay.setUrl(this.datalayer.options.remoteData.url, false)

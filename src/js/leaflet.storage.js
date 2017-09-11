@@ -456,6 +456,7 @@ L.Storage.Map.include({
     },
 
     createTileLayer: function (tilelayer) {
+        L.Util.extend(tilelayer, {zIndex: 0});
         return new L.TileLayer(tilelayer.url_template, tilelayer);
     },
 
