@@ -358,5 +358,7 @@
     "PKK": "Public cadastral card of the Federal Registration Service",
     "Print map": "Print map",
     "Load existing": "Load existing",
-    "MaxFeatures": "MaxFeatures. Default {count}"
+    "MaxFeatures": "MaxFeatures. Default {count}",
+    "Style": "Style",
+    "Default style": "Default style"
 }

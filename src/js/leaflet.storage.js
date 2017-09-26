@@ -229,6 +229,10 @@ L.Storage.Map.include({
         this.backup();
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
+        this.vl = L.vectorLayer({
+            accessToken: 'no-token'
+        });
+        this.vl.addTo(this);
     },
 
     initControls: function () {

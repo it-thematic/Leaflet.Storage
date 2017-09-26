@@ -805,15 +805,30 @@ L.Storage.DataLayer = L.Class.extend({
         }
 
         var remoteDataFields = [
-            ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL', callback: redrawCallback}],
-            ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format'), callback: redrawCallback}],
+            ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL',
+                callback: (field) => {this._changeURL(field.helper.value())}
+            }],
+            ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format'),
+                callback: (field) => { this._changeFormat(field.helper.value())}
+            }],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
             ['options.remoteData.licence', {label: L._('Licence'), helpText: L._('Please be sure the licence is compliant with your use.')}]
         ];
+
+        if (this.options.remoteData && !this.options.remoteData.style_id) {
+            remoteDataFields.push(['options.remoteData.style_id', {handler: 'Select', label: L._('Default style'), selectOptions: this._styleSelect,
+                callback: (field) => { this.vectorStyleID = field.helper.value()}
+            }]);
+        }
+        remoteDataFields.push(['vectorStyleID', {handler: 'Select', label: L._('Style'), selectOptions: this._styleSelect}]);
+
         if (this.isWFSTLayer()) {
-            remoteDataFields.push(['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: redrawCallback}]);
+            remoteDataFields.push(['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: function (e) {
+                    this.layer.options.url = e.helper.toJS();
+                    this.layer.describeFeatureType();
+                }}]);
             remoteDataFields.push(['options.remoteData.maxFeatures', {handler: 'IntInput', label: L._('MaxFeatures', {'count': this.layer.maxFeatures}),
                 callback: function (e) {
                     this.layer.maxFeatures = e.helper.toJS();

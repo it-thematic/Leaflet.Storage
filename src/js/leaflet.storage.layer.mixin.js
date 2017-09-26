@@ -1,7 +1,28 @@
 DataLayerMixin = {
     _tilelay: null,
-    _vectorlay: null,
     _vectorStyle: null,
+    // Список значений для элемента select выбора доступных стилей
+    _styleSelect: [["-1", '------']],
+
+    _getStyleSelect: function (id) {
+        if (!id) { return; }
+        var _template = L.Util.template('/datalayer/{layer_id}/styles', {layer_id: id});
+        this.map.get(_template, {
+            async: false,
+            callback: (response) => {
+                if (response.data.length) {
+                    this._styleSelect = this._styleSelect.concat(response.data);
+                    if (this._styleSelect.length) {
+                        if (this.isRemoteLayer() && this.options.remoteData.style_id) {
+                            this.vectorStyleID = this.options.remoteData.style_id;
+                        } else {
+                            this.vectorStyleID = this._styleSelect[0][0];
+                        }
+                    }
+                }
+            }
+        });
+    },
 
     _objectUrl: function(e, layer){
         var template = './api_identify?lat={lat}&lng={lng}&f=json&lay={lay}';
@@ -13,60 +34,136 @@ DataLayerMixin = {
         return L.Util.template(template, {});
     },
 
-    _createTileLayer: function () {
-        this._tilelay = L.tileLayer(this.options.remoteData.url, {attribution: '-'});
-     },
-
-    _deleteTileLayer: function () {
+    _changeFormat: function (format) {
+        // Удаление таловой подложки
         if (this._tilelay) {
-            if (this.map.hasLayer(this._tilelay)) {
+            if (this.map.hasLayer(this.layer)) {
                 this.map.removeLayer(this._tilelay);
             }
-            delete this._tilelay;
         }
-     },
 
-    _createVectorLayer: function (created) {
-        var _url = L.Util.template('/static/styles/{layer}.json', {
-            'layer': this.options.laydescription
-        });
+        delete this._tilelay;
 
-        if (!this._vectorStyle) {
-            this.map.get(_url, {
-                callback: (data) => {
-                    this._vectorStyle = data;
-                    this._vectorStyle.sprite = L.Util.template('{location}/static/sprite/sprite', {'location': window.location.origin});
-                    this._vectorlay = L.mapboxGL({
-                        local: true,
-                        style: this._vectorStyle
-                    });
-                    if (created && typeof(created) === 'function') created();
+        if (this._vectorStyle) {
+            this.map.vl.removeStyle(this._vectorStyle);
+        }
+
+        switch (format) {
+            case "osm":
+                this._tilelay = L.tileLayer(this.options.remoteData.url, {attribution: '-', zIndex: 0});
+                if (this.map.hasLayer(this.layer)) { this.map.addLayer(this._tilelay); }
+                break;
+
+            case "pbf":
+                if (this._vectorStyle) {
+                    if (this.map.hasLayer(this.layer)) {
+                        this.map.vl.setStyle(this._vectorStyle);
+                    }
                 }
-            })
-        } else {
-            this._vectorlay = L.mapboxGL({
-                local: true,
-                style: this._vectorStyle
-            });
-            if (created && typeof(created) === 'function') created();
         }
-     },
+    },
 
-    _deleteVectorLayer: function () {
-        if (this._vectorlay) {
-            if (this.map.hasLayer(this._vectorlay)) {
-                this.map.removeLayer(this._vectorlay);
-            }
-            delete this._vectorlay;
+    _changeURL: function (url) {
+        if ((typeof url !== "string") || (!this._tilelay)) { return; }
+
+        if (url.match('(\/{[xyz]})(\/{[xyz]})(\/{[xyz]})(\.(png|jpg))+$')) {
+            this._tilelay.setUrl(url);
         }
-     },
+    },
+
+    _createBackground: function (format) {
+        switch (format) {
+            case 'osm':
+                if (this._tilelay) {
+                    if (this.map.hasLayer(this.layer)) {
+                        this.map.removeLayer(this._tilelay);
+                    }
+                }
+                delete this._tilelay;
+                this._tilelay = L.tileLayer(this.options.remoteData.url, {attribution: '-', zIndex: 0});
+                if (this.map.hasLayer(this.layer)) { this.map.addLayer(this._tilelay); }
+                break;
+
+            case 'pbf':
+                // Если стиль ещё не скачан
+                if (!this._vectorStyle) {
+                    // И не выбран стиль для отображения
+                    if (!this.vectorStyleID) {
+                        // И не назначен слить по умолчанию в настройках слоя
+                        if (!this.options.remoteData.style_id) {
+                            // То выходим
+                            return;
+                        } else {
+                            // А если назначен по умолчанию, то выбираем его для отображения
+                            this.vectorStyleID = this.options.remoteData.style_id;
+                        }
+                    }
+
+                    // Запрашиваем стиль с сервера
+                    this.map.get(L.Util.template('/styles/{style_id}/', {style_id: this.vectorStyleID}), {
+                        callback: (data) => {
+                            // Кэшируем стиль чтобы не запрашивать потом повторно
+                            this._vectorStyle = data;
+                            // Назначаем стиль (смешивание стилей разрешено по умолчанию
+                            // т.к. у может быть включено несколько растровых основ
+                            // Если слой уже отображен на карте, то добавляем и его для отображения
+                            if (this.map.hasLayer(this.layer)) { this.map.vl.setStyle(this._vectorStyle); }
+                        }
+                    });
+                } else {
+                    // А если стиль уже закэширован, то назначаем его в слой
+                    // Если слой уже отображен на карте, то добавляем и его для отображения
+                    if (this.map.hasLayer(this.layer)) { this.map.vl.setStyle(this._vectorStyle); }
+                }
+            break;
+        }
+    },
+
+    _changeBakcground: function (vectorStyle) {
+        if (this._vectorStyle) {
+            this.map.vl.removeStyle(this._vectorStyle);
+        }
+
+        if (vectorStyle) {
+            this.map.vl.setStyle(vectorStyle);
+        }
+    },
+
+    _hideBackground: function () {
+        // Удаление тайловой подложки
+        if (this._tilelay) {
+            this.map.removeLayer(this._tilelay);
+        }
+
+        // Удаление векторной подложки
+        if (this.isRemoteLayer() && this.options.remoteData.format === 'pbf') {
+            if (this._vectorStyle) {
+                this.map.vl.removeStyle(this._vectorStyle);
+            }
+        }
+    },
+
+    _showBackground: function () {
+        // Отображение тайловой подложки
+        if (this._tilelay) {
+            if (this.map.hasLayer(this.layer) && !this.map.hasLayer(this._tilelay)) {
+                this.map.addLayer(this._tilelay);
+            }
+        }
+
+        // Отображение векторной подложки
+        if (this.isRemoteLayer() && this.options.remoteData.format === 'pbf') {
+            if (this._vectorStyle) {
+                this.map.vl.setStyle(this._vectorStyle);
+            }
+        }
+    },
 
     getLocalId: function () {
         return this.storage_id || 'tmp' + L.Util.stamp(this);
     },
 
     isWFSTLayer: function () {
-//        return this.isRemoteLayer() && this.options.type === 'WFST';
         return this.options.type === 'WFST';
     },
 
@@ -88,6 +185,7 @@ DataLayerMixin = {
 
     allowEdit: function () {
         return !this.isRemoteLayer() ||
+            (this._vectorStyle && this.map.vl.hasStyle(this._vectorStyle)) ||
             (this.isRemoteLayer() && this.isWFSTLayer() && this.layer.isValid);
     },
 
@@ -102,6 +200,41 @@ DataLayerMixin = {
 };
 
 L.Storage.DataLayer.include(DataLayerMixin);
+
+L.Storage.DataLayer.addInitHook(function(){
+
+    
+    var vectorStyleID = null;
+   
+    try {
+        Object.defineProperty(this, 'vectorStyleID', {
+            get: function () {
+                return vectorStyleID;
+            },
+            set: function (style_id) {
+                if (Number(style_id) === -1) return;
+                if (vectorStyleID === style_id) return;
+                vectorStyleID  = style_id;
+                if (!this.isRemoteLayer()) return;
+                if (this.options.remoteData.format !== 'pbf') return;
+    
+                let _template = L.Util.template('/styles/{style_id}/', {style_id: style_id});
+                this.map.get(_template,{
+                    callback: (response) => {
+                        if (response) {
+                            this._changeBakcground(response);
+                            this._vectorStyle = response;
+                        }
+                    }
+                });
+            }
+        });
+    }
+    catch (e) {
+        // Certainly IE8, which has a limited version of defineProperty
+    }
+    this._getStyleSelect(this.storage_id);
+});
 
 L.Storage.DataLayer.prototype.umapGeoJSON = function () {
     return {
@@ -126,47 +259,18 @@ L.Storage.DataLayer.prototype.fetchRemoteData = function () {
         url = this.map.localizeUrl(this.options.remoteData.url);
     if (this.options.remoteData.proxy) url = this.map.proxyUrl(url);
 
-    if (this.options.remoteData.format === 'pbf') {
-        if (!this._vectorlay) {
-            this._createVectorLayer(() => {
-                if (this.map.hasLayer(this.layer)) {
-                    this.map.addLayer(this._vectorlay);
-                }
-            });
-        }
-    } else {
-        if (!this._tilelay) {
-            this._createTileLayer();
-            if (this.map.hasLayer(this.layer)) {
-                this.map.addLayer(this._tilelay);
-            }
-        }
-    }
+    this._createBackground(this.options.remoteData.format);
 };
 
 L.Storage.DataLayer.prototype.show = function() {
     if(!this.isLoaded()) this.fetchData();
     this.map.addLayer(this.layer);
-    if (this._tilelay && !this.map.hasLayer(this._tilelay)) {
-        this.map.addLayer(this._tilelay);
-    }
-
-    if (this._vectorlay && !this.map.hasLayer(this._vectorlay)){
-          this.map.addLayer(this._vectorlay);
-    }
+    this._showBackground();
     this.fire('show');
 };
 
 L.Storage.DataLayer.prototype.hide = function() {
-    if (this._tilelay) {
-        this.map.removeLayer(this._tilelay);
-    }
-
-    if (this._vectorlay) {
-
-        this.map.removeLayer(this._vectorlay);
-    }
-
+    this._hideBackground();
     this.map.removeLayer(this.layer);
     this.fire('hide');
 };
@@ -175,6 +279,10 @@ L.Storage.DataLayer.prototype.fromUmapGeoJSON = function (geojson) {
     if (geojson._storage) {
         var st = geojson._storage;
         if (this.options.laydescription) st.laydescription = this.options.laydescription;
+        // TODO: сохранение id стиля для отображения векторных тайлов.
+        // Если слой не локальный, то после загрузки параметров из базы грузятся параметры из json-файла
+        // и полностью перетирают старые параметры. А id стиля грузится из базы
+        if (this.options.style_id) st.style_id = this.options.style_id;
         this.setOptions(st);
     }
     if (this.isRemoteLayer()) this.fetchRemoteData();

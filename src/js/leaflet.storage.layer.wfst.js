@@ -82,7 +82,7 @@ L.S.Layer.WFST= L.WFST.extend({
 
         this.on('save:success', function() {
             if (that.datalayer._tilelay) {
-                that.datalayer._tilelay.redraw();
+                that.datalayer.redraw();
             }
             that.datalayer.clear();
             that.fire('viewreset');
@@ -90,30 +90,6 @@ L.S.Layer.WFST= L.WFST.extend({
         this.on('error', function(error) {
             that.isValid = false;
         });
-    },
-
-    postUpdate: function () {
-        this.options.url = this.datalayer.options.remoteData.url_wfst;
-        this.options.typeName = this.datalayer.options.laydescription;
-        this.isValid = true;
-        this.describeFeatureType();
-        if (this.datalayer.options.remoteData.format === 'pbf') {
-             delete this.datalayer._deleteTileLayer();
-             this.datalayer._createVectorLayer( () => {
-                if (this.datalayer._vectorlay && this.datalayer.map.hasLayer(this.layer)) {
-                    this.datalayer.map.addLayer(this.datalayer._vectorlay);
-                }
-             });
-        } else {
-            delete this.datalayer._deleteVectorLayer();
-            if (this.datalayer.options.remoteData.url.match('/*\/{[xyz]}\/{[xyz]}\/{[xyz]}*')) {
-                if (this.datalayer._tilelay) {
-                    this.datalayer._tilelay.setUrl(this.datalayer.options.remoteData.url, false)
-                } else {
-                    this.datalayer._createTileLayer();
-                }
-            }
-        }
     },
 
     searchLayer: function (e) {
