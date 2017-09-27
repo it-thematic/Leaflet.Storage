@@ -126,7 +126,7 @@ L.Storage.DrawPolygonAction = L.Storage.BaseAction.extend({
     options: {
         helpMenu: true,
         className: 'storage-draw-polygon dark',
-        tooltip: L._('Draw a polygon')
+        tooltip: L._('Нарисовать полигон')
     },
 
     addHooks: function () {
@@ -356,7 +356,7 @@ L.Storage.DrawToolbar = L.Toolbar.Control.extend({
 L.Storage.EditControl = L.Control.extend({
 
     options: {
-        position: 'topright'
+        position: 'topleft'
     },
 
     onAdd: function (map) {
@@ -377,7 +377,7 @@ L.Storage.EditControl = L.Control.extend({
 L.Control.Embed = L.Control.extend({
 
     options: {
-        position: 'bottomright'//TODO:ForestMap
+        position: 'topleft'
     },
 
     onAdd: function (map) {
@@ -464,7 +464,10 @@ L.Storage.DataLayersControl = L.Control.extend({
         toggle.href = '#';
 
         L.DomEvent
-            .on(toggle, 'click', L.DomEvent.stop);
+            .on(toggle, 'click', L.DomEvent.stop)
+            .on(toggle, 'click', this.openPanel, this)
+            .on(toggle, 'dblclick', L.DomEvent.stopPropagation);
+
 
         L.DomEvent
             .on(link, 'click', L.DomEvent.stop)
@@ -474,32 +477,32 @@ L.Storage.DataLayersControl = L.Control.extend({
             this.update();
         }, this);
 
-        if (!L.Browser.touch) {
-            L.DomEvent.disableClickPropagation(container);
-            L.DomEvent.on(container, 'mousewheel', L.DomEvent.stopPropagation);
-            L.DomEvent.on(container, 'MozMousePixelScroll', L.DomEvent.stopPropagation);
-            L.DomEvent.on(container, {
-                mouseenter: this.expand,
-                mouseleave: this.collapse
-            }, this);
-        } else {
-            L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-            L.DomEvent.on(toggle, 'click', L.DomEvent.stop)
-                      .on(toggle, 'click', this.expand, this);
-            map.on('click', this.collapse, this);
-        }
+//        if (!L.Browser.touch) {
+//            L.DomEvent.disableClickPropagation(container);
+//            L.DomEvent.on(container, 'mousewheel', L.DomEvent.stopPropagation);
+//            L.DomEvent.on(container, 'MozMousePixelScroll', L.DomEvent.stopPropagation);
+//            L.DomEvent.on(container, {
+////                mouseenter: this.expand,
+////                mouseleave: this.collapse
+//            }, this);
+//        } else {
+//            L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
+//            L.DomEvent.on(toggle, 'click', L.DomEvent.stop)
+////                      .on(toggle, 'click', this.expand, this);
+////            map.on('click', this.collapse, this);
+//        }
 
         return container;
     },
 
     onAdd: function (map) {
         if (!this._container) this._initLayout(map);
-        if (map.options.datalayersControl === 'expanded') this.expand();
+//        if (map.options.datalayersControl === 'expanded') this.expand();
         return this._container;
     },
 
     onRemove: function (map) {
-        this.collapse();
+//        this.collapse();
     },
 
     update: function () {
@@ -511,26 +514,22 @@ L.Storage.DataLayersControl = L.Control.extend({
         }
     },
 
-    expand: function () {
-        L.DomUtil.addClass(this._container, 'expanded');
-    },
-
-    collapse: function () {
-        if (this._map.options.datalayersControl === 'expanded') return;
-        L.DomUtil.removeClass(this._container, 'expanded');
-    },
+//    expand: function () {
+//        L.DomUtil.addClass(this._container, 'expanded');
+//    },
+//
+//    collapse: function () {
+//        if (this._map.options.datalayersControl === 'expanded') return;
+//        L.DomUtil.removeClass(this._container, 'expanded');
+//    },
 
     addDataLayer: function (container, datalayer, draggable) {
         var datalayerLi = L.DomUtil.create('li', '', container);
         if (draggable) L.DomUtil.element('i', {className: 'drag-handle', title: L._('Drag to reorder')}, datalayerLi);
         datalayer.renderToolbox(datalayerLi);
-
-
         var title = L.DomUtil.add('span', 'layer-title', datalayerLi, datalayer.options.name);
-        //TODO: ForestMap : назначение обозначения для открытия табличного представления
-        title.id =  datalayer.options.laydescription;
 
-        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);//TODO:ForestMap datalayerLi.id = 'browse_data_toggle_' + datalayer.storage_id;
+        datalayerLi.id = 'browse_data_toggle_' + L.stamp(datalayer);
         L.DomUtil.classIf(datalayerLi, 'off', !datalayer.isVisible());
 
         title.innerHTML = datalayer.options.name;
@@ -542,7 +541,7 @@ L.Storage.DataLayersControl = L.Control.extend({
     },
 
     openPanel: function () {
-        if (!this.map.editEnabled) return;
+        //if (!this.map.editEnabled) return;
         var container = L.DomUtil.create('ul', 'storage-browse-datalayers');
         this.map.eachDataLayerReverse(function (datalayer) {
             this.addDataLayer(container, datalayer, true);
@@ -579,22 +578,23 @@ L.Storage.DataLayer.include({
 
     renderToolbox: function (container) {
         var toggle = L.DomUtil.create('i', 'layer-toggle', container),
-            zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container),
+            // zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container), TODO : пока уберем переопределили на легенду
             edit = L.DomUtil.create('i', 'layer-edit show-on-edit', container),
-            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
+//            table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
             remove = L.DomUtil.create('i', 'layer-delete show-on-edit', container);
-        zoomTo.title = L._('Zoom to layer extent');
+        // zoomTo.title = L._('Zoom to layer extent');
         toggle.title = L._('Show/hide layer');
         edit.title = L._('Edit');
-        table.title = L._('Edit properties in a table');
+ //       table.title = L._('Edit properties in a table');
         remove.title = L._('Delete layer');
         L.DomEvent.on(toggle, 'click', this.toggle, this);
         //-->TODO: ForestMap пока уберем
-        //L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
+        // L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
         //-->TODO: ForestMap
 
+
         L.DomEvent.on(edit, 'click', this.edit, this);
-        L.DomEvent.on(table, 'click', this.tableEdit, this);
+//        L.DomEvent.on(table, 'click', this.tableEdit, this);
         L.DomEvent.on(remove, 'click', function () {
                     // TODO: ForestMap: нельзя удалить редактируемый слой
                     if (this == this.map.editedLayer) return;
@@ -745,6 +745,7 @@ L.Storage.TileLayerControl = L.Control.extend({
     onAdd: function () {
         var container = L.DomUtil.create('div', 'leaflet-control-tilelayers storage-control');
 
+        container.id = 'tile_layer_container';
         var link = L.DomUtil.create('a', '', container);
         link.href = '#';
         link.title = L._('Change map background');
@@ -766,7 +767,7 @@ L.Storage.TileLayerControl = L.Control.extend({
         this._map.eachTileLayer(function (tilelayer) {
             this.addTileLayerElement(tilelayer, options);
         }, this);
-        this._map.ui.openPanel({data: {html: this._tilelayers_container}, className: options.className});
+        this._map.ui.openPanel({data: {html: this._tilelayers_container}, className: 'dark'});
     },
 
     //TODO: ForestMap  - добавление на нижний толбар открытия легенды
@@ -794,7 +795,7 @@ L.Storage.TileLayerControl = L.Control.extend({
             var namelayer = widget_f.id;
             if (namelayer != '')
             {
-                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.PNG');
+                $('#widget_legenda').children().children().children('img').attr('src', '/static/main/src/image/'  + namelayer + '.png');
                 $('#widget_legenda').show();
             }
         }, this);

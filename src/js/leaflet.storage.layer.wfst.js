@@ -6,6 +6,20 @@ L.S.Layer.WFST= L.WFST.extend({
     initialize: function (datalayer) {
         this.datalayer = datalayer;
 
+        var options = {
+            url: datalayer.options.remoteData.url_wfst,
+            typeName: datalayer.options.laydescription,
+            showExisting: this.showExisting,
+            maxFeatures: 100,
+            crs: L.CRS.EPSG4326,
+            geometryField: 'geometry',
+            style: {
+                color: datalayer.getColor(),
+                weight: 2
+            }
+        };
+
+        L.WFST.prototype.initialize.call(this, options, new L.Format.GeoJSON(options));
         var isValid = true;
         try {
             Object.defineProperty(this, 'isValid', {
@@ -20,26 +34,57 @@ L.S.Layer.WFST= L.WFST.extend({
         catch (e) {
             // Certainly IE8, which has a limited version of defineProperty
         }
-        L.WFST.prototype.initialize.call(this,
-            {
-                url: datalayer.options.remoteData.url_wfst,
-                typeName: datalayer.options.laydescription,
-                showExisting: false,
-                maxFeatures: 100,
-                crs: L.CRS.EPSG4326,
-                geometryField: 'geometry',
-                style: {
-                    color: 'red',
-                    weight: 2
-                }
-            },
-            new L.Format.GeoJSON({crs: L.CRS.EPSG4326, geometryField: 'geometry'})
-        );
-
         var that = this;
+        try {
+            Object.defineProperty(this, 'showExisting', {
+                get: function () {
+                    return this.options.showExisting;
+                },
+                set: function (value) {
+                    this.options.showExisting = value;
+                    if (value) {
+                        this.options.typeName = this.datalayer.options.laydescription;
+                        this.options.typeNSName = this.namespaceName(this.options.typeName);
+                        this.requestFeatures(null, function(rt) {
+                            that._parseFeature(rt);
+                            that.isValid = true;
+                        })
+                    } else {
+                        this.datalayer.clear();
+                    }
+                }
+            })
+        }
+        catch (e) {
+
+        }
+
+        try {
+            Object.defineProperty(this, 'maxFeatures', {
+                get: function () {
+                    return this.options.maxFeatures;
+                },
+                set: function (value) {
+                    this.options.maxFeatures = value;
+                    if (this.showExisting) {
+                        this.datalayer.clear();
+                        this.requestFeatures(null, function(rt) {
+                            that._parseFeature(rt);
+                            that.isValid = true;
+                        })
+                    }
+                }
+            })
+        }
+        catch (e) {
+
+        }
+
         this.on('save:success', function() {
+            if (that.datalayer._tilelay) {
+                that.datalayer.redraw();
+            }
             that.datalayer.clear();
-            that.datalayer._tilelay.redraw();
             that.fire('viewreset');
         });
         this.on('error', function(error) {
@@ -56,15 +101,40 @@ L.S.Layer.WFST= L.WFST.extend({
                 filter_id.append(id);
                 var that = this;
                 this.requestFeatures(filter_id,function(rt) {
-                    var pd = JSON.parse(rt);
-                    for (var i = 0; i < pd.features.length; i++) {
-                        pd.features[i].state = 'exist';
-                    }
-                    that.datalayer.addData(pd);
-                    that.datalayer.map.fitBounds(that.getBounds())
+                    that._parseFeature(rt);
                 })},
             context: this
         });
+    },
+
+    _parseFeature: function(responseText) {
+        var pd = JSON.parse(responseText);
+        for (var i = 0; i < pd.features.length; i++) {
+            pd.features[i].state = 'exist';
+        }
+        this.datalayer.addData(pd);
+        this.datalayer.map.fitBounds(this.getBounds())
+    },
+
+    _deleteUrl: function(layer) {
+        var template = '/row_delete/{layer}/{id}/';
+        return L.Util.template(template, {layer: layer.datalayer.options.laydescription, id:layer.properties.id})
+    },
+
+    _deleteLayer: function (layer) {
+        if (!!layer.properties.id && layer.state === this.state.insert) {
+            var form_url = this._deleteUrl(layer);
+            if (!form_url) {
+                return;
+            }
+            var that = this;
+            this.datalayer.map.post(form_url, {
+                data: '',
+                callback: function (data) {
+                    if (data.success) console.log(data)
+                }
+            })
+        }
     },
 
     addLayer: function (layer) {
@@ -84,5 +154,27 @@ L.S.Layer.WFST= L.WFST.extend({
           this.changes[id] = layer;
         }
         return this;
+    },
+
+    save: function(reload) {
+        this.datalayer.eachLayer(function (layer) {
+            if (!!layer.properties.id && layer.state == 'insert') {
+                layer.state = 'update';
+            }
+        });
+        L.WFST.prototype.save.call(this, reload);
+    },
+
+    removeLayer: function (layer) {
+        this._deleteLayer(layer);
+        L.WFST.prototype.removeLayer.call(this, layer);
+    },
+
+    clearLayers: function () {
+        for (var id in this.changes) {
+            var layer = this.changes[id];
+            this._deleteLayer(layer)
+        }
+        L.WFST.prototype.clearLayers.call(this);
     }
 });

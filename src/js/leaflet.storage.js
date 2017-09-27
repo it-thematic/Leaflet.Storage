@@ -22,7 +22,7 @@ L.Map.mergeOptions({
     embedControl: true,
     zoomControl: true,
     datalayersControl: true,
-    searchControl: true,
+    
     editInOSMControl: false,
     editInOSMControlOptions: false,
     scaleControl: true,
@@ -45,12 +45,22 @@ L.Map.mergeOptions({
     captionBar: false,
     slideshow: {},
     clickable: true,
-    easing: true
+    easing: true,
+    printControl: true,
+    pkkControl: true,
+    importControl: true,
+    tablesemanticControl : true,
+    searchcontextControl  : true,
+    searchControl: true,
+    layerSearchCadNum : ''//'umzparcel', //TODO : noga  - грубая фильтрация :  добавить возможность считать данное значение из JSON -options карты
+    // reportControl : true
 });
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
+    HIDDABLE_CONTROLS: ['search','searchcontext', 'fullscreen',  'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'print', 'pkk', 'import','tablesemantic'],
+        // 'embed',
+        // 'zoom'
 
     initialize: function (el, geojson) {
 
@@ -72,9 +82,9 @@ L.Storage.Map.include({
         this.xhr.on('datalaod', function (e) {
             this.fire('datalaod', e);
         });
-
         this.initLoader();
         this.name = this.options.name;
+        this.layerSearchCadNum = this.options.layerSearchCadNum;
         this.description = this.options.description;
         this.demoTileInfos = this.options.demoTileInfos;
         if (geojson.geometry) this.options.center = geojson.geometry;
@@ -204,7 +214,7 @@ L.Storage.Map.include({
             this.ui.on('panel:closed panel:open', function () {
                 this.editedFeature = null;
             }, this);
-            this.initEditBar();
+            // this.initEditBar();
         }
         this.initShortcuts();
 
@@ -219,19 +229,24 @@ L.Storage.Map.include({
         this.backup();
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
+        this.vl = L.vectorLayer({
+            accessToken: 'no-token'
+        });
+        this.vl.addTo(this);
     },
 
     initControls: function () {
         this.helpMenuActions = {};
         this._controls = {};
-
         if (this.options.allowEdit && !this.options.noControl) {
             new L.Storage.EditControl(this).addTo(this);
-            new L.S.EditingLayerToolbar({map: this}).addTo(this);
+            new L.Storage.EditLayerControl(this).addTo(this);
+            new L.Storage.SaveControl(this).addTo(this);
+            new L.Storage.CancelControl(this).addTo(this);
+            new L.Storage.DisableControl(this).addTo(this);
             new L.S.DrawToolbar({map: this}).addTo(this);
-
             var editActions = [
-                L.S.ImportAction,
+                // L.S.ImportAction,
                 L.S.EditPropertiesAction,
                 L.S.ChangeTileLayerAction,
                 L.S.ManageDatalayersAction,
@@ -254,6 +269,13 @@ L.Storage.Map.include({
         this._controls.measure = (new L.MeasureControl()).initHandler(this);
         this._controls.more = new L.S.MoreControls();
         this._controls.scale = L.control.scale();
+        this._controls.print = new L.Storage.printControl(this).addTo(this);
+        this._controls.pkk = new L.Storage.pkkControl(this).addTo(this);
+        this._controls.import = new L.Storage.importControl(this).addTo(this);
+        this._controls.tablesemantic = new L.Storage.tablesemanticControl(this).addTo(this);
+        this._controls.searchcontext = new L.Storage.searchcontextControl(this).addTo(this);
+        // this._controls.reportcont = new L.reportControl(map).addTo(map);
+        // this._controls.reportcont =   new L.Storage.reportControls(this).addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();
@@ -438,6 +460,7 @@ L.Storage.Map.include({
     },
 
     createTileLayer: function (tilelayer) {
+        L.Util.extend(tilelayer, {zIndex: 0});
         return new L.TileLayer(tilelayer.url_template, tilelayer);
     },
 
@@ -702,7 +725,7 @@ L.Storage.Map.include({
             clearLabel = L.DomUtil.create('label', '', container),
             submitInput = L.DomUtil.create('input', '', container),
             map = this, option,
-            types = ['geojson', 'csv', 'gpx', 'kml', 'osm', 'georss', 'umap'];
+            types = ['geojson', 'csv', 'gpx', 'kml', 'osm', 'georss', 'umap', 'excel'];
         title.innerHTML = L._('Import data');
         fileInput.type = 'file';
         fileInput.multiple = 'multiple';
@@ -769,11 +792,11 @@ L.Storage.Map.include({
                         continue;
                     }
                     if (type === 'umap') {
-                        this.importFromFile(file, 'umap');
+                        this.importFromFile(file, 'umap', clearFlag.checked);
                     } else {
                         var importLayer = layer;
                         if (!layer) importLayer = this.createDataLayer({name: file.name});
-                        importLayer.importFromFile(file, type);
+                        importLayer.importFromFile(file, type, clearFlag.checked);
                     }
                 }
             } else {
@@ -1040,7 +1063,8 @@ L.Storage.Map.include({
         'embedControl',
         'measureControl',
         'tilelayersControl',
-        'easing'
+        'easing',
+        'layerSearchCadNum'
     ],
 
     exportOptions: function () {
@@ -1483,7 +1507,7 @@ L.Storage.Map.include({
     },
 
     initLoader: function () {
-        this.loader = new L.Control.Loading();
+        this.loader = new L.Control.Loading({spinjs: true});
         this.loader.onAdd(this);
     },
 

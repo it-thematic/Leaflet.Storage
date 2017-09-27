@@ -28,7 +28,7 @@ var locale = {
     "Default": "По умолчанию",
     "Delete": "Удалить",
     "Delete this feature": "Удалить объект",
-    "Disable editing": "Отключить редактирование",
+    "Disable editing": "ОТКЛЮЧИТЬ",
     "Display on load": "Показывать при загрузке",
     "Do you want to display a minimap?": "Показывать миникарту?",
     "Do you want to display popup footer?": "Хотите использовать всплывающую подсказку снизу?",
@@ -36,7 +36,7 @@ var locale = {
     "Download data": "Скачать данные",
     "Draw a line": "Нарисовать линию",
     "Draw a marker": "Добавить метку",
-    "Draw a polygon": "Нарисовать полигон",
+    "Draw a polygon": "Пространственный отчет",
     "Draw a polyline": "Нарисовать линию",
     "Drop": "Капля",
     "Dynamic": "Динамический",
@@ -356,7 +356,14 @@ var locale = {
     "Are you sure you want to cancel your changes in this feature?" : "Вы уверены, что хотите отменить свои изменения в этом объекте?",
     "Enable editing layer": "Выбрать слой для редактирования",
     "Disable editing layer": "Завершить редактирование слоя",
-    "You have unsaved changes. Save?": "У вас есть несохранённые изменения. Сохранить"
+    "Layer {name} contain unsaved changes. Save?": "Слой {name} содержит несохранённые изменения. Сохранить?",
+    "PKK": "Кадастровая карта Росреестра",
+    "Print map": "Печать карты",
+    "Load existing": "Загружать существующие объекты",
+    "MaxFeatures": "Максимальное количество объектов. По умолчанию {count}",
+    "Style": "Стиль отображения",
+    "Default style": "Стиль отображения по умолчанию"
+
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");

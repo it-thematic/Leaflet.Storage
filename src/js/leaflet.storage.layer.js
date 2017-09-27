@@ -81,7 +81,9 @@ L.S.Layer.Heat = L.HeatLayer.extend({
         if (layer instanceof L.Marker) {
             var latlng = layer.getLatLng(), alt;
             if (this.datalayer.options.heat && this.datalayer.options.heat.intensityProperty) {
+                /**TODO: IT */
                 alt = parseFloat(layer.properties[this.datalayer.options.heat.intensityProperty || 0]);
+                /** */
                 latlng = new L.LatLng(latlng.lat, latlng.lng, alt);
             }
             this.addLatLng(latlng);
@@ -407,10 +409,12 @@ L.Storage.DataLayer = L.Class.extend({
 
     removeLayer: function (feature) {
         var id = L.stamp(feature);
-        feature.disconnectFromDataLayer(this);
+        // feature.disconnectFromDataLayer(this); // 03.08.2017 from last UMAP commit
         this._index.splice(this._index.indexOf(id), 1);
         delete this._layers[id];
         this.layer.removeLayer(feature);
+        //TODO: IT
+        feature.disconnectFromDataLayer(this);
         if (this.hasDataLoaded()) this.fire('datachanged');
     },
 
@@ -662,7 +666,8 @@ L.Storage.DataLayer = L.Class.extend({
     erase: function () {
         this.hide();
         delete this.map.datalayers[L.stamp(this)];
-        this.map.datalayers_index.splice(this.getRank(), 1);
+        var _rank = this.getRank();
+        if (_rank !== -1) { this.map.datalayers_index.splice(_rank, 1); }
         this.parentPane.removeChild(this.pane);
         this.map.updateDatalayersControl();
         this.fire('erase');
@@ -671,23 +676,47 @@ L.Storage.DataLayer = L.Class.extend({
         this.clear();
         delete this._loaded;
     },
-
+    
+    /** #TODO: umap - */
+    //TODO: IT
     reset: function () {
         if (!this.storage_id) this.erase();
+        else {
 
-        this.resetOptions();
-        this.parentPane.appendChild(this.pane);
-        if (this._leaflet_events_bk && !this._leaflet_events) {
-            this._leaflet_events = this._leaflet_events_bk;
+            this.resetOptions();
+            this.parentPane.appendChild(this.pane);
+            if (this._leaflet_events_bk && !this._leaflet_events) {
+                this._leaflet_events = this._leaflet_events_bk;
+            }
+            this.clear();
+            this.hide();
+            if (this.isRemoteLayer()) this.fetchRemoteData();
+            else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
+            this._loaded = true;
+            this.show();
+            this.isDirty = false;
         }
-        this.clear();
-        this.hide();
-        if (this.isRemoteLayer()) this.fetchRemoteData();
-        else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
-        this._loaded = true;
-        this.show();
-        this.isDirty = false;
     },
+    
+    /** */
+
+//    reset: function () {
+//        if (!this.storage_id) { this.erase(); }
+//        else {
+//            this.resetOptions();
+//            this.parentPane.appendChild(this.pane);
+//            if (this._leaflet_events_bk && !this._leaflet_events) {
+//                this._leaflet_events = this._leaflet_events_bk;
+//            }
+//            this.clear();
+//            this.hide();
+//            if (this.isRemoteLayer()) this.fetchRemoteData();
+//            else if (this._geojson_bk) this.fromGeoJSON(this._geojson_bk);
+//            this._loaded = true;
+//            this.show();
+//            this.isDirty = false;
+//        }
+//    },
 
     redraw: function () {
         this.hide();
@@ -775,24 +804,42 @@ L.Storage.DataLayer = L.Class.extend({
             this.options.remoteData = {};
         }
 
-        var wfstCallback = function(field){
-            if (this.options.type === 'WFST') {
-                if (field.helper.field == 'options.remoteData.wfst') {
-                    this.resetLayer(true);
-                    this.edit();
-                }
-
-            }
-        };
         var remoteDataFields = [
-            ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL'}],
-            ['options.remoteData.wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: wfstCallback}],
-            ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format')}],
+            ['options.remoteData.url', {handler: 'Url', label: L._('Url'), helpEntries: 'formatURL',
+                callback: (field) => {this._changeURL(field.helper.value())}
+            }],
+            ['options.remoteData.format', {handler: 'DataFormat', label: L._('Format'),
+                callback: (field) => { this._changeFormat(field.helper.value())}
+            }],
             ['options.remoteData.from', {label: L._('From zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.to', {label: L._('To zoom'), helpText: L._('Optionnal.')}],
             ['options.remoteData.dynamic', {handler: 'Switch', label: L._('Dynamic'), helpEntries: 'dynamicRemoteData'}],
             ['options.remoteData.licence', {label: L._('Licence'), helpText: L._('Please be sure the licence is compliant with your use.')}]
         ];
+
+        if (this.options.remoteData && !this.options.remoteData.style_id) {
+            remoteDataFields.push(['options.remoteData.style_id', {handler: 'Select', label: L._('Default style'), selectOptions: this._styleSelect,
+                callback: (field) => { this.vectorStyleID = field.helper.value()}
+            }]);
+        }
+        remoteDataFields.push(['vectorStyleID', {handler: 'Select', label: L._('Style'), selectOptions: this._styleSelect}]);
+
+        if (this.isWFSTLayer()) {
+            remoteDataFields.push(['options.remoteData.url_wfst', {handler: 'Url', label: L._('WFST'), helpEntries: 'formatWFST', callback: function (e) {
+                    this.layer.options.url = e.helper.toJS();
+                    this.layer.describeFeatureType();
+                }}]);
+            remoteDataFields.push(['options.remoteData.maxFeatures', {handler: 'IntInput', label: L._('MaxFeatures', {'count': this.layer.maxFeatures}),
+                callback: function (e) {
+                    this.layer.maxFeatures = e.helper.toJS();
+                }
+            }]);
+            remoteDataFields.push(['options.remoteData.loadexisting', {handler: 'Switch', label: L._('Load existing'),
+                callback: function (e) {
+                    this.layer.showExisting = e.helper.toJS();
+                }
+            }])
+        }
         if (this.map.options.urls.ajax_proxy) {
             remoteDataFields.push(['options.remoteData.proxy', {handler: 'Switch', label: L._('Proxy request'), helpEntries: 'proxyRemoteData'}]);
         }

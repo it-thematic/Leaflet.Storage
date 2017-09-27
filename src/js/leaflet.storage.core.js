@@ -111,6 +111,10 @@ L.Util.detectFileType = function (f) {
     if (f.type === 'application/vnd.google-earth.kml+xml' || ext('.kml')) {
         return 'kml';
     }
+    if (f.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' // Microsoft Office Excel 2007
+        || ext('.xls')) {
+        return 'excel';
+    }
     if (ext('.gpx')) return 'gpx';
     if (ext('.geojson') || ext('.json')) return 'geojson';
     if (f.type === 'text/csv' || ext('.csv') || ext('.tsv') || ext('.dsv')) {
