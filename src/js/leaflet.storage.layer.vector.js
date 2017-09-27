@@ -18,10 +18,7 @@ L.VectorLayer = L.MapboxGL.extend({
             return;
         }
 
-        let diff = true;
-        if (options && options.diff) {
-            diff = (options && options.diff);
-        }
+        const diff = (options && options.diff);
 
         if (!diff) {
             this._glMap.setStyle(style);
@@ -67,9 +64,11 @@ L.VectorLayer = L.MapboxGL.extend({
     },
 
     hasStyle: function (style) {
-        if (!style) {
+        if (!style || !this._glMap.getStyle()) {
             return false;
         }
+
+
 
         if (style.hasOwnProperty('layers')) {
             for (let j in style.layers) {
