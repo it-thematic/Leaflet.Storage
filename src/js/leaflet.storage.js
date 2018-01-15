@@ -219,6 +219,12 @@ L.Storage.Map.include({
         this.backup();
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
+
+        // TODO: vector_tiles
+        this.vl = L.vectorLayer({
+            accessToken: 'no-token'
+        });
+        this.vl.addTo(this);
     },
 
     initControls: function () {
