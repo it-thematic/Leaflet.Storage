@@ -1,0 +1,31 @@
+/ * Control for pkk5.rosreestr.ru */
+
+.leaflet-control-pkk a {
+    background-position: -120px -122px;
+}
+
+.leaflet-control-pkk.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
+}
+
+
+/* button show tematic karts*/
+
+.storage-edit-enabled .leaflet-control-show-type-kart {
+    display: none;
+}
+
+.leaflet-control-show-type-kart {
+    display:block !important;
+    right: 57px;
+    top : -70px;
+    cursor: pointer;
+}
+.leaflet-control-show-type-kart a {
+    background-image: url("../img/24-white.png");
+    background-position:-82px -122px;
+    border: #2a2e30;
+}
