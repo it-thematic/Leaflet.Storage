@@ -18,8 +18,6 @@
 
 .leaflet-control-show-type-kart {
     display:block !important;
-    right: 57px;
-    top : -70px;
     cursor: pointer;
 }
 .leaflet-control-show-type-kart a {

@@ -56,7 +56,7 @@ L.Storage.pkkControl = L.Control.extend({
 L.Storage.TyeKartControl = L.Control.extend({
 
     options: {
-        position: 'topright'
+        position: 'topleft'
     },
 
     onAdd: function (map) {
