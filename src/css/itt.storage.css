@@ -25,3 +25,13 @@
     background-position:-82px -122px;
     border: #2a2e30;
 }
+
+/*
+    переопределение стилизации иконок "Увеличение / Уменьшение  масштаба"
+*/
+
+.leaflet-touch .leaflet-bar a {
+    width: 36px !important;
+    height: 36px !important;
+    line-height: 36px !important;
+    margin-left: -1px !important;
