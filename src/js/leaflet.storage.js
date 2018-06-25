@@ -223,10 +223,9 @@ L.Storage.Map.include({
         this.on('click contextmenu.show', this.closeInplaceToolbar);
 
         // TODO: vector_tiles
-        this.vl = L.vectorLayer({
-            accessToken: 'no-token'
+        this.MAPBOX = L.MapboxITT({
         });
-        this.vl.addTo(this);
+        this.MAPBOX.addTo(this);
     },
 
     initControls: function () {

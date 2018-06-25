@@ -1,8 +1,21 @@
-L.VectorLayer = L.MapboxGL.extend({
+L.MapboxGL.ITT = L.MapboxGL.extend({
     TOKEN : "pk.eyJ1Ijoic2hwYXdlbCIsImEiOiJjaXMwOGRqajYwMDBhMnpvNzdyOWYxNWU2In0.tCzDmtQKGwFwHx40zXQhKQ",
 
     options: {
         version: 8
+    },
+
+    style: {
+        "version": 8,
+        "name": "mgs_web_service",
+        "center": [37.627487, 55.741028],
+        "zoom": 8,
+        "sprite": "mapbox://sprites/mapbox/streets-v8",
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        "sources": {
+        },
+        "layers": [
+        ]
     },
 
     initialize: function (options) {
@@ -26,7 +39,7 @@ L.VectorLayer = L.MapboxGL.extend({
             return;
         }
 
-        let diff = true;
+        var diff = true;
         if (options && (options.diff === false)) {
             diff = false;
         }
@@ -44,7 +57,7 @@ L.VectorLayer = L.MapboxGL.extend({
             }
             // Добавление слоёв
             if (style.hasOwnProperty('layers')) {
-                for (var j in style.layers) {
+                for (j in style.layers) {
                     if (!this._glMap.getLayer(style.layers[j].id)) {
                         this._glMap.addLayer(style.layers[j]);
                     }
@@ -82,8 +95,6 @@ L.VectorLayer = L.MapboxGL.extend({
             return false;
         }
 
-
-
         if (style.hasOwnProperty('layers')) {
             for (var j in style.layers) {
                 if (this._glMap.getLayer(style.layers[j].id)) {
@@ -94,6 +105,6 @@ L.VectorLayer = L.MapboxGL.extend({
     }
 });
 
-L.vectorLayer = function (url, options) {
-	return new L.VectorLayer(url, options);
+L.MapboxITT = function (url, options) {
+	return new L.MapboxGL.ITT(url, options);
 };

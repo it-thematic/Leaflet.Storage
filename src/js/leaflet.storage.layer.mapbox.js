@@ -43,17 +43,17 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     return styleID;
                 },
                 set: function (style_id) {
-                    if (Number(style_id) === -1) return;
-                    if (styleID === style_id) return;
+                    if (Number(style_id) === -1) { return; }
+                    if (styleID === style_id) { return; }
                     styleID  = style_id;
 
                     var that = this;
                     this.datalayer.map.get(this._getStyleUrl(style_id), {
                         callback: function(response) {
-                            that.datalayer.map.vl.removeStyle(that._styleJSON);
+                            that.datalayer.map.MAPBOX.removeStyle(that._styleJSON);
                             if (response) {
                                 that._styleJSON = response;
-                                that.datalayer.map.vl.setStyle(response);
+                                that.datalayer.map.MAPBOX.setStyle(response);
                             }
                         }
                     });
@@ -66,13 +66,13 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
         this.on('add', function (e) {
             if (this.styleID && this.styleID !== -1) {
-                this.datalayer.map.vl.setStyle(this._styleJSON);
+                this.datalayer.map.MAPBOX.setStyle(this._styleJSON);
             }
         }, this);
 
         this.on('remove', function (e) {
             if (this.styleID && this.styleID !== -1) {
-                this.datalayer.map.vl.removeStyle(this._styleJSON);
+                this.datalayer.map.MAPBOX.removeStyle(this._styleJSON);
             }
         }, this);
         if (this.datalayer.options.mapbox && this.datalayer.options.mapbox.style) {
