@@ -58,7 +58,7 @@
 }
 
 .employee {
-    background-position: -160px -122px;
+    background-position: -80px -155px;
 }
 
 .employee{
@@ -76,17 +76,17 @@
 }
 
 .vehicle {
-    background-position: -0px -42px;
+    background-position: -120px -155px;
 }
 
-.vehicle{
-    background-image: url(../img/24-white.png);
-    background-color: #2a2e30;
-    color: #eeeeec;
-}
+/*.vehicle{*/
+    /*background-image: url(../img/24-white.png);*/
+    /*background-color: #2a2e30;*/
+    /*color: #eeeeec;*/
+/*}*/
 
-.vehicle:hover{
-    background-image: url(../img/24-white.png);
-    /*background-position: -82px -122px;*/
-    border: #2a2e30;
-}
+/*.vehicle:hover{*/
+    /*background-image: url(../img/24-white.png);*/
+    /*!*background-position: -82px -122px;*!*/
+    /*border: #2a2e30;*/
+/*}*/
