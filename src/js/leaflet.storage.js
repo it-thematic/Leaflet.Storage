@@ -48,6 +48,8 @@ L.Map.mergeOptions({
     easing: true,
     pkkControl: true,
     showTypeKartControl: true,
+    filterType_Employee: true,
+    filterType_Vehicle: true,
 });
 
 L.Storage.Map.include({
@@ -117,6 +119,23 @@ L.Storage.Map.include({
         catch (e) {
             // Certainly IE8, which has a limited version of defineProperty
         }
+
+        var activeDataLayer = null;
+        try {
+            Object.defineProperty(this, 'activeDataLayer', {
+                get: function () {
+                    return activeDataLayer;
+                },
+                set: function (Datalayer) {
+                    activeDataLayer = Datalayer;
+                    self.fire('setactivedatalayer', self);
+                }
+            });
+        }
+        catch (e) {
+            // Certainly IE8, which has a limited version of defineProperty
+        }
+
 
         if (this.options.hash) this.addHash();
         this.initCenter();
@@ -222,10 +241,7 @@ L.Storage.Map.include({
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
 
-        // TODO: vector_tiles
-        this.MAPBOX = L.MapboxITT({
-        });
-        this.MAPBOX.addTo(this);
+        this.initMapbox();
     },
 
     initControls: function () {
@@ -247,6 +263,16 @@ L.Storage.Map.include({
             if (this.options.urls.map_update_permissions) editActions.push(L.Storage.UpdatePermsAction);
             new L.S.SettingsToolbar({actions: editActions}).addTo(this);
         }
+
+        if (!this.options.noControl) {
+            var filterActions = [
+                L.S.FilterAction.Employee,
+                L.S.FilterAction.Vehicle,
+                L.S.BearingActions
+            ];
+            new L.S.FilterToolbar({actions: filterActions}).addTo(this);
+        }
+
         this._controls.zoom = new L.Control.Zoom({zoomInTitle: L._('Zoom in'), zoomOutTitle: L._('Zoom out')});
         this._controls.datalayers = new L.Storage.DataLayersControl(this);
         this._controls.locate = new L.S.LocateControl();
@@ -262,6 +288,8 @@ L.Storage.Map.include({
         this._controls.more = new L.S.MoreControls();
         this._controls.scale = L.control.scale();
         this._controls.pkk = new L.S.pkkControl(this).addTo(this);
+        this._controls.filterType_Employee = new L.S.filterControl(this, 'TypeId=Employee').addTo(this);
+        this._controls.filterType_Vehicle = new L.S.filterControl(this, 'TypeId=Vehicle').addTo(this);
         this._controls.showkarts = new L.S.TyeKartControl(this).addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();

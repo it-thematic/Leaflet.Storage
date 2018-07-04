@@ -63,7 +63,7 @@ L.Storage.TyeKartControl = L.Control.extend({
         var container = L.DomUtil.create('div', 'leaflet-control-show-type-kart storage-control'),
             show_kart = L.DomUtil.create('a', '', container);
 
-        show_kart.id='show_kart_s'
+        show_kart.id='show_kart_s';
         show_kart.title = L._('Показать тематические карты');
         L.DomEvent.on(show_kart, 'click', function (e) {
             L.DomEvent.stop(e);
@@ -72,5 +72,126 @@ L.Storage.TyeKartControl = L.Control.extend({
 
         return container;
     }
-
 });
+
+
+L.Storage.filterControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    initialize: function (map, condition, options) {
+        this.map = map;
+        this.condition = condition;
+        this.enabled = false;
+        L.Control.prototype.initialize.call(this, options);
+    },
+
+    onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-control-filter storage-control');
+
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._(this.condition.split('=')[1]);
+
+        L.DomEvent
+            .on(link, 'click', L.DomEvent.stop)
+            .on(link, 'click', this.onClick, this)
+            .on(link, 'dblclick', L.DomEvent.stopPropagation);
+
+        return container;
+    },
+
+    onClick: function () {
+        this.enabled = !this.enabled;
+        L.DomUtil.classIf(this.getContainer(), 'dark', this.enabled);
+        var that = this;
+        this.map.eachDataLayer(function (datalayer) {
+            if (!!this.map.activeDatalaye && this.map.activeDatalaye.layer._type === 'Mapbx') {
+                that.enabled ? datalayer.layer.appendFilter(that.condition) : datalayer.layer.removeFilter(that.condition);
+            }
+        });
+    }
+});
+
+
+L.Storage.FilterAction = L.Storage.BaseAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-filter dark',
+        tooltip: L._('')
+    },
+
+    condition: '',
+
+    initialize: function (map) {
+        this.enabled = false;
+        L.Storage.BaseAction.prototype.initialize.call(this, map);
+    },
+
+    onClick: function() {
+        this.enabled = !this.enabled;
+        L.DomUtil.classIf(this._link, 'dark', !this.enabled);
+        var that = this;
+        this.map.eachDataLayer(function (datalayer) {
+            if (!!that.map.activeDatalaye && that.map.activeDatalaye.layer._type === 'Mapbx') {
+                !that.enabled ? datalayer.layer.removeFilter(that.condition) : datalayer.layer.appendFilter(that.condition);
+            }
+        });
+    },
+
+    addHooks: function () {
+        this.onClick();
+    }
+});
+
+L.Storage.FilterAction.Employee = L.Storage.FilterAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-filter dark',
+        tooltip: L._('Employee')
+    },
+
+    condition: 'TypeId=Employee'
+});
+
+L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-filter dark',
+        tooltip: L._('Vehicle')
+    },
+
+    condition: 'TypeId=Vehicle'
+});
+
+L.Storage.BearingActions = L.Storage.BaseAction.extend({
+
+    options: {
+        helpMenu: true,
+        className: 'leaflet-control-bearing dark',
+        tooltip: L._('Bearing')
+    },
+
+    initialize: function (map) {
+        this.bearing = 0;
+        L.Storage.BaseAction.prototype.initialize.call(this, map);
+    },
+
+    rotate: function() {
+        this.bearing += 90;
+        if (this.bearing >= 360) {
+            this.bearing = 0;
+        }
+        this.map.MAPBOX.rotateTo(this.bearing);
+    },
+
+    addHooks: function () {
+        this.rotate();
+    }
+});
+
+L.Storage.FilterToolbar = L.Toolbar.Control.extend({});

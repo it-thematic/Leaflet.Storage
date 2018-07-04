@@ -347,5 +347,9 @@
     "Set it to false to hide this layer from the slideshow, the data browser, the popup navigation…": "Set it to false to hide this layer from the slideshow, the data browser, the popup navigation…",
     "{delay} seconds": "{delay} seconds",
     "Display measure": "Display measure",
-    "Mapbox": "Mapbox styles layer"
+    "Mapbox": "Mapbox styles layer",
+    "WFS Data": "Сервис пространственных объектов",
+    "Default filter": "Default filter",
+    "In bbox map": "In bbox map",
+    "Active": "Active"
 }

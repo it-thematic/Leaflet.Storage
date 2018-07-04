@@ -9,6 +9,17 @@
     border: 1px solid #1b1f20;
 }
 
+.leaflet-control-filter a {
+    background-position: -120px -122px;
+}
+
+.leaflet-control-filter.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid #1b1f20;
+}
+
 
 /* button show tematic karts*/
 
@@ -35,3 +46,13 @@
     height: 36px !important;
     line-height: 36px !important;
     margin-left: -1px !important;
+}
+
+/*
+    Переопределение поведения leaflet-toolbar
+ */
+
+.storage-toolbar-enabled .leaflet-control-toolbar > li > .leaflet-toolbar-icon,
+.storage-toolbar-enabled .storage-toolbar a {
+    display: block;
+}

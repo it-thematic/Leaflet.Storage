@@ -364,7 +364,10 @@ var locale = {
     "Style": "Стиль отображения",
     "Default style": "Стиль отображения по умолчанию",
     "Mapbox": "Слой данных Mapbox",
-    "WFS Data": "Сервис пространственных объектов"
+    "WFS Data": "Сервис пространственных объектов",
+    "Default filter": "Фильтр по умлочанию",
+    "In bbox map": "В границах видимой области",
+    "Active": "Активный"
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");
