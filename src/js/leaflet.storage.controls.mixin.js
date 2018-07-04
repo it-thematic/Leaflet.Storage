@@ -150,7 +150,7 @@ L.Storage.FilterAction.Employee = L.Storage.FilterAction.extend({
 
     options: {
         helpMenu: true,
-        className: 'leaflet-control-filter dark',
+        className: 'leaflet-control-filter employee dark',
         tooltip: L._('Employee')
     },
 
@@ -161,7 +161,7 @@ L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
 
     options: {
         helpMenu: true,
-        className: 'leaflet-control-filter dark',
+        className: 'leaflet-control-filter vehicle dark',
         tooltip: L._('Vehicle')
     },
 

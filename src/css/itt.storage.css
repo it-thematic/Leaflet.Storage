@@ -56,3 +56,41 @@
 .storage-toolbar-enabled .storage-toolbar a {
     display: block;
 }
+
+.employee {
+    background-position: -160px -122px;
+}
+
+.employee{
+    background-image: url(../img/24-white.png);
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid white;
+    outline: none;
+}
+}
+
+.employee:hover{
+    background-image: url(../img/24-white.png);
+    /*background-position: -82px -122px;*/
+    border: #2a2e30;
+}
+
+.vehicle {
+    background-position: -0px -42px;
+}
+
+.vehicle{
+    background-image: url(../img/24-white.png);
+    background-color: #2a2e30;
+    color: #eeeeec;
+    border: 1px solid white;
+    outline: none;
+}
+}
+
+.vehicle:hover{
+    background-image: url(../img/24-white.png);
+    /*background-position: -82px -122px;*/
+    border: #2a2e30;
+}
