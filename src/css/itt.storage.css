@@ -65,9 +65,8 @@
     background-image: url(../img/24-white.png);
     background-color: #2a2e30;
     color: #eeeeec;
-    border: 1px solid white;
-    outline: none;
-}
+    /*border: 1px solid white;*/
+    /*outline: none;*/
 }
 
 .employee:hover{
@@ -84,9 +83,6 @@
     background-image: url(../img/24-white.png);
     background-color: #2a2e30;
     color: #eeeeec;
-    border: 1px solid white;
-    outline: none;
-}
 }
 
 .vehicle:hover{
