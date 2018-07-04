@@ -138,12 +138,14 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
         if (!_style.hasOwnProperty('sources')) { return; }
         for (var source in _style.sources) {
             if (!_style.sources.hasOwnProperty(source)) { continue; }
+            this._glMap.style.sourceCaches[source].reload();
             this._glMap.getSource(source).load();
             console.log(source + ' is reload', new Date());
         }
     },
 
-    reload: function (options) {
+    reload: function () {
+        // this._glMap.style.reload();
         this._reloadSources();
 
     },
