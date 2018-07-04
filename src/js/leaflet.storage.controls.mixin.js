@@ -151,7 +151,7 @@ L.Storage.FilterAction.Employee = L.Storage.FilterAction.extend({
     options: {
         helpMenu: true,
         className: 'leaflet-control-filter employee dark',
-        tooltip: L._('Employee')
+        tooltip: L._('Показать/скрыть персонал')
     },
 
     condition: 'TypeId=Employee'
@@ -162,7 +162,7 @@ L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
     options: {
         helpMenu: true,
         className: 'leaflet-control-filter vehicle dark',
-        tooltip: L._('Vehicle')
+        tooltip: L._('Показать/скрыть автотранспорт')
     },
 
     condition: 'TypeId=Vehicle'
