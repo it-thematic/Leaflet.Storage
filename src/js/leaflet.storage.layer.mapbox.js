@@ -70,6 +70,9 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         this.on('add', function (e) {
             if (this.styleID && this.styleID !== -1) {
                 this.datalayer.map.MAPBOX.setStyle(this._styleJSON);
+                this.datalayer.map.MAPBOX._glMap.repaint = true;
+                // this.datalayer.map.MAPBOX._glMap.showTileBoundaries = true;
+                // this._glMap.showCollisionBoxes = true;
             }
         }, this);
 

@@ -135,7 +135,7 @@ L.Storage.FilterAction = L.Storage.BaseAction.extend({
         L.DomUtil.classIf(this._link, 'dark', !this.enabled);
         var that = this;
         this.map.eachDataLayer(function (datalayer) {
-            if (!!that.map.activeDatalaye && that.map.activeDatalaye.layer._type === 'Mapbx') {
+            if (!!that.map.activeDataLayer && that.map.activeDataLayer.layer._type === 'Mapbox') {
                 !that.enabled ? datalayer.layer.removeFilter(that.condition) : datalayer.layer.appendFilter(that.condition);
             }
         });
