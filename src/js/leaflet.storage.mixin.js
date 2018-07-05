@@ -13,7 +13,7 @@ StorageMixin = {
             // }
             // that.fire('mapbox-reload', that);
             // console.log("map reload");
-            timerId = setTimeout(tick, 1000);
+            timerId = setTimeout(tick, 500);
         }, 1000);
 
         this.MAPBOX.mapON('load', function (e) {
