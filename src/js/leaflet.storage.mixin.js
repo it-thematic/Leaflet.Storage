@@ -7,9 +7,10 @@ StorageMixin = {
 
         var that = this;
         var timerId = setTimeout(function tick() {
-            if (that.activeDataLayer.layer._type === 'Mapbox') {
-                that.activeDataLayer.layer.reloadData();
-            }
+            that.MAPBOX.reload();
+            // if (that.activeDataLayer && that.activeDataLayer.layer._type === 'Mapbox') {
+            //     that.activeDataLayer.layer.reloadData();
+            // }
             // that.fire('mapbox-reload', that);
             // console.log("map reload");
             timerId = setTimeout(tick, 1000);
@@ -22,17 +23,17 @@ StorageMixin = {
             // that.MAPBOX._glMap.vertices = true;
         });
 
-        this.MAPBOX.mapON('click', 'mgs_locations', function (e) {
-            console.log(e);
-        });
-
-        this.MAPBOX._glMap.on('mouseenter', 'mgs_locations', function (e) {
-            console.log(e);
-        });
-
-        this.MAPBOX._glMap.on('mouseleave', 'mgs_locations', function (e) {
-            console.log(e);
-        });
+        // this.MAPBOX.mapON('click', 'mgs_locations', function (e) {
+        //     console.log(e);
+        // });
+        //
+        // this.MAPBOX._glMap.on('mouseenter', 'mgs_locations', function (e) {
+        //     console.log(e);
+        // });
+        //
+        // this.MAPBOX._glMap.on('mouseleave', 'mgs_locations', function (e) {
+        //     console.log(e);
+        // });
 
         // this.on('mapbox-reload', this.MAPBOX._glMap._update.bind(this.MAPBOX._glMap, true));
 
@@ -42,23 +43,23 @@ StorageMixin = {
             }
         });
 
-        this.on('click', function (e) {
-            var x,y, width=10, height=10;
-            x = e.latlng['lat'];
-            y = e.latlng['lng'];
-            var bbox = [
-                [x - width / 2, y - height / 2],
-                [x + width / 2, y + height / 2]
-            ];
-            var features = that.MAPBOX._glMap.queryRenderedFeatures(bbox);//, {layers: ['mgs_locations']});
-            console.log(features);
-            bbox = [
-                [y - width / 2, x - height / 2],
-                [x + width / 2, y + height / 2]
-            ];
-            var features = that.MAPBOX._glMap.queryRenderedFeatures(bbox);//, {layers: ['mgs_locations']});
-            console.log(features);
-        }, true);
+        // this.on('click', function (e) {
+        //     var x,y, width=10, height=10;
+        //     x = e.latlng['lat'];
+        //     y = e.latlng['lng'];
+        //     var bbox = [
+        //         [x - width / 2, y - height / 2],
+        //         [x + width / 2, y + height / 2]
+        //     ];
+        //     var features = that.MAPBOX._glMap.queryRenderedFeatures(bbox);//, {layers: ['mgs_locations']});
+        //     console.log(features);
+        //     bbox = [
+        //         [y - width / 2, x - height / 2],
+        //         [x + width / 2, y + height / 2]
+        //     ];
+        //     var features = that.MAPBOX._glMap.queryRenderedFeatures(bbox);//, {layers: ['mgs_locations']});
+        //     console.log(features);
+        // }, true);
     }
 };
 
