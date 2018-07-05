@@ -189,5 +189,11 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             this.datalayer.map.MAPBOX.setSource(source, url + filter);
             this.datalayer.map.fire('update-source', {map: this.datalayer.map, layer: this});
         }
+    },
+
+    reloadData: function () {
+        if (!!this._styleJSON && this._styleJSON.hasOwnProperty('sources')) {
+            this.datalayer.map.MAPBOX.reloadSource(this._styleJSON.sources);
+        }
     }
 });

@@ -149,6 +149,14 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
         this._reloadSources();
 
     },
+    
+    reloadSource: function (source) {
+        for (var s in source) {
+            if (this._glMap.style.sourceCaches.hasOwnProperty(s)) {
+                this._glMap.style.sourceCaches[s].reload();
+            }
+        }
+    },
 
     getBearing: function() {
         return this._glMap.getBearing();

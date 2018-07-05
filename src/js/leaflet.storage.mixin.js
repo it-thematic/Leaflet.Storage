@@ -7,7 +7,9 @@ StorageMixin = {
 
         var that = this;
         var timerId = setTimeout(function tick() {
-            that.MAPBOX.reload();
+            if (that.activeDataLayer.layer._type === 'Mapbox') {
+                that.activeDataLayer.layer.reloadData();
+            }
             // that.fire('mapbox-reload', that);
             // console.log("map reload");
             timerId = setTimeout(tick, 1000);
