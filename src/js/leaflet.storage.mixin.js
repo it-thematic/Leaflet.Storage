@@ -7,14 +7,14 @@ StorageMixin = {
 
         var that = this;
         var timerId = setTimeout(function tick() {
-            that.MAPBOX.reload();
-            // if (that.activeDataLayer && that.activeDataLayer.layer._type === 'Mapbox') {
-            //     that.activeDataLayer.layer.reloadData();
-            // }
+            // that.MAPBOX.reload();
+            if (that.activeDataLayer && that.activeDataLayer.layer._type === 'Mapbox') {
+                that.activeDataLayer.layer.reloadData();
+            }
             // that.fire('mapbox-reload', that);
             // console.log("map reload");
-            timerId = setTimeout(tick, 500);
-        }, 1000);
+            timerId = setTimeout(tick, 5000);
+        }, 5000);
 
         this.MAPBOX.mapON('load', function (e) {
             // that.MAPBOX._glMap.showTileBoundaries = true;

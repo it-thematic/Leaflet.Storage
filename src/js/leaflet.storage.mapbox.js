@@ -154,6 +154,10 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
         for (var s in source) {
             if (this._glMap.style.sourceCaches.hasOwnProperty(s)) {
                 this._glMap.style.sourceCaches[s].reload();
+                var glsource = this._glMap.getSource(s);
+                if (!!glsource) {
+                    glsource.load();
+                }
             }
         }
     },
