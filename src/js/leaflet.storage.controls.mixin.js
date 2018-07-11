@@ -154,7 +154,7 @@ L.Storage.FilterAction.Employee = L.Storage.FilterAction.extend({
         tooltip: L._('Показать/скрыть персонал')
     },
 
-    condition: 'TypeId=Employee'
+    condition: 'type_name=Employee'
 });
 
 L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
@@ -165,33 +165,7 @@ L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
         tooltip: L._('Показать/скрыть автотранспорт')
     },
 
-    condition: 'TypeId=Vehicle'
-});
-
-L.Storage.BearingActions = L.Storage.BaseAction.extend({
-
-    options: {
-        helpMenu: true,
-        className: 'leaflet-control-bearing dark',
-        tooltip: L._('Bearing')
-    },
-
-    initialize: function (map) {
-        this.bearing = 0;
-        L.Storage.BaseAction.prototype.initialize.call(this, map);
-    },
-
-    rotate: function() {
-        this.bearing += 90;
-        if (this.bearing >= 360) {
-            this.bearing = 0;
-        }
-        this.map.MAPBOX.rotateTo(this.bearing);
-    },
-
-    addHooks: function () {
-        this.rotate();
-    }
+    condition: 'type_name=Vehicle'
 });
 
 L.Storage.FilterToolbar = L.Toolbar.Control.extend({});

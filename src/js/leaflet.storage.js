@@ -267,8 +267,7 @@ L.Storage.Map.include({
         if (!this.options.noControl) {
             var filterActions = [
                 L.S.FilterAction.Employee,
-                L.S.FilterAction.Vehicle,
-                L.S.BearingActions
+                L.S.FilterAction.Vehicle
             ];
             new L.S.FilterToolbar({actions: filterActions}).addTo(this);
         }
