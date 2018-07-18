@@ -7,7 +7,7 @@ StorageMixin = {
 
         var that = this;
         var timerId = setTimeout(function tick() {
-            if (this.options.noControl) { return; }
+            if (that.options.noControl) { return; }
             if (that.activeDataLayer && that.activeDataLayer.layer._type === 'Mapbox') {
                 that.activeDataLayer.layer.reloadData();
             }
@@ -15,7 +15,7 @@ StorageMixin = {
         }, 1000);
 
         this.MAPBOX.mapON('load', function (e) {
-            if (this.options.noControl) { return; }
+            if (that.options.noControl) { return; }
             // that.MAPBOX._glMap.showTileBoundaries = true;
             // that.MAPBOX._glMap.showCollisionBoxes = true;
             if (that.activeDataLayer && that.activeDataLayer.layer._type === 'Mapbox') {
