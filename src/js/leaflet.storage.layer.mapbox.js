@@ -166,10 +166,13 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             if (source_type !== 'geojson') {
                 continue;
             }
-            url = this._styleJSON.sources[source].data.split('?')[0];
-            if (this.filters.length >=0 ) {
+            url = this._styleJSON.sources[source].data; //.split('?')[0];
+            if (url.indexOf('?') === -1 ) {
                 url += '?';
             }
+            // if (this.filters.length >=0 ) {
+            //     url += '?';
+            // }
 
             // Добавление фильтра по умолчанию
             if (!!this.default_filter) {
@@ -185,7 +188,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             for (i = 0; i < this.filters.length; i++) {
                 filter += '&' + this.filters[i];
             }
-            this._styleJSON.sources[source].data = url + filter;
+            // this._styleJSON.sources[source].data = url + filter;
             this.datalayer.map.MAPBOX.setSource(source, url + filter);
             this.datalayer.map.fire('update-source', {map: this.datalayer.map, layer: this});
         }
