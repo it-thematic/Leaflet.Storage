@@ -5,19 +5,6 @@
 L.MapboxGL.ITT = L.MapboxGL.extend({
     TOKEN : "pk.eyJ1Ijoic2hwYXdlbCIsImEiOiJjaXMwOGRqajYwMDBhMnpvNzdyOWYxNWU2In0.tCzDmtQKGwFwHx40zXQhKQ",
 
-    style: {
-        "version": 8,
-        "name": "moesk_gis_show",
-        "center": [37.627487, 55.741028],
-        "zoom": 8,
-        "sprite": "mapbox://sprites/mapbox/streets-v8",
-        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-        "sources": {
-        },
-        "layers": [
-        ]
-    },
-
     options: {
         attributionControl: true,
         maxTileCacheSize: 0,
@@ -29,7 +16,10 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
             "name": "moesk_gis_show",
             "center": [37.627487, 55.741028],
             "zoom": 8,
-            "sprite": "mapbox://sprites/mapbox/streets-v8",
+            "sprite": "http://localhost:8000/static/umap/sprite/sprite",
+            // "sprite": "http://35.208.236.233/static/umap/sprite/sprite",
+            // "sprite": "http://35.206.94.214/static/umap/sprite/sprite",
+            // "sprite": "http://10.42.222.190/static/umap/sprite/sprite",
             "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
             "sources": {
             },
