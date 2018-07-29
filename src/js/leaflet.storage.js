@@ -46,7 +46,6 @@ L.Map.mergeOptions({
     slideshow: {},
     clickable: true,
     easing: true,
-    pkkControl: true,
     showTypeKartControl: true,
     filterType_Employee: true,
     filterType_Vehicle: true,
@@ -54,7 +53,7 @@ L.Map.mergeOptions({
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers', 'pkk','showkarts'],
+    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
 
     initialize: function (el, geojson) {
 
@@ -286,10 +285,8 @@ L.Storage.Map.include({
         this._controls.measure = (new L.MeasureControl()).initHandler(this);
         this._controls.more = new L.S.MoreControls();
         this._controls.scale = L.control.scale();
-        this._controls.pkk = new L.S.pkkControl(this).addTo(this);
         this._controls.filterType_Employee = new L.S.filterControl(this, 'TypeId=Employee').addTo(this);
         this._controls.filterType_Vehicle = new L.S.filterControl(this, 'TypeId=Vehicle').addTo(this);
-        this._controls.showkarts = new L.S.TyeKartControl(this).addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();
