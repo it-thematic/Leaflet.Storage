@@ -53,7 +53,9 @@ L.Map.mergeOptions({
 
 L.Storage.Map.include({
 
-    HIDDABLE_CONTROLS: ['zoom', 'search', 'fullscreen', 'embed', 'locate', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
+    //    delete 'locate' - мое местоположение
+    //    delete 'fullscreen', - показать на весь экран
+    HIDDABLE_CONTROLS: ['zoom', 'search', 'embed', 'measure', 'tilelayers', 'editinosm', 'datalayers'],
 
     initialize: function (el, geojson) {
 
@@ -273,8 +275,10 @@ L.Storage.Map.include({
 
         this._controls.zoom = new L.Control.Zoom({zoomInTitle: L._('Zoom in'), zoomOutTitle: L._('Zoom out')});
         this._controls.datalayers = new L.Storage.DataLayersControl(this);
-        this._controls.locate = new L.S.LocateControl();
-        this._controls.fullscreen = new L.Control.Fullscreen({title: {'false': L._('View Fullscreen'), 'true': L._('Exit Fullscreen')}});
+        //  TODO: уберем кнопку - показать мое местоположение
+        // this._controls.locate = new L.S.LocateControl();
+        //  TODO: скроем кнопку показать на весь экран
+        // this._controls.fullscreen = new L.Control.Fullscreen({title: {'false': L._('View Fullscreen'), 'true': L._('Exit Fullscreen')}});
         this._controls.search = new L.Storage.SearchControl();
         this._controls.embed = new L.Control.Embed(this, this.options.embedOptions);
         this._controls.tilelayers = new L.Storage.TileLayerControl();
@@ -1064,7 +1068,7 @@ L.Storage.Map.include({
         'zoomControl',
         'datalayersControl',
         'searchControl',
-        'locateControl',
+        /*'locateControl', - мое местоположение*/
         'fullscreenControl',
         'editinosmControl',
         'embedControl',
