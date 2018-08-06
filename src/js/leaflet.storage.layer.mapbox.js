@@ -16,6 +16,11 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         return L.Util.template(template, {storage_id: this.datalayer.storage_id, id: id});
     },
 
+    _getLegendUrl: function (id) {
+        var template = '/styles/datalayer/legend/{id}';
+        return L.Util.template(template, {id: id});
+    },
+
     _getStyle: function (id) {
         if (!this.datalayer.storage_id) { return; }
         var that = this;
@@ -198,5 +203,18 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         if (!!this._styleJSON && this._styleJSON.hasOwnProperty('sources')) {
             this.datalayer.map.MAPBOX.reloadSource(this._styleJSON.sources);
         }
+    },
+
+    legend: function () {
+        if (!this.datalayer.storage_id) { return; }
+        var that = this;
+        this.datalayer.map.ajax({
+            verb: 'GET',
+            uri: this._getLegendUrl(this.styleID),
+            async: true,
+            callback: function(response) {
+                that.datalayer.map.ui.openPanel({data: {html: response}, className: 'dark'});
+            }
+        });
     }
 });

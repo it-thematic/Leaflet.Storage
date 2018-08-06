@@ -37,6 +37,7 @@
   },
   "homepage": "http://wiki.openstreetmap.org/wiki/UMap",
   "dependencies": {
+    "@mapbox/mapbox-gl-language": "^0.10.0",
     "csv2geojson": "^5.0.2",
     "georsstogeojson": "^0.0.2",
     "leaflet": "^1.0.3",

@@ -576,6 +576,7 @@ L.Storage.DataLayer.include({
     renderToolbox: function (container) {
         var toggle = L.DomUtil.create('i', 'layer-toggle', container),
             zoomTo = L.DomUtil.create('i', 'layer-zoom_to', container),
+            legend = L.DomUtil.create('i', 'layer-legend', container),
             edit = L.DomUtil.create('i', 'layer-edit show-on-edit', container),
             table = L.DomUtil.create('i', 'layer-table-edit show-on-edit', container),
             remove = L.DomUtil.create('i', 'layer-delete show-on-edit', container);
@@ -584,8 +585,10 @@ L.Storage.DataLayer.include({
         edit.title = L._('Edit');
         table.title = L._('Edit properties in a table');
         remove.title = L._('Delete layer');
+        legend.title = L._('Lenend');
         L.DomEvent.on(toggle, 'click', this.toggle, this);
         L.DomEvent.on(zoomTo, 'click', this.zoomTo, this);
+        L.DomEvent.on(legend, 'click', this.showLegend, this);
         L.DomEvent.on(edit, 'click', this.edit, this);
         L.DomEvent.on(table, 'click', this.tableEdit, this);
         L.DomEvent.on(remove, 'click', function () {

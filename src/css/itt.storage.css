@@ -90,3 +90,10 @@
     /*!*background-position: -82px -122px;*!*/
     /*border: #2a2e30;*/
 /*}*/
+
+.layer-legend {
+    background-position: -49px -170px;
+}
+.off .layer-legend {
+    background-position: -49px -170px;
+}

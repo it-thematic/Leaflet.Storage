@@ -27,6 +27,12 @@ DataLayerMixin = {
                 feature.view();
             }, this);
         }, this);
+    },
+
+    showLegend: function () {
+        if (this.layer._type !== 'Mapbox') { return; }
+        this.layer.legend();
+
     }
 };
 
