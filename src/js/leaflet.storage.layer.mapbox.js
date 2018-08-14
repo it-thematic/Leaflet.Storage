@@ -159,6 +159,21 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         this.updateSource();
     },
 
+    updateFilter: function (key, value) {
+        if (this.filters.length === 0) {
+            this.appendFilter(key + '=' + value);
+        } else {
+            for (var i = 0; i < this.filters.length; i++) {
+                var filter = this.filters[i];
+                var arr_filter = filter.split('=');
+                if (arr_filter[0] === key) {
+                    this.filters[i] = key + '=' + value;
+                    this.updateSource();
+                }
+            }
+        }
+    },
+
     updateSource: function () {
         if (!this._styleJSON) { return; }
         var source_type, url, filter, i;
