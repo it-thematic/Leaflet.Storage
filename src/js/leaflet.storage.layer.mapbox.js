@@ -167,7 +167,11 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 var filter = this.filters[i];
                 var arr_filter = filter.split('=');
                 if (arr_filter[0] === key) {
-                    this.filters[i] = key + '=' + value;
+                    if (!!value) {
+                        this.filters[i] = key + '=' + value;
+                    } else {
+                        this.filters.splice(i, 1);
+                    }
                     this.updateSource();
                 }
             }
