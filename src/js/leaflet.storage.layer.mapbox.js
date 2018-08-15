@@ -6,7 +6,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     default_filter: null,
     selectOptions: [["-1", '------']],
 
-    _getStylesUrl: function() {
+    _getStylesUrl: function () {
         var template = '/styles/datalayer/{id}/styles';
         return L.Util.template(template, {id: this.datalayer.storage_id});
     },
@@ -22,11 +22,13 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     },
 
     _getStyle: function (id) {
-        if (!this.datalayer.storage_id) { return; }
+        if (!this.datalayer.storage_id) {
+            return;
+        }
         var that = this;
         this.datalayer.map.get(this._getStylesUrl(), {
             async: false,
-            callback: function(response) {
+            callback: function (response) {
                 if (response.data.length) {
                     that.selectOptions = that.selectOptions.concat(response.data);
                     if (that.datalayer.options.mapbox.style) {
@@ -52,11 +54,15 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     return styleID;
                 },
                 set: function (style_id) {
-                    if (Number(style_id) === -1) { return; }
-                    if (styleID === style_id) { return; }
-                    styleID  = style_id;
+                    if (Number(style_id) === -1) {
+                        return;
+                    }
+                    if (styleID === style_id) {
+                        return;
+                    }
+                    styleID = style_id;
                     this.datalayer.map.get(this._getStyleUrl(style_id), {
-                        callback: function(response) {
+                        callback: function (response) {
                             that.datalayer.map.MAPBOX.removeStyle(that._styleJSON);
                             if (response) {
                                 that._styleJSON = response;
@@ -74,9 +80,31 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
         this.on('add', function (e) {
             if (this.styleID && this.styleID !== -1) {
-                this.datalayer.map.MAPBOX.setStyle(this._styleJSON);
+                if (!this._styleJSON) { return; }
+                var style = this._styleJSON;
+                for (var source in style.sources) {
+                    if (!style.sources.hasOwnProperty(source)) {
+                        continue;
+                    }
+                    // Получение базово адреса источника данных
+                    var source_type = style.sources[source].type;
+                    if (source_type !== 'geojson') {
+                        continue;
+                    }
+
+                    if (!!this.default_filter) {
+                        var url = style.sources[source].data;
+                        if (url.indexOf('?') === -1) {
+                            url += '?' + this.default_filter;
+                        } else {
+                            url += this.default_filter;
+                        }
+                        url = style.sources[source].data = url;
+                    }
+                    this.datalayer.map.MAPBOX.setStyle(style);
+                }
             }
-        }, this);
+        });
 
         this.on('remove', function (e) {
             if (this.styleID && this.styleID !== -1) {
@@ -114,7 +142,8 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         }
         var that = this;
         return [
-            ['options.mapbox.style', {handler: 'Select', label: L._('Default style'), selectOptions: this.selectOptions,
+            ['options.mapbox.style', {
+                handler: 'Select', label: L._('Default style'), selectOptions: this.selectOptions,
                 callback: function (field) {
                     that.styleID = field.helper.value();
                 }
@@ -141,20 +170,24 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         L.S.Layer.Default.prototype.postUpdate.call(this, field);
     },
 
-    updateBboxFilter: function(value) {
+    updateBboxFilter: function (value) {
         !!value ? this.bbox_filter = 'in_bbox=' + this.datalayer.map.getBounds().toBBoxString() : null;
         this.updateSource();
     },
 
     appendFilter: function (filter) {
-        if (this.filters.indexOf(filter) !== -1) { return; }
+        if (this.filters.indexOf(filter) !== -1) {
+            return;
+        }
         this.filters.push(filter);
         this.updateSource();
     },
 
     removeFilter: function (filter) {
         var index = this.filters.indexOf(filter);
-        if (index === -1) { return; }
+        if (index === -1) {
+            return;
+        }
         this.filters.splice(index, 1);
         this.updateSource();
     },
@@ -179,7 +212,9 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     },
 
     updateSource: function () {
-        if (!this._styleJSON) { return; }
+        if (!this._styleJSON) {
+            return;
+        }
         var source_type, url, filter, i;
         for (var source in this._styleJSON.sources) {
             if (!this._styleJSON.sources.hasOwnProperty(source)) {
@@ -191,7 +226,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 continue;
             }
             url = this._styleJSON.sources[source].data; //.split('?')[0];
-            if (url.indexOf('?') === -1 ) {
+            if (url.indexOf('?') === -1) {
                 url += '?';
             }
             // if (this.filters.length >=0 ) {
@@ -225,13 +260,15 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     },
 
     legend: function () {
-        if (!this.datalayer.storage_id) { return; }
+        if (!this.datalayer.storage_id) {
+            return;
+        }
         var that = this;
         this.datalayer.map.ajax({
             verb: 'GET',
             uri: this._getLegendUrl(this.styleID),
             async: true,
-            callback: function(response) {
+            callback: function (response) {
                 that.datalayer.map.ui.openPanel({data: {html: response}, className: 'dark'});
             }
         });
