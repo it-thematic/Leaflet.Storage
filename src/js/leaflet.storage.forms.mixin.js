@@ -9,3 +9,13 @@ L.FormBuilder.LayerTypeChooser.include({
         L.FormBuilder.Select.prototype.initialize.call(this, builder, field, options);
     }
 });
+
+L.FormBuilder.DateTimeMixin = {
+    type: function () {
+        return 'datetime-local';
+    }
+};
+
+L.FormBuilder.DateTimeInput = L.FormBuilder.Input.extend({
+    includes: [L.FormBuilder.DateTimeMixin]
+});

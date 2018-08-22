@@ -9,18 +9,6 @@
     border: 1px solid #1b1f20;
 }
 
-.leaflet-control-filter a {
-    background-position: -120px -122px;
-}
-
-.leaflet-control-filter.dark a {
-    background-image: url("../img/24-white.png");
-    background-color: #2a2e30;
-    color: #eeeeec;
-    border: 1px solid #1b1f20;
-}
-
-
 /* button show tematic karts*/
 
 .storage-edit-enabled .leaflet-control-show-type-kart {
@@ -57,38 +45,28 @@
     display: block;
 }
 
-.employee {
+.leaflet-filter-employee {
     background-position: -80px -155px;
 }
 
-.employee{
-    background-image: url(../img/24-white.png);
-    background-color: #2a2e30;
-    color: #eeeeec;
-    /*border: 1px solid white;*/
-    /*outline: none;*/
-}
+/*.employee.dark {*/
+    /*background-image: url(../img/24-white.png);*/
+/*}*/
 
-.employee:hover{
-    background-image: url(../img/24-white.png);
-    /*background-position: -82px -122px;*/
-    border: #2a2e30;
-}
-
-.vehicle {
+.leaflet-filter-vehicle {
     background-position: -120px -155px;
 }
 
-/*.vehicle{*/
-    /*background-image: url(../img/24-white.png);*/
-    /*background-color: #2a2e30;*/
-    /*color: #eeeeec;*/
-/*}*/
+.leaflet-filter-datetime {
+    background-position: -120px 0;
+}
 
-/*.vehicle:hover{*/
+.active-filter-datetime {
+    width: 100%;
+    height: 25px;
+}
+/*.vehicle.dark {*/
     /*background-image: url(../img/24-white.png);*/
-    /*!*background-position: -82px -122px;*!*/
-    /*border: #2a2e30;*/
 /*}*/
 
 .layer-legend {
@@ -97,3 +75,4 @@
 .off .layer-legend {
     background-position: -49px -170px;
 }
+

@@ -268,7 +268,8 @@ L.Storage.Map.include({
         if (!this.options.noControl) {
             var filterActions = [
                 L.S.FilterAction.Employee,
-                L.S.FilterAction.Vehicle
+                L.S.FilterAction.Vehicle,
+                L.S.FilterAction.Datetime
             ];
             new L.S.FilterToolbar({actions: filterActions}).addTo(this);
         }
@@ -289,8 +290,6 @@ L.Storage.Map.include({
         this._controls.measure = (new L.MeasureControl()).initHandler(this);
         this._controls.more = new L.S.MoreControls();
         this._controls.scale = L.control.scale();
-        this._controls.filterType_Employee = new L.S.filterControl(this, 'TypeId=Employee').addTo(this);
-        this._controls.filterType_Vehicle = new L.S.filterControl(this, 'TypeId=Vehicle').addTo(this);
         if (this.options.scrollWheelZoom) this.scrollWheelZoom.enable();
         else this.scrollWheelZoom.disable();
         this.renderControls();
