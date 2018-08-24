@@ -136,23 +136,23 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
             option.textContent = i;
         }
 
-        if (previousDay) {
-            daySelectContainer.value = previousDay;
+        if (this.previousDay) {
+            daySelectContainer.value = this.previousDay;
 
             // If the previous day was set to a high number, say 31, and then
             // you chose a month with less total days in it (e.g. February),
             // this part of the code ensures that the highest day available
             // is selected, rather than showing a blank daySelect
             if (daySelectContainer.value === "") {
-                daySelectContainer.value = previousDay - 1;
+                daySelectContainer.value = this.previousDay - 1;
             }
 
             if (daySelectContainer.value === "") {
-                daySelectContainer.value = previousDay - 2;
+                daySelectContainer.value = this.previousDay - 2;
             }
 
             if (daySelectContainer.value === "") {
-                daySelectContainer.value = previousDay - 3;
+                daySelectContainer.value = this.previousDay - 3;
             }
         }
     },
@@ -285,9 +285,6 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     getContainer: function () {
         var container = L.DomUtil.create('div');
         var subcontainer = L.DomUtil.create('div', 'leaflet-filter-datetime-block', container);
-        var title = L.DomUtil.create('h4', '', subcontainer);
-        title.innerHTML = L._('Edit map properties');
-
         subcontainer.appendChild(this._getDay());
         subcontainer.appendChild(this._getMonth());
         subcontainer.appendChild(this._getYear());
