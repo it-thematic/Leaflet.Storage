@@ -367,7 +367,26 @@ var locale = {
     "WFS Data": "Сервис пространственных объектов",
     "Default filter": "Фильтр по умлочанию",
     "In bbox map": "В границах видимой области",
-    "Active": "Активный"
+    "Active": "Активный",
+    "Lenend": "Легенда",
+    "January": "Январь",
+    "February": "Февраль",
+    "March": "Март",
+    "April": "Апрель",
+    "May": "Май",
+    "June": "Июнь",
+    "July": "Июль",
+    "August": "Август",
+    "September": "Сентябрь",
+    "October": "Октябрь",
+    "November": "Ноябрь",
+    "December": "Декабрь",
+    "Apply": "Применить",
+    "Day": "День",
+    "Month": "Месяц",
+    "Year": "Год",
+    "Hour": "Час",
+    "Minute": "Минута"
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");

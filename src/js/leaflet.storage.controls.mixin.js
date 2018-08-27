@@ -28,12 +28,9 @@ L.Storage.filterControl = L.Control.extend({
     onClick: function () {
         this.enabled = !this.enabled;
         L.DomUtil.classIf(this.getContainer(), 'dark', this.enabled);
-        var that = this;
-        this.map.eachDataLayer(function (datalayer) {
-            if (!!this.map.activeDatalaye && this.map.activeDatalaye.layer._type === 'Mapbx') {
-                that.enabled ? datalayer.layer.appendFilter(that.condition) : datalayer.layer.removeFilter(that.condition);
-            }
-        });
+        if (!!this.map.activeDatalayer && this.map.activeDatalayer.layer._type === 'Mapbx') {
+            that.enabled ? datalayer.layer.appendFilter(that.condition) : datalayer.layer.removeFilter(that.condition);
+        };
     }
 });
 
@@ -88,7 +85,7 @@ L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
     condition: 'type_name=Vehicle'
 });
 
-var monthsNames = ['January', 'February', 'February', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+var monthsNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     options: {
@@ -172,7 +169,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     _populateHours: function (hourSelectContainer) {
         // populate the hours <select> with the 24 hours of the day
         for (var i = 0; i <= 23; i++) {
-            var option = document.createElement('option');
+            var option = L.DomUtil.create('option', '', hourSelectContainer);
             option.textContent = (i < 10) ? ("0" + i) : i;
             hourSelectContainer.appendChild(option);
         }
@@ -221,6 +218,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
         for (var i = 0; i < monthsNames.length; i++) {
             var month_options = L.DomUtil.create('option', '', month_select);
+            month_options.value = i +1;
             month_options.innerHTML = L._(monthsNames[i]);
         }
         this._month_select = month_select;
@@ -252,8 +250,6 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
     _getHour: function () {
         var container = L.DomUtil.create('span');
-
-
         var hour_label = L.DomUtil.create('label', '', container);
         hour_label.innerHTML = L._('Hour');
         hour_label.for = 'hour';
@@ -271,7 +267,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         var container = L.DomUtil.create('span');
         var minute_label = L.DomUtil.create('label', '', container);
         minute_label.innerHTML = L._('Minute');
-        minute_label.for = 'hour';
+        minute_label.for = 'minute';
 
         var minute_select = L.DomUtil.create('select', '', container);
         minute_select.id = 'minute';
@@ -293,8 +289,36 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         this._populateHours(this._hour_select);
         subcontainer.appendChild(this._getMinute());
         this._populateMinutes(this._minute_select);
-        return container;
 
+        var buttonContainer = L.DomUtil.create('div', 'leaflet-filter-datetime-button', container);
+        var cancel = L.DomUtil.create('a', 'button', buttonContainer);
+        cancel.href = '#';
+        cancel.innerHTML = L._('Cancel');
+        L.DomEvent
+            .on(cancel, 'click', L.DomEvent.stop)
+            .on(cancel, 'click', this.cancel, this);
+
+        var apply = L.DomUtil.create('a', 'button', buttonContainer);
+        apply.href = '#';
+        apply.innerHTML = L._('Apply');
+        L.DomEvent
+            .on(apply, 'click', L.DomEvent.stop)
+            .on(apply, 'click', this.apply, this);
+        return container;
+    },
+
+    cancel: function() {
+        if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
+            this.map.activeDataLayer.layer.updateFilter('time');
+        }
+    },
+
+    apply: function() {
+        var _date = new Date(this._year_select.value, this._month_select.value, this._day_select.value,
+                             this._hour_select.value, this._minute_select.value);
+        if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
+            this.map.activeDataLayer.layer.updateFilter('time', _date.getTime() / 1000);
+        }
     },
 
     _openDatetime: function (options) {

@@ -62,12 +62,11 @@
 }
 
 .leaflet-filter-datetime-block {
-    display: inline-flex;
+    display: flex;
 }
 
-.leaflet-filter-datetime-line {
-    padding-left: 2px;
-    padding-right: 2px;
+.leaflet-filter-datetime-button {
+    display: flex;
 }
 
 /*.vehicle.dark {*/
