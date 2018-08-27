@@ -199,7 +199,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         this._populateDays(day_select, L._(monthsNames[date.getMonth()]), date.getFullYear());
         var that = this;
         day_select.onchange = function () {
-            this.previousDay = that._day_select.value;
+            that.previousDay = that._day_select.value;
         };
 
         return container;
@@ -208,7 +208,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     _getMonth: function () {
         var container = L.DomUtil.create('span');
         var month_label = L.DomUtil.create('label', '', container);
-        month_label.innerHTML = L._('Mounth');
+        month_label.innerHTML = L._('Month');
         month_label.for = 'month';
 
         var month_select = L.DomUtil.create('select', '', container);
@@ -218,7 +218,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
         for (var i = 0; i < monthsNames.length; i++) {
             var month_options = L.DomUtil.create('option', '', month_select);
-            month_options.value = i +1;
+            month_options.value = i;
             month_options.innerHTML = L._(monthsNames[i]);
         }
         this._month_select = month_select;
@@ -316,6 +316,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     apply: function() {
         var _date = new Date(this._year_select.value, this._month_select.value, this._day_select.value,
                              this._hour_select.value, this._minute_select.value);
+        console.log(_date, _date.getTime() / 1000);
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
             this.map.activeDataLayer.layer.updateFilter('time', _date.getTime() / 1000);
         }
