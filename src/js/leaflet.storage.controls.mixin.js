@@ -312,16 +312,17 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
             this.map.activeDataLayer.layer.updateFilter('time');
         }
         this.setState(false);
+        this.map.startTimer();
     },
 
     apply: function() {
         var _date = new Date(this._year_select.value, this._month_select.value, this._day_select.value,
                              this._hour_select.value, this._minute_select.value);
-        console.log(_date, _date.getTime() / 1000);
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
             this.map.activeDataLayer.layer.updateFilter('time', _date.getTime() / 1000);
             this.setState(true);
         }
+        this.map.stopTimer();
     },
 
     _openDatetime: function (options) {
