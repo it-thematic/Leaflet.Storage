@@ -311,6 +311,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
             this.map.activeDataLayer.layer.updateFilter('time');
         }
+        this.setState(false);
     },
 
     apply: function() {
@@ -319,6 +320,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         console.log(_date, _date.getTime() / 1000);
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
             this.map.activeDataLayer.layer.updateFilter('time', _date.getTime() / 1000);
+            this.setState(true);
         }
     },
 
