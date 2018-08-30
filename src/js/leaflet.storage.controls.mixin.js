@@ -96,6 +96,10 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
     condition: undefined,
     previousDay: undefined,
+    //для  info-desk  необходима  получение  временного интерва, если он задан  (вычисления будут производится по
+    // LocationTrackPoint - огромная )), и чтобы повторно не вычислять utctime, будем  хранить  utctime в
+    // localstorage
+    localStorageHistoryKey: 'history-time',
 
     onClick: function () {
         this._openDatetime();
@@ -312,18 +316,22 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
             this.map.activeDataLayer.layer.updateFilter('time');
         }
         this.setState(false);
+        localStorage.removeItem(this.localStorageHistoryKey);
         this.map.startTimer();
     },
 
     apply: function() {
         var _date = new Date(this._year_select.value, this._month_select.value, this._day_select.value,
                              this._hour_select.value, this._minute_select.value);
+        _date = _date.getTime() / 1000;
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
-            this.map.activeDataLayer.layer.updateFilter('time', _date.getTime() / 1000);
+            this.map.activeDataLayer.layer.updateFilter('time',_date);
             this.setState(true);
+            localStorage.setItem(this.localStorageHistoryKey, _date);
         }
         this.map.stopTimer();
     },
+
 
     _openDatetime: function (options) {
         var that = this;
