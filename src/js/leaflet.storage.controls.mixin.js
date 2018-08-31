@@ -100,6 +100,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     previousYear: undefined,
     previousHour: undefined,
     previousMinute: undefined,
+
     //для  info-desk  необходима  получение  временного интерва, если он задан  (вычисления будут производится по
     // LocationTrackPoint - огромная )), и чтобы повторно не вычислять utctime, будем  хранить  utctime в
     // localstorage
@@ -114,163 +115,47 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         L.DomUtil.classIf(this._link, 'dark', !this.enabled);
     },
 
-    _populateDays: function (daySelectContainer, month, year) {
-        // Добавление количества дней
-        while (daySelectContainer.firstChild) {
-            daySelectContainer.removeChild(daySelectContainer.firstChild);
+    _getDefultDate: function (){
+        _check_date = localStorage.getItem(this.localStorageHistoryKey);
+        if (_check_date !== null) {
+            _date = new Date(_check_date*1000);
         }
-
-
-        var dayNum, i;
-
-        // 31 or 30 days?
-        if (month === L._('January') || month === L._('March') || month === L._('May') || month === L._('July') ||
-            month === L._('August') || month === L._('October') || month === L._('December')) {
-            dayNum = 31;
-        } else if (month === L._('April') || month === L._('June') || month === L._('September') ||
-            month === L._('November')) {
-            dayNum = 30;
-        } else {
-            // If month is February, calculate whether it is a leap year or not
-            (year - 2000) % 4 === 0 ? dayNum = 29 : dayNum = 28;
+        else {
+            _date = new Date();
         }
-
-        // inject the right number of new <option> elements into the day <select>
-        for (i = 1; i <= dayNum; i++) {
-            var option = L.DomUtil.create('option', '', daySelectContainer);
-            option.textContent = i;
-        }
-
-        if (this.previousDay) {
-            daySelectContainer.value = this.previousDay;
-
-            // If the previous day was set to a high number, say 31, and then
-            // you chose a month with less total days in it (e.g. February),
-            // this part of the code ensures that the highest day available
-            // is selected, rather than showing a blank daySelect
-            if (daySelectContainer.value === "") {
-                daySelectContainer.value = this.previousDay - 1;
-            }
-
-            if (daySelectContainer.value === "") {
-                daySelectContainer.value = this.previousDay - 2;
-            }
-
-            if (daySelectContainer.value === "") {
-                daySelectContainer.value = this.previousDay - 3;
-            }
-        }
+        return _date;
     },
-
-    _populateYears: function (yearSelectContainer) {
-        // get this year as a number
-        var date = new Date();
-        var year = date.getFullYear();
-
-        // Make this year, and the 100 years before it available in the year <select>
-        for (var i = 0; i <= 100; i++) {
-            var option = L.DomUtil.create('option', '', yearSelectContainer);
-            option.textContent = year - i;
-        }
-    },
-
-    _populateHours: function (hourSelectContainer) {
-        // populate the hours <select> with the 24 hours of the day
-        for (var i = 0; i <= 23; i++) {
-            var option = L.DomUtil.create('option', '', hourSelectContainer);
-            option.textContent = (i < 10) ? ("0" + i) : i;
-            hourSelectContainer.appendChild(option);
-        }
-        var date = new Date();
-        hourSelectContainer.value = this.previousHour || date.getHours();
-    },
-
-    _populateMinutes: function (minuteSelectContainer) {
-        // populate the minutes <select> with the 60 hours of each minute
-        for (var i = 0; i <= 59; i++) {
-            var option = L.DomUtil.create('option', '', minuteSelectContainer);
-            option.textContent = (i < 10) ? ("0" + i) : i;
-        }
-        var date = new Date();
-        minuteSelectContainer.value = this.previousMinute || date.getMinutes();
-    },
-
     _getDay: function () {
         // Выбор дня
         var container = L.DomUtil.create('span');
         var day_label = L.DomUtil.create('label', '', container);
-        day_label.innerHTML = L._('Day');
-        day_label.for = 'day';
+        day_label.innerHTML = L._('дата');
+        day_label.for = 'дата';
 
-        var day_select = L.DomUtil.create('select', '', container);
-        day_select.id = 'day';
-        day_select.name = 'day';
+        var day_select = L.DomUtil.create('input', '', container);
+        day_select.id = 'date';
+        day_select.type = 'date';
+        day_select.name = 'date';
+        day_select.valueAsDate = this._getDefultDate();
 
         this._day_select = day_select;
         var that = this;
-        day_select.onchange = function () {
-            that.previousDay = that._day_select.value;
-        };
-
-        return container;
-    },
-
-    _getMonth: function () {
-        var container = L.DomUtil.create('span');
-        var month_label = L.DomUtil.create('label', '', container);
-        month_label.innerHTML = L._('Month');
-        month_label.for = 'month';
-
-        var month_select = L.DomUtil.create('select', '', container);
-        month_select.id = 'month';
-        month_select.name = 'month';
-
-
-        for (var i = 0; i < monthsNames.length; i++) {
-            var month_options = L.DomUtil.create('option', '', month_select);
-            month_options.value = i;
-            month_options.innerHTML = L._(monthsNames[i]);
-        }
-        this._month_select = month_select;
-        var date = new Date();
-        this._month_select.value = date.getMonth();
-        var that = this;
-        month_select.onchange = function () {
-            that.previousMonth = that._month_select[that._month_select.value].label;
-            that._populateDays(that._day_select, that.previousMonth, that._year_select.value);
-        };
-        return container;
-    },
-
-    _getYear: function () {
-        // Выбор года
-        var container = L.DomUtil.create('span');
-        var year_label = L.DomUtil.create('label', '', container);
-        year_label.innerHTML = L._('Year');
-        year_label.for = 'year';
-
-        var year_select = L.DomUtil.create('select', '', container);
-        year_select.id = 'year';
-        year_select.name = 'year';
-        this._year_select = year_select;
-        var that = this;
-        year_select.onchange = function () {
-            that.previousYear = that._year_select.value;
-            that._populateDays(that._day_select, that._month_select.value, that._year_select.value);
-        };
-
         return container;
     },
 
     _getHour: function () {
         var container = L.DomUtil.create('span');
         var hour_label = L.DomUtil.create('label', '', container);
-        hour_label.innerHTML = L._('Hour');
+        hour_label.innerHTML = L._('hour');
         hour_label.for = 'hour';
 
-        var hour_select = L.DomUtil.create('select', '', container);
+        var hour_select = L.DomUtil.create('input', '', container);
+        hour_select.type ="number";
+        hour_select.min  ="1";
+        hour_select.max="24";
         hour_select.id = 'hour';
         hour_select.name = 'hour';
+        hour_select.value = this._getDefultDate().getHours();
 
         this._hour_select = hour_select;
         var that = this;
@@ -280,49 +165,103 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     _getMinute: function () {
         var container = L.DomUtil.create('span');
         var minute_label = L.DomUtil.create('label', '', container);
-        minute_label.innerHTML = L._('Minute');
+        minute_label.innerHTML = L._('minute');
         minute_label.for = 'minute';
 
-        var minute_select = L.DomUtil.create('select', '', container);
+        var minute_select = L.DomUtil.create('input', '', container);
         minute_select.id = 'minute';
         minute_select.name = 'minute';
+        minute_select.type ="number";
+        minute_select.min  ="1";
+        minute_select.max="60";
+        minute_select.value = this._getDefultDate().getMinutes();
 
         this._minute_select = minute_select;
         var that = this;
         return container;
     },
 
+    _disableDate: function() {
+        this._hour_select.disabled = 'disabled';
+        this._minute_select.disabled = 'disabled';
+        this._day_select.disabled= 'disabled';
+        this.ok.setAttribute('style','pointer-events:none');
+    },
+
+    _enabledData: function() {
+        this._hour_select.removeAttribute('disabled');
+        this._minute_select.removeAttribute('disabled');
+        this._day_select.removeAttribute('disabled');
+        this.ok.setAttribute('style','pointer-events:all');
+    },
+
+    setStateEnbaledDate: function() {
+        if (document.getElementById('mgs-chekbox-actual').checked) {
+            this._disableDate();
+            this.cancel();
+        }
+        else{
+            this._enabledData();
+        }
+    },
+
     getContainer: function () {
         var container = L.DomUtil.create('div');
+        var label_header = document.createElement('label');
+        label_header.appendChild(document.createTextNode('ОБЪЕКТЫ МОНИТОРИНГА'));
+        container.appendChild(label_header);
+
+        var sub_container = L.DomUtil.create('div', 'mgs-swith', container);
+        var label = document.createElement('label');
+        label.appendChild(document.createTextNode('АКТУАЛЬНЫЕ/ИСТОРИЯ'));
+        sub_container.appendChild(label);
+
+        var state_switch = L.DomUtil.create('label', 'switch', sub_container);
+        var label_act = document.createElement('label');
+        label_act.appendChild(document.createTextNode(''));
+        state_switch.appendChild(label_act);
+        var checkbox = document.createElement('input');
+        state_switch.appendChild(checkbox);
+        var state_span = L.DomUtil.create('span','slider round', state_switch);
+        checkbox.type = "checkbox";
+        checkbox.name = "is_actual";
+        checkbox.value = "value";
+        checkbox.id = "mgs-chekbox-actual";
+        checkbox.classname = 'mgs-check-actual';
+        L.DomEvent
+            .on(checkbox, 'change', L.DomEvent.stop)
+            .on(checkbox, 'change', this.setStateEnbaledDate, this);
+
+
         var subcontainer = L.DomUtil.create('div', 'leaflet-filter-datetime-block', container);
+        var hh_mm_label = L.DomUtil.create('label', '', subcontainer);
+        hh_mm_label.innerHTML = L._('');
         subcontainer.appendChild(this._getDay());
-        subcontainer.appendChild(this._getMonth());
-        subcontainer.appendChild(this._getYear());
-        var date = new Date();
-        this.previousDay = date.getDate();
-        this.previousMonth = date.getMonth();
-        this.previousYear = date.getFullYear();
-        this._populateYears(this._year_select);
-        this._populateDays(this._day_select, L._(monthsNames[this.previousMonth]), this.previousYear);
-        subcontainer.appendChild(this._getHour());
-        this._populateHours(this._hour_select);
-        subcontainer.appendChild(this._getMinute());
-        this._populateMinutes(this._minute_select);
+        var hours_container = L.DomUtil.create('div','mgs-hours',subcontainer);
+        hours_container.appendChild(this._getHour());
+        hours_container.appendChild(this._getMinute());
+
 
         var buttonContainer = L.DomUtil.create('div', 'leaflet-filter-datetime-button', container);
-        var cancel = L.DomUtil.create('a', 'button', buttonContainer);
-        cancel.href = '#';
-        cancel.innerHTML = L._('Cancel');
-        L.DomEvent
-            .on(cancel, 'click', L.DomEvent.stop)
-            .on(cancel, 'click', this.cancel, this);
+        // var cancel = L.DomUtil.create('a', 'button', buttonContainer);
+        // cancel.href = '#';
+        // cancel.innerHTML = L._('Cancel');
+        // L.DomEvent
+        //     .on(cancel, 'click', L.DomEvent.stop)
+        //     .on(cancel, 'click', this.cancel, this);
 
         var apply = L.DomUtil.create('a', 'button', buttonContainer);
         apply.href = '#';
         apply.innerHTML = L._('Apply');
+        this.ok  = apply;
         L.DomEvent
             .on(apply, 'click', L.DomEvent.stop)
             .on(apply, 'click', this.apply, this);
+
+        if (localStorage.getItem(this.localStorageHistoryKey) === null) {
+            checkbox.checked = true;
+            this._disableDate();
+        };
         return container;
     },
 
@@ -336,9 +275,12 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     },
 
     apply: function() {
-        var _date = new Date(this._year_select.value, this._month_select.value, this._day_select.value,
+        _check_date = new Date(this._day_select.value);
+        var _date = new Date(_check_date.getFullYear(), _check_date.getMonth(), _check_date.getDate(),
                              this._hour_select.value, this._minute_select.value);
+        console.log(_date);
         _date = _date.getTime() / 1000;
+        console.log(_date);
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
             this.map.activeDataLayer.layer.updateFilter('time',_date);
             this.setState(true);
@@ -373,7 +315,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         // this._filter_container.appendChild(builder.build());
 
         this.map.ui.openPanel({data: {html: this.getContainer()}, className: 'dark'});
-    }
+    },
 })
 ;
 
