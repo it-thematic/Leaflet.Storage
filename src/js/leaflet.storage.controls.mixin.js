@@ -96,6 +96,10 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
     condition: undefined,
     previousDay: undefined,
+    previousMonth: undefined,
+    previousYear: undefined,
+    previousHour: undefined,
+    previousMinute: undefined,
     //для  info-desk  необходима  получение  временного интерва, если он задан  (вычисления будут производится по
     // LocationTrackPoint - огромная )), и чтобы повторно не вычислять utctime, будем  хранить  utctime в
     // localstorage
@@ -177,6 +181,8 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
             option.textContent = (i < 10) ? ("0" + i) : i;
             hourSelectContainer.appendChild(option);
         }
+        var date = new Date();
+        hourSelectContainer.value = this.previousHour || date.getHours();
     },
 
     _populateMinutes: function (minuteSelectContainer) {
@@ -185,6 +191,8 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
             var option = L.DomUtil.create('option', '', minuteSelectContainer);
             option.textContent = (i < 10) ? ("0" + i) : i;
         }
+        var date = new Date();
+        minuteSelectContainer.value = this.previousMinute || date.getMinutes();
     },
 
     _getDay: function () {
@@ -199,8 +207,6 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         day_select.name = 'day';
 
         this._day_select = day_select;
-        var date = new Date();
-        this._populateDays(day_select, L._(monthsNames[date.getMonth()]), date.getFullYear());
         var that = this;
         day_select.onchange = function () {
             that.previousDay = that._day_select.value;
@@ -226,9 +232,12 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
             month_options.innerHTML = L._(monthsNames[i]);
         }
         this._month_select = month_select;
+        var date = new Date();
+        this._month_select.value = date.getMonth();
         var that = this;
         month_select.onchange = function () {
-            that._populateDays(that._day_select, that._month_select.value, that._year_select.value);
+            that.previousMonth = that._month_select[that._month_select.value].label;
+            that._populateDays(that._day_select, that.previousMonth, that._year_select.value);
         };
         return container;
     },
@@ -246,6 +255,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         this._year_select = year_select;
         var that = this;
         year_select.onchange = function () {
+            that.previousYear = that._year_select.value;
             that._populateDays(that._day_select, that._month_select.value, that._year_select.value);
         };
 
@@ -288,7 +298,12 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         subcontainer.appendChild(this._getDay());
         subcontainer.appendChild(this._getMonth());
         subcontainer.appendChild(this._getYear());
+        var date = new Date();
+        this.previousDay = date.getDate();
+        this.previousMonth = date.getMonth();
+        this.previousYear = date.getFullYear();
         this._populateYears(this._year_select);
+        this._populateDays(this._day_select, L._(monthsNames[this.previousMonth]), this.previousYear);
         subcontainer.appendChild(this._getHour());
         this._populateHours(this._hour_select);
         subcontainer.appendChild(this._getMinute());

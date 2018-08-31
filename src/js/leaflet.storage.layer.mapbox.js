@@ -194,7 +194,9 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
     updateFilter: function (key, value) {
         if (this.filters.length === 0) {
-            this.appendFilter(key + '=' + value);
+            if (!!value) {
+                this.appendFilter(key + '=' + value);
+            }
         } else {
             for (var i = 0; i < this.filters.length; i++) {
                 var filter = this.filters[i];
