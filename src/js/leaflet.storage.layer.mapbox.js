@@ -101,8 +101,8 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                         }
                         url = style.sources[source].data = url;
                     }
-                    this.datalayer.map.MAPBOX.setStyle(style);
                 }
+                this.datalayer.map.MAPBOX.setStyle(style);
             }
         });
 
