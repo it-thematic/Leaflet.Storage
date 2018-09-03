@@ -129,7 +129,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         // Выбор дня
         var container = L.DomUtil.create('span');
         var day_label = L.DomUtil.create('label', '', container);
-        day_label.innerHTML = L._('дата');
+        day_label.innerHTML = L._('Date').toLowerCase();
         day_label.for = 'дата';
 
         var day_select = L.DomUtil.create('input', '', container);
@@ -146,7 +146,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     _getHour: function () {
         var container = L.DomUtil.create('span');
         var hour_label = L.DomUtil.create('label', '', container);
-        hour_label.innerHTML = L._('hour');
+        hour_label.innerHTML = L._('Hour').toLowerCase();
         hour_label.for = 'hour';
 
         var hour_select = L.DomUtil.create('input', '', container);
@@ -165,7 +165,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     _getMinute: function () {
         var container = L.DomUtil.create('span');
         var minute_label = L.DomUtil.create('label', '', container);
-        minute_label.innerHTML = L._('minute');
+        minute_label.innerHTML = L._('Minute').toLowerCase();
         minute_label.for = 'minute';
 
         var minute_select = L.DomUtil.create('input', '', container);
@@ -252,7 +252,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
         var apply = L.DomUtil.create('a', 'button', buttonContainer);
         apply.href = '#';
-        apply.innerHTML = L._('Apply');
+        apply.innerHTML = L._('Apply').toLowerCase();
         this.ok  = apply;
         L.DomEvent
             .on(apply, 'click', L.DomEvent.stop)

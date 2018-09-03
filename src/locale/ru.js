@@ -383,10 +383,11 @@ var locale = {
     "December": "Декабрь",
     "Apply": "Применить",
     "Day": "День",
+    "Date": "Дата",
     "Month": "Месяц",
     "Year": "Год",
     "Hour": "Час",
-    "Minute": "Минута"
+    "Minute": "Минута",
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");
