@@ -239,6 +239,8 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         subcontainer.appendChild(this._getDay());
         var hours_container = L.DomUtil.create('div','mgs-hours',subcontainer);
         hours_container.appendChild(this._getHour());
+        var split_hour = L.DomUtil.create('span', ' mgs-hours-span', hours_container);
+        split_hour.innerHTML = ':';
         hours_container.appendChild(this._getMinute());
 
 
