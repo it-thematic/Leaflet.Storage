@@ -273,6 +273,7 @@ L.Storage.Map.include({
             ];
             new L.S.FilterToolbar({actions: filterActions}).addTo(this);
         }
+        new L.S.ExitToolbar({actions: [L.Storage.ExitAction]}).addTo(this);
 
         this._controls.zoom = new L.Control.Zoom({zoomInTitle: L._('Zoom in'), zoomOutTitle: L._('Zoom out')});
         this._controls.datalayers = new L.Storage.DataLayersControl(this);

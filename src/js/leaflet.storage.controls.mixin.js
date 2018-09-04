@@ -245,13 +245,6 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
 
         var buttonContainer = L.DomUtil.create('div', 'leaflet-filter-datetime-button', container);
-        // var cancel = L.DomUtil.create('a', 'button', buttonContainer);
-        // cancel.href = '#';
-        // cancel.innerHTML = L._('Cancel');
-        // L.DomEvent
-        //     .on(cancel, 'click', L.DomEvent.stop)
-        //     .on(cancel, 'click', this.cancel, this);
-
         var apply = L.DomUtil.create('a', 'button', buttonContainer);
         apply.href = '#';
         apply.innerHTML = L._('Apply').toLowerCase();
@@ -323,6 +316,42 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
 L.Storage.FilterToolbar = L.Toolbar.Control.extend({
     onAdd: function (map) {
+        L.Toolbar.Control.prototype.onAdd.call(this, map);
+        L.DomUtil.addClass(this._container, 'storage-toolbar-enabled');
+    },
+
+    onRemove: function (map) {
+        L.Toolbar.Control.prototype.onRemove.call(this, map);
+        L.DomUtil.removeClass(this._container, 'storage-toolbar-enabled');
+    }
+});
+
+
+L.Storage.ExitAction = L.Storage.FilterAction.extend({
+    // exit to karta (modal popup)
+    options: {
+        helpMenu: true,
+        className: 'leaflet-exit-map dark',
+        tooltip: L._('Выйти')
+    },
+
+    onClick: function () {
+        var _modal = document.querySelector(".mgs-modal");
+        $.ajax({
+            url : "/logout/",
+            type: "GET",
+          }).success(function(res) {
+            var _content = document.querySelector(".mgs-modal-content > .mgs-content");
+            _content.innerHTML = res;
+            _modal.className ='mgs-show-modal';
+          }).error(function(res) {
+            console.log(res)
+        });
+    },
+});
+
+L.Storage.ExitToolbar = L.Toolbar.Control.extend({
+     onAdd: function (map) {
         L.Toolbar.Control.prototype.onAdd.call(this, map);
         L.DomUtil.addClass(this._container, 'storage-toolbar-enabled');
     },
