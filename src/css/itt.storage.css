@@ -220,3 +220,16 @@ input:checked + .slider:before {
     position: absolute;
     left: 50%;
 }
+
+/*
+   For Leaflet Right Panel
+*/
+/* *** */
+/*TODO: уменьшим правую панель    */
+/* *** */
+.storage-ui .leaflet-right {
+    right: 350px !important;
+}
+#storage-ui-container {
+    width: 350px !important;
+}

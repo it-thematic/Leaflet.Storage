@@ -1449,12 +1449,3 @@ a.add-datalayer:hover,
     }
 }
 
-/* *** */
-/*TODO: уменьшим правую панель    */
-/* *** */
-.storage-ui .leaflet-right {
-    right: 350px !important;
-}
-#storage-ui-container {
-    width: 350px;
-}
