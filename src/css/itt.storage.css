@@ -214,8 +214,6 @@ input:checked + .slider:before {
 .mgs-show-modal {
     opacity: 1;
     visibility: visible;
-    /*transform: scale(1.0);*/
-    /*transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;*/
     z-index: 9999;
     position: absolute;
     left: 50%;
@@ -228,8 +226,8 @@ input:checked + .slider:before {
 /*TODO: уменьшим правую панель    */
 /* *** */
 .storage-ui .leaflet-right {
-    right: 350px !important;
+    /*right: 350px !important;*/
 }
 #storage-ui-container {
-    width: 350px !important;
+    /*width: 350px !important;*/
 }
