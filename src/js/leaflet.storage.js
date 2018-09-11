@@ -273,7 +273,8 @@ L.Storage.Map.include({
             ];
             new L.S.FilterToolbar({actions: filterActions}).addTo(this);
         }
-        if (this.options.allowEdit && !this.options.noControl) {
+
+        if (this.options.isAuth){
             new L.S.ExitToolbar({actions: [L.Storage.ExitAction]}).addTo(this);
         }
 
