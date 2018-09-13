@@ -1,40 +1,3 @@
-L.Storage.filterControl = L.Control.extend({
-    options: {
-        position: 'topleft'
-    },
-
-    initialize: function (map, condition, options) {
-        this.map = map;
-        this.condition = condition;
-        this.enabled = false;
-        L.Control.prototype.initialize.call(this, options);
-    },
-
-    onAdd: function (map) {
-        var container = L.DomUtil.create('div', 'leaflet-control-filter storage-control');
-
-        var link = L.DomUtil.create('a', '', container);
-        link.href = '#';
-        link.title = L._(this.condition.split('=')[1]);
-
-        L.DomEvent
-            .on(link, 'click', L.DomEvent.stop)
-            .on(link, 'click', this.onClick, this)
-            .on(link, 'dblclick', L.DomEvent.stopPropagation);
-
-        return container;
-    },
-
-    onClick: function () {
-        this.enabled = !this.enabled;
-        L.DomUtil.classIf(this.getContainer(), 'dark', this.enabled);
-        if (!!this.map.activeDatalayer && this.map.activeDatalayer.layer._type === 'Mapbx') {
-            that.enabled ? datalayer.layer.appendFilter(that.condition) : datalayer.layer.removeFilter(that.condition);
-        };
-    }
-});
-
-
 L.Storage.FilterAction = L.Storage.BaseAction.extend({
 
     options: {
@@ -43,7 +6,9 @@ L.Storage.FilterAction = L.Storage.BaseAction.extend({
         tooltip: L._('')
     },
 
-    condition: '',
+    key: undefined,
+
+    value: undefined,
 
     initialize: function (map) {
         this.enabled = false;
@@ -54,7 +19,7 @@ L.Storage.FilterAction = L.Storage.BaseAction.extend({
         this.enabled = !this.enabled;
         L.DomUtil.classIf(this._link, 'dark', !this.enabled);
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
-            !this.enabled ? this.map.activeDataLayer.layer.removeFilter(this.condition) : this.map.activeDataLayer.layer.appendFilter(this.condition);
+            !!this.enabled ? this.map.activeDataLayer.layer.appendFilter(this.key + '=' + this.value) : this.map.activeDataLayer.layer.removeFilter(this.key + '=' + this.value);
         }
     },
 
@@ -71,7 +36,9 @@ L.Storage.FilterAction.Employee = L.Storage.FilterAction.extend({
         tooltip: L._('Показать/скрыть персонал')
     },
 
-    condition: 'type_name=Employee'
+    key: 'type_name',
+
+    value: 'Employee'
 });
 
 L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
@@ -82,7 +49,9 @@ L.Storage.FilterAction.Vehicle = L.Storage.FilterAction.extend({
         tooltip: L._('Показать/скрыть автотранспорт')
     },
 
-    condition: 'type_name=Vehicle'
+    key: 'type_name',
+
+    value: 'Vehicle'
 });
 
 var monthsNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -277,7 +246,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         _date = _date.getTime() / 1000;
         console.log(_date);
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
-            this.map.activeDataLayer.layer.updateFilter('time',_date);
+            this.map.activeDataLayer.layer.updateFilter('time', '=', _date);
             this.setState(true);
             localStorage.setItem(this.localStorageHistoryKey, _date);
         }
@@ -311,8 +280,106 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
         this.map.ui.openPanel({data: {html: this.getContainer()}, className: 'dark'});
     },
-})
-;
+});
+
+L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
+    condition: 'voltage',
+
+    // Доступные фильтры
+    filters: {},
+
+    values: [
+        {label: '6 кВ', operation: '<=', value: 6},
+        {label: '10 кВ', operation: '==', value: 10},
+        {label: '20 кВ', operation: '==', value: 20},
+        {label: '35 кВ', operation: '==', value: 35},
+        {label: '110кВ', operation: '==', value: 110},
+        {label: '220кВ', operation: '>=', value: 220}
+    ],
+
+    inputs: [],
+
+    _getContainer: function() {
+        var container = L.DomUtil.create('div'), fields = [], that = this;
+        for (var i = 0; i < this.values.length; i++) {
+            fields.push([
+                'filters.voltage'+this.values[i].value+'.check'+this.values[i].value, {
+                    handler: 'Switch',
+                    label: this.values[i].label
+                }
+            ]);
+        }
+        var builder = new L.S.FormBuilder(this, fields, {
+            callback: function (e) {
+                var filter_mapbox_layer = ['any'], i = 0;
+                for (var filter in that.filters) {
+                    if (!that.filters.hasOwnProperty(filter)) { continue; }
+                    var check = this.filters['voltage'+that.values[i].value]['check'+that.values[i].value];
+                    var value = that.filters[filter].value;
+                    i++;
+                    if (!check) { continue; }
+                    filter_mapbox_layer.push([that.values[value].operation, that.condition, that.values[value].value]);
+                }
+                that.map.eachDataLayer(function (datalayer) {
+                    if (datalayer.layer._type === 'Mapbox') {
+                        datalayer.layer.updateMapboxFilter(that.condition, filter_mapbox_layer);
+                    }
+                });
+            }
+        });
+        container.appendChild(builder.build());
+
+        var advancedButtons = L.DomUtil.create('div', 'button-bar', container);
+        var cancelLink = L.DomUtil.create('a', 'button third storage-delete', advancedButtons);
+        cancelLink.innerHTML = L._('Cancel');
+        cancelLink.href = '#';
+        L.DomEvent.on(cancelLink, 'click', L.DomEvent.stop)
+                  .on(cancelLink, 'click', function () {
+                      this.map.ui.closePanel();
+                      this.cancel();
+                      this.reset();
+                  }, this);
+
+        return container;
+    },
+
+    initialize: function(map) {
+        L.Storage.FilterAction.prototype.initialize.call(this, map);
+        for (var i = 0; i < this.values.length; i++) {
+            this.filters['voltage'+this.values[i].value] = {};
+            this.filters['voltage'+this.values[i].value]['check'+this.values[i].value] = true;
+            this.filters['voltage'+this.values[i].value].value = i;
+        }
+    },
+
+    onClick: function () {
+        this.show();
+    },
+
+    getMap: function() {
+        return this.map;
+    },
+
+    show: function () {
+        this.map.ui.openPanel({data: {html: this._getContainer()}, className: 'dark'});
+    },
+
+    reset: function() {
+        for (var i = 0; i < this.values.length; i++) {
+            this.filters['voltage'+this.values[i].value]['check'+this.values[i].value] = true;
+        }
+    },
+
+    cancel: function () {
+        var that = this;
+        this.map.eachDataLayer(function (datalayer) {
+            if (datalayer.layer._type === 'Mapbox') {
+                datalayer.layer.updateMapboxFilter(that.condition, undefined);
+            }
+        });
+    }
+});
+
 
 L.Storage.FilterToolbar = L.Toolbar.Control.extend({
     onAdd: function (map) {

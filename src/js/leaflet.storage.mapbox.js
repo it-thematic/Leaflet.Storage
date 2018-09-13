@@ -77,6 +77,14 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
         }
     },
 
+    getFilter: function (layer) {
+        return this._glMap.getFilter(layer);
+    },
+
+    setFilter: function (layer, filter) {
+        this._glMap.setFilter(layer, filter);
+    },
+
     setSource: function(id, source) {
         var s = this._glMap.getSource(id);
         if (s) {

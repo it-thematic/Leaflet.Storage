@@ -269,7 +269,8 @@ L.Storage.Map.include({
             var filterActions = [
                 L.S.FilterAction.Employee,
                 L.S.FilterAction.Vehicle,
-                L.S.FilterAction.Datetime
+                L.S.FilterAction.Datetime,
+                L.S.FilterAction.Voltage
             ];
             new L.S.FilterToolbar({actions: filterActions}).addTo(this);
         }
