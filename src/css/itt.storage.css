@@ -219,3 +219,6 @@ input:checked + .slider:before {
     left: 50%;
 }
 
+.btn.btn-danger.cancel {
+    margin-top: -18px;
+}
