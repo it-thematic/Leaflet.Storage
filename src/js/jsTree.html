@@ -1,0 +1,159 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+    </head>
+    <body>
+        <div class="root my-root" id="root"></div>
+        <!-- <div class="real-root"></div> -->
+        <button class="showResult" onclick="returnResult()">print</button>
+        <button class="openTree" onclick="openTree()">open</button>
+        <button class="closeTree" onclick="closeTree()">close</button>
+    </body>
+    <script>
+    var dataTree = {}
+
+    $(function () {
+      dataTree = window.localStorage.getItem('moesk-structure');
+      if (dataTree == null) {
+        $.ajax({
+          type: "GET",
+          url: "/api/v2/resource/moesk-structure/",
+          data: {},
+          dataType: "json",
+          success: function (data) {
+            dataTree = data
+            window.localStorage.setItem('moesk-structure', dataTree);
+          },
+          error: function (error){
+              console.log("Ошибка получения данных");
+          }
+        });
+        return false;
+      }
+    });
+
+    var timerId;
+    $('#root').on(
+      "changed.jstree", function(evt, data) {
+        clearTimeout(timerId);
+        timerId = setTimeout(function () {
+          returnResult();
+        }, 1500);
+      }
+    )
+
+    $(function () {
+        $("#root").jstree({
+            "core": {
+                'data': dataTree,
+                'themes': {
+                    "icons": false
+                }
+            },
+            "checkbox" : {
+                "keep_selected_style" : false
+            },
+            "plugins" : [ "checkbox" ]
+        });
+    });
+
+    function openTree () {
+      $("#root").jstree("open_node", "ul > li:first");
+    }
+
+    function closeTree () {
+      $("#root").jstree("close_node", "ul > li:first");
+    }
+
+    function compareId(a, b) {
+        if (parseInt(a.id, 10) < parseInt(b.id, 10))
+            return -1;
+        if (parseInt(a.id, 10) > parseInt(b.id, 10))
+            return 1;
+        return 0;
+    }
+
+    var rest_arr = [];
+
+    function returnResult() {
+        var result = $('#root').jstree('get_selected', true);
+        result.sort(compareId);
+        res_arr = [];
+        for (let item of result) {
+            var index_item = res_arr.indexOf(item.id);
+            if (index_item !== -1) {
+                res_arr.splice(index_item, 1);
+            } else {
+                res_arr.push(item.id);
+                for (let child of item.children_d) {
+                    res_arr.push(child);
+                }
+            }
+        }
+        sendResutl();
+    }
+
+    function sendResutl() {
+      console.log(res_arr);
+    }
+    </script>
+    <style>
+        .root {
+
+        }
+        .my-root{
+            position: absolute;
+            z-index: 99;
+            width: 100px;
+            height: 30px;
+            top:0;
+            left:0;
+            background-color: transparent;
+        }
+        .elem-tree {
+            width: 100px;
+            height: 30px;
+            background-color: blue;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .jstree-default .jstree-clicked {
+            background: red;
+        }
+        .showResult{
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .openTree{
+          position: absolute;
+          top: 30px;
+          right: 0;
+        }
+        .closeTree{
+          position: absolute;
+          top: 60px;
+          right: 0;
+        }
+        #j1_1_anchor {
+            display: none;
+        }
+        #j1_1 {
+            margin-top: 7px;
+            /* width: 100px;
+            height: 30px; */
+        }
+        .real-root{
+            top:0;
+            left:0;
+            position: absolute;
+            width: 100px;
+            height: 30px;
+            background-color: rebeccapurple;
+            z-index: 99999;
+            pointer-events: none;
+        }
+    </style>
+</html>

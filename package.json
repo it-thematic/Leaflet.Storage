@@ -40,6 +40,8 @@
     "@mapbox/mapbox-gl-language": "^0.10.0",
     "csv2geojson": "^5.0.2",
     "georsstogeojson": "^0.0.2",
+    "jstree": "^3.3.5",
+    "jstree-bootstrap-theme": "^1.0.1",
     "leaflet": "^1.0.3",
     "leaflet-contextmenu": "^1.2.1",
     "leaflet-editable": "1.0.0",

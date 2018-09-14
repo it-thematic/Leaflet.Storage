@@ -384,6 +384,100 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
 
     _getContainer: function() {
         var container = L.DomUtil.create('div');
+        container.style.width = '100%';
+        container.style.height = '100%';
+        var root = L.DomUtil.create('div');
+        root.setAttribute('id', 'rootTree');
+        container.append(root);
+
+        var dataTree = null;
+
+        $(function  () {
+            dataTree = JSON.parse(window.localStorage.getItem('moesk-structure'));
+            if (dataTree == null) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/v2/resource/moesk-structure/",
+                    data: {},
+                    dataType: "json",
+                    success: function (data) {
+                        dataTree = data;
+                        window.localStorage.setItem('moesk-structure', JSON.stringify(dataTree));
+                        buildTree();
+                    },
+                    error: function (error) {
+                        console.log("Ошибка получения данных", error);
+                    }
+                });
+                return false;
+            } else {
+                buildTree();
+            }
+        });
+        function buildTree() {
+            $("#rootTree").jstree({
+                "core": {
+                    'data': dataTree,
+                    'themes': {
+                        "icons": false,
+                        "variant" : "large",
+                        "dots": false
+                    }
+                },
+                "checkbox" : {
+                    "keep_selected_style" : false
+                },
+                "plugins" : [ "checkbox" ]
+            });
+        }
+        var interval_id = setInterval(function(){
+             if($("li#"+ 0).length != 0){
+                 clearInterval(interval_id);
+                  $("#rootTree").jstree("open_node", "ul > li:first");
+                  $(".jstree-anchor").css("background-color", "transparent");
+                  $("#0_anchor").css("display", 'none');
+                  $("i.jstree-icon.jstree-ocl").first().css("display", "none");
+                  $("#rootTree").css('margin-top', '20px');
+                  var timerId;
+                  $('#rootTree').on(
+                    "changed.jstree", function(evt, data) {
+                    clearTimeout(timerId);
+                    timerId = setTimeout(function () {
+                      returnResult();
+                    }, 1200);
+                  }
+                );
+              }
+        }, 5);
+
+        function compareId(a, b) {
+            if (parseInt(a.id, 10) < parseInt(b.id, 10))
+                return -1;
+            if (parseInt(a.id, 10) > parseInt(b.id, 10))
+                return 1;
+            return 0;
+        }
+        function returnResult() {
+            var result = $('#rootTree').jstree('get_selected', true);
+            result.sort(compareId);
+            var res_arr = [];
+            for (var item in result) {
+                var index_item = res_arr.indexOf(result[item].id);
+                if (index_item !== -1) {
+                    res_arr.splice(index_item, 1);
+                } else {
+                    res_arr.push(result[item].id);
+                    for (var child in result[item].children_d) {
+                        res_arr.push(result[item].children_d[child]);
+                    }
+                }
+            }
+            sendResutl(res_arr);
+        }
+
+        function sendResutl(res_arr) {
+          console.log(res_arr);
+        }
         return container;
     },
 
