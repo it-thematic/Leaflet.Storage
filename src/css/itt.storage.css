@@ -61,7 +61,58 @@
 }
 
 .leaflet-filter-datetime {
-    background-position: -120px 0;
+    background-position: 0 -200px;
+}
+
+.leaflet-filter-voltage {
+    background-position: -40px -200px;
+}
+
+.leaflet-filter-voltage-table {
+    width: 100%;
+    border: 0 solid black;
+    border-spacing: 0;
+}
+
+.leaflet-filter-voltage-td {
+    vertical-align: top;
+    width: 30px;
+    padding: 3px;
+}
+
+.leaflet-filter-voltage-fill {
+    vertical-align: top;
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+}
+
+.mgs-st-6 {
+    background-color: olive;
+}
+
+.mgs-st-10 {
+    background-color: green;
+}
+
+.mgs-st-20 {
+    background-color: orange;
+}
+
+.mgs-st-35 {
+    background-color: red;
+}
+
+.mgs-st-110 {
+    background-color: lightblue;
+}
+
+.mgs-st-220 {
+    background-color: blue;
+}
+
+.leaflet-filter-hierarchy {
+    background-position: -80px -200px;
 }
 
 .leaflet-filter-datetime-block {

@@ -63,6 +63,8 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         tooltip: L._('Задать дату/время')
     },
 
+    actual: true,
+
     condition: undefined,
     previousDay: undefined,
     previousMonth: undefined,
@@ -84,10 +86,10 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         L.DomUtil.classIf(this._link, 'dark', !this.enabled);
     },
 
-    _getDefultDate: function (){
-        _check_date = localStorage.getItem(this.localStorageHistoryKey);
+    _getDefultDate: function () {
+        var _check_date = localStorage.getItem(this.localStorageHistoryKey);
         if (_check_date !== null) {
-            _date = new Date(_check_date*1000);
+            _date = new Date(_check_date * 1000);
         }
         else {
             _date = new Date();
@@ -99,7 +101,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         var container = L.DomUtil.create('span');
         var day_label = L.DomUtil.create('label', '', container);
         day_label.innerHTML = L._('Date').toLowerCase();
-        day_label.for = 'дата';
+        day_label.for = 'date';
 
         var day_select = L.DomUtil.create('input', '', container);
         day_select.id = 'date';
@@ -119,9 +121,9 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         hour_label.for = 'hour';
 
         var hour_select = L.DomUtil.create('input', '', container);
-        hour_select.type ="number";
-        hour_select.min  ="1";
-        hour_select.max="24";
+        hour_select.type = "number";
+        hour_select.min = "1";
+        hour_select.max = "24";
         hour_select.id = 'hour';
         hour_select.name = 'hour';
         hour_select.value = this._getDefultDate().getHours();
@@ -140,9 +142,9 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         var minute_select = L.DomUtil.create('input', '', container);
         minute_select.id = 'minute';
         minute_select.name = 'minute';
-        minute_select.type ="number";
-        minute_select.min  ="1";
-        minute_select.max="60";
+        minute_select.type = "number";
+        minute_select.min = "1";
+        minute_select.max = "60";
         minute_select.value = this._getDefultDate().getMinutes();
 
         this._minute_select = minute_select;
@@ -150,26 +152,26 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         return container;
     },
 
-    _disableDate: function() {
+    _disableDate: function () {
         this._hour_select.disabled = 'disabled';
         this._minute_select.disabled = 'disabled';
-        this._day_select.disabled= 'disabled';
-        this.ok.setAttribute('style','pointer-events:none');
+        this._day_select.disabled = 'disabled';
+        this.ok.setAttribute('style', 'pointer-events:none');
     },
 
-    _enabledData: function() {
+    _enabledData: function () {
         this._hour_select.removeAttribute('disabled');
         this._minute_select.removeAttribute('disabled');
         this._day_select.removeAttribute('disabled');
-        this.ok.setAttribute('style','pointer-events:all');
+        this.ok.setAttribute('style', 'pointer-events:all');
     },
 
-    setStateEnbaledDate: function() {
+    setStateEnbaledDate: function () {
         if (document.getElementById('mgs-chekbox-actual').checked) {
             this._disableDate();
             this.cancel();
         }
-        else{
+        else {
             this._enabledData();
         }
     },
@@ -180,56 +182,55 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         label_header.appendChild(document.createTextNode('ОБЪЕКТЫ МОНИТОРИНГА'));
         container.appendChild(label_header);
 
+        // Начало создания контейнера для переключателя
+
+        // Новый переключатель
         var sub_container = L.DomUtil.create('div', 'mgs-swith', container);
-        var label = document.createElement('label');
-        label.appendChild(document.createTextNode('АКТУАЛЬНЫЕ/ИСТОРИЯ'));
-        sub_container.appendChild(label);
+        var that = this;
+        var fields = [
+            ['actual', { handler: 'Switch', label: 'Актуальные', callback: function (e) {
+                if (e.helper.value()) {
+                    that._disableDate();
+                    that.cancel();
+                }
+                else {
+                    that._enabledData();
+                }
+            }}]
+        ];
+        var builder = new L.S.FormBuilder(this, fields);
+        sub_container.appendChild(builder.build());
 
-        var state_switch = L.DomUtil.create('label', 'switch', sub_container);
-        var label_act = document.createElement('label');
-        label_act.appendChild(document.createTextNode(''));
-        state_switch.appendChild(label_act);
-        var checkbox = document.createElement('input');
-        state_switch.appendChild(checkbox);
-        var state_span = L.DomUtil.create('span','slider round', state_switch);
-        checkbox.type = "checkbox";
-        checkbox.name = "is_actual";
-        checkbox.value = "value";
-        checkbox.id = "mgs-chekbox-actual";
-        checkbox.classname = 'mgs-check-actual';
-        L.DomEvent
-            .on(checkbox, 'change', L.DomEvent.stop)
-            .on(checkbox, 'change', this.setStateEnbaledDate, this);
-
+        // Начало создания блока с датами
 
         var subcontainer = L.DomUtil.create('div', 'leaflet-filter-datetime-block', container);
         var hh_mm_label = L.DomUtil.create('label', '', subcontainer);
         hh_mm_label.innerHTML = L._('');
         subcontainer.appendChild(this._getDay());
-        var hours_container = L.DomUtil.create('div','mgs-hours',subcontainer);
+        var hours_container = L.DomUtil.create('div', 'mgs-hours', subcontainer);
         hours_container.appendChild(this._getHour());
         var split_hour = L.DomUtil.create('span', ' mgs-hours-span', hours_container);
         split_hour.innerHTML = ':';
         hours_container.appendChild(this._getMinute());
 
-
-        var buttonContainer = L.DomUtil.create('div', 'leaflet-filter-datetime-button', container);
-        var apply = L.DomUtil.create('a', 'button', buttonContainer);
+        // Кнопка "Применить"
+        var apply = L.DomUtil.create('a', 'button', subcontainer);
         apply.href = '#';
         apply.innerHTML = L._('Apply').toLowerCase();
-        this.ok  = apply;
+        this.ok = apply;
         L.DomEvent
             .on(apply, 'click', L.DomEvent.stop)
             .on(apply, 'click', this.apply, this);
 
+        // Завершение создания блока с датами
         if (localStorage.getItem(this.localStorageHistoryKey) === null) {
-            checkbox.checked = true;
+            this.actual = true;
             this._disableDate();
-        };
+        }
         return container;
     },
 
-    cancel: function() {
+    cancel: function () {
         if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
             this.map.activeDataLayer.layer.updateFilter('time');
         }
@@ -238,10 +239,10 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         this.map.startTimer();
     },
 
-    apply: function() {
-        _check_date = new Date(this._day_select.value);
+    apply: function () {
+        var _check_date = new Date(this._day_select.value);
         var _date = new Date(_check_date.getFullYear(), _check_date.getMonth(), _check_date.getDate(),
-                             this._hour_select.value, this._minute_select.value);
+            this._hour_select.value, this._minute_select.value);
         console.log(_date);
         _date = _date.getTime() / 1000;
         console.log(_date);
@@ -280,6 +281,10 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
         this.map.ui.openPanel({data: {html: this.getContainer()}, className: 'dark'});
     },
+
+    getMap: function () {
+        return this.map;
+    }
 });
 
 L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
@@ -305,25 +310,30 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
 
     inputs: [],
 
-    _getContainer: function() {
-        var container = L.DomUtil.create('div'), fields = [], that = this;
-        for (var i = 0; i < this.values.length; i++) {
+    _getContainer: function () {
+        var container = L.DomUtil.create('div'), fields = [], i, that = this;
+        for (i = 0; i < this.values.length; i++) {
             fields.push([
-                'filters.voltage'+this.values[i].value+'.check'+this.values[i].value, {
+                'filters.voltage' + this.values[i].value + '.check' + this.values[i].value, {
                     handler: 'Switch',
                     label: this.values[i].label
                 }
             ]);
         }
+        // Создание формы для чекбоксов
         var builder = new L.S.FormBuilder(this, fields, {
             callback: function (e) {
                 var filter_mapbox_layer = ['any'], i = 0;
                 for (var filter in that.filters) {
-                    if (!that.filters.hasOwnProperty(filter)) { continue; }
-                    var check = this.filters['voltage'+that.values[i].value]['check'+that.values[i].value];
+                    if (!that.filters.hasOwnProperty(filter)) {
+                        continue;
+                    }
+                    var check = this.filters['voltage' + that.values[i].value]['check' + that.values[i].value];
                     var value = that.filters[filter].value;
                     i++;
-                    if (!check) { continue; }
+                    if (!check) {
+                        continue;
+                    }
                     filter_mapbox_layer.push([that.values[value].operation, that.condition, that.values[value].value]);
                 }
                 that.map.eachDataLayer(function (datalayer) {
@@ -333,17 +343,28 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
                 });
             }
         });
-        container.appendChild(builder.build());
-
+        // Создание таблицы для вставки картинок
+        var root_table = L.DomUtil.create('table', 'leaflet-filter-voltage-table', container);
+        for (i = 0; i < this.values.length; i++) {
+            var tr = L.DomUtil.create('tr', '', root_table);
+            tr.id = Date.now() + 'voltage' + this.values[i].value;
+            var td = L.DomUtil.create('td', 'leaflet-filter-voltage-td', tr);
+            L.DomUtil.create('div', 'leaflet-filter-voltage-fill mgs-st-'+this.values[i].value, td);
+            if (i === 0) {
+                var td_builder = L.DomUtil.create('td', '', tr);
+                td_builder.rowSpan = this.values.length;
+                td_builder.appendChild(builder.build());
+            }
+        }
         return container;
     },
 
-    initialize: function(map) {
+    initialize: function (map) {
         L.Storage.FilterAction.prototype.initialize.call(this, map);
         for (var i = 0; i < this.values.length; i++) {
-            this.filters['voltage'+this.values[i].value] = {};
-            this.filters['voltage'+this.values[i].value]['check'+this.values[i].value] = true;
-            this.filters['voltage'+this.values[i].value].value = i;
+            this.filters['voltage' + this.values[i].value] = {};
+            this.filters['voltage' + this.values[i].value]['check' + this.values[i].value] = true;
+            this.filters['voltage' + this.values[i].value].value = i;
         }
     },
 
@@ -351,7 +372,7 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
         this.show();
     },
 
-    getMap: function() {
+    getMap: function () {
         return this.map;
     },
 
@@ -359,9 +380,9 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
         this.map.ui.openPanel({data: {html: this._getContainer()}, className: 'dark'});
     },
 
-    reset: function() {
+    reset: function () {
         for (var i = 0; i < this.values.length; i++) {
-            this.filters['voltage'+this.values[i].value]['check'+this.values[i].value] = true;
+            this.filters['voltage' + this.values[i].value]['check' + this.values[i].value] = true;
         }
     },
 
@@ -382,7 +403,7 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         tooltip: L._('Structure and hierarchy of MOESK')
     },
 
-    _getContainer: function() {
+    _getContainer: function () {
         var container = L.DomUtil.create('div');
         return container;
     },
@@ -395,8 +416,6 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         this.map.ui.openPanel({data: {html: this._getContainer()}, className: 'dark'});
     }
 });
-
-
 
 
 L.Storage.FilterToolbar = L.Toolbar.Control.extend({
@@ -423,20 +442,20 @@ L.Storage.ExitAction = L.Storage.FilterAction.extend({
     onClick: function () {
         var _modal = document.querySelector(".mgs-modal");
         $.ajax({
-            url : "/logout/",
+            url: "/logout/",
             type: "GET",
-          }).success(function(res) {
+        }).success(function (res) {
             var _content = document.querySelector(".mgs-modal-content > .mgs-content");
             _content.innerHTML = res;
-            _modal.className ='mgs-show-modal';
-          }).error(function(res) {
+            _modal.className = 'mgs-show-modal';
+        }).error(function (res) {
             console.log(res)
         });
     },
 });
 
 L.Storage.ExitToolbar = L.Toolbar.Control.extend({
-     onAdd: function (map) {
+    onAdd: function (map) {
         L.Toolbar.Control.prototype.onAdd.call(this, map);
         L.DomUtil.addClass(this._container, 'storage-toolbar-enabled');
     },
