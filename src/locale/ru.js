@@ -388,6 +388,8 @@ var locale = {
     "Year": "Год",
     "Hour": "Час",
     "Minute": "Минута",
+    "Filter by voltage": "Фильтр по напряжению",
+    "Structure and hierarchy of MOESK": "Структура и иерархия МОЭСК"
 };
 L.registerLocale("ru", locale);
 L.setLocale("ru");

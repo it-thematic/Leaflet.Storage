@@ -265,18 +265,19 @@ L.Storage.Map.include({
             new L.S.SettingsToolbar({actions: editActions}).addTo(this);
         }
 
+        if (this.options.isAuth){
+            new L.S.ExitToolbar({actions: [L.Storage.ExitAction]}).addTo(this);
+        }
+
         if (!this.options.noControl) {
             var filterActions = [
                 L.S.FilterAction.Employee,
                 L.S.FilterAction.Vehicle,
                 L.S.FilterAction.Datetime,
-                L.S.FilterAction.Voltage
+                L.S.FilterAction.Voltage,
+                L.S.FilterAction.Hierarchy
             ];
             new L.S.FilterToolbar({actions: filterActions}).addTo(this);
-        }
-
-        if (this.options.isAuth){
-            new L.S.ExitToolbar({actions: [L.Storage.ExitAction]}).addTo(this);
         }
 
         this._controls.zoom = new L.Control.Zoom({zoomInTitle: L._('Zoom in'), zoomOutTitle: L._('Zoom out')});

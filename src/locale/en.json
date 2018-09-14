@@ -370,5 +370,7 @@
     "Month": "Month",
     "Year": "Year",
     "Hour": "Hour",
-    "Minute": "Minute"
+    "Minute": "Minute",
+    "Filter by voltage": "Filter by voltage",
+    "Structure and hierarchy of MOESK": "Structure and hierarchy of MOESK"
 }

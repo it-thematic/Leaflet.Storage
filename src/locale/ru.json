@@ -370,5 +370,7 @@
     "Month": "Месяц",
     "Year": "Год",
     "Hour": "Час",
-    "Minute": "Минута"
+    "Minute": "Минута",
+    "Filter by voltage": "Фильтр по напряжению",
+    "Structure and hierarchy of MOESK": "Структура и иерархия МОЭСК"
 }

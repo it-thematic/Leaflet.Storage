@@ -283,6 +283,12 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 });
 
 L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
+    options: {
+        helpMenu: true,
+        className: 'leaflet-filter-voltage dark',
+        tooltip: L._('Filter by voltage')
+    },
+
     condition: 'voltage',
 
     // Доступные фильтры
@@ -329,17 +335,6 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
         });
         container.appendChild(builder.build());
 
-        var advancedButtons = L.DomUtil.create('div', 'button-bar', container);
-        var cancelLink = L.DomUtil.create('a', 'button third storage-delete', advancedButtons);
-        cancelLink.innerHTML = L._('Cancel');
-        cancelLink.href = '#';
-        L.DomEvent.on(cancelLink, 'click', L.DomEvent.stop)
-                  .on(cancelLink, 'click', function () {
-                      this.map.ui.closePanel();
-                      this.cancel();
-                      this.reset();
-                  }, this);
-
         return container;
     },
 
@@ -379,6 +374,29 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
         });
     }
 });
+
+L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
+    options: {
+        helpMenu: true,
+        className: 'leaflet-filter-hierarchy dark',
+        tooltip: L._('Structure and hierarchy of MOESK')
+    },
+
+    _getContainer: function() {
+        var container = L.DomUtil.create('div');
+        return container;
+    },
+
+    onClick: function () {
+        this.show();
+    },
+
+    show: function () {
+        this.map.ui.openPanel({data: {html: this._getContainer()}, className: 'dark'});
+    }
+});
+
+
 
 
 L.Storage.FilterToolbar = L.Toolbar.Control.extend({
