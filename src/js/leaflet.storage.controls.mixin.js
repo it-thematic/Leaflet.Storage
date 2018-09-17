@@ -497,20 +497,17 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         }
 
         function sendResutl(res_arr) {
-          console.log(res_arr);
-          if (!!map_tree.activeDataLayer && map_tree.activeDataLayer.layer._type === 'Mapbox') {
-                // map_tree.activeDataLayer.layer.updateFilter('owner','=',res_arr);
-                map_tree.eachDataLayer(function (datalayer) {
-                    if ((datalayer.layer._type === 'Mapbox') && (datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol'))) {
-                        if (res_arr.length > 0 ) {
-                            datalayer.layer.updateFilter('owner', '=', res_arr);
-                        }
-                        else {
-                            datalayer.layer.updateFilter('owner', '=', undefined);
-                        }
+            console.log(res_arr);
+            map_tree.eachDataLayer(function (datalayer) {
+                if ((datalayer.layer._type === 'Mapbox') && (datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol'))) {
+                    if (res_arr.length > 0 ) {
+                        datalayer.layer.updateFilter('owner', '=', res_arr);
                     }
-                });
-          }
+                    else {
+                        datalayer.layer.updateFilter('owner', '=', undefined);
+                    }
+                }
+            });
 
         }
         return container;
