@@ -274,7 +274,10 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 case 'vector':
                     for (var j = 0; j < this._styleJSON.layers.length; j++) {
                         if (this._styleJSON.layers[j].source === source) {
-                            this._styleJSON.layers[j].filter = this.mapbox_layer_filter || undefined;
+                            if (!!this.mapbox_layer_filter) {
+                                this._styleJSON.layers[j].filter = this.mapbox_layer_filter;
+                            }
+
                         }
                     }
             }
