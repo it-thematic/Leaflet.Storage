@@ -430,7 +430,7 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         container.appendChild(root);
         var map_tree  = this.map;
         var dataTree = null;
-
+        var that = this;
         $(function  () {
             dataTree = JSON.parse(window.localStorage.getItem('moesk-structure'));
             if (dataTree === null) {
@@ -524,21 +524,24 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
             console.log(res_arr);
             map_tree.eachDataLayer(function (datalayer) {
                 if ((datalayer.layer._type === 'Mapbox') && (datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol'))) {
-                    if ((res_arr.length === 1)&& res_arr[0]==="0"){
-                        is_tree = JSON.parse(window.localStorage.getItem('jstree'));
-                        if ((is_tree === null) || (is_tree === undefined))
+                    if ((res_arr.length === 1) && res_arr[0] === "0") {
+                        var is_tree = JSON.parse(window.localStorage.getItem('jstree'));
+                        if ((is_tree === null) || (is_tree === undefined)) {
                             return;
+                        }
                         datalayer.layer.updateFilter('owner', '=', undefined);
+                        that.setState(false);
                     }
                     else if (res_arr.length > 0 )  {
                         datalayer.layer.updateFilter('owner', '=', res_arr);
+                        that.setState(true);
                     }
                     else {
                         datalayer.layer.updateFilter('owner', '=', '-1');
+                        that.setState(true);
                     }
                 }
             });
-
         }
         return container;
     },
@@ -549,6 +552,10 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
 
     show: function () {
         this.map.ui.openPanel({data: {html: this._getContainer()}, className: 'dark'});
+    },
+
+    setState: function (value) {
+        L.DomUtil.classIf(this._link, 'dark', !value);
     }
 });
 
