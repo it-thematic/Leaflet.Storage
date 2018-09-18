@@ -283,3 +283,9 @@ input:checked + .slider:before {
     margin-top: 20px;
     margin-left: -20px !important;
 }
+
+.jstree-anchor:hover, .jstree-anchor:active {
+    text-decoration: none;
+    color: black !important;
+    background-color: white !important;
+}

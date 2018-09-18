@@ -409,7 +409,7 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         container.style.height = '100%';
         var root = L.DomUtil.create('div');
         root.setAttribute('id', 'rootTree');
-        container.append(root);
+        container.appendChild(root);
         var map_tree  = this.map;
         var dataTree = null;
 
@@ -446,9 +446,11 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                     }
                 },
                 "checkbox" : {
-                    "keep_selected_style" : false
+                    "keep_selected_style" : false,
+                    // "tie_selection" : false,
+                    // "whole_node" : false,
                 },
-                "plugins" : [ "checkbox" ]
+                "plugins" : [ "checkbox", "state"]
             });
         }
         var interval_id = setInterval(function(){
