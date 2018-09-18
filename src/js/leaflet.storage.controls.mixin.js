@@ -323,8 +323,21 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
         // Создание формы для чекбоксов
         var builder = new L.S.FormBuilder(this, fields, {
             callback: function (e) {
-                var filter_mapbox_layer = ['any'], i = 0;
-                for (var filter in that.filters) {
+                var filter_mapbox_layer = ['any'], i = 0, filter;
+                // Уазывает на то, что включены все флаги
+                var all = true;
+                for (filter in that.filters) {
+                    if (!that.filters.hasOwnProperty(filter)) {
+                        continue;
+                    }
+                    if (!this.filters[filter]['check' + that.values[i].value]) {
+                        all = false;
+                        break;
+                    }
+                    i++;
+                }
+                i = 0;
+                for (filter in that.filters) {
                     if (!that.filters.hasOwnProperty(filter)) {
                         continue;
                     }
@@ -338,9 +351,10 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
                 }
                 that.map.eachDataLayer(function (datalayer) {
                     if (datalayer.layer._type === 'Mapbox') {
-                        datalayer.layer.updateMapboxFilter(that.condition, filter_mapbox_layer);
+                        datalayer.layer.updateMapboxFilter(that.condition, all ? undefined : filter_mapbox_layer);
                     }
                 });
+                that.setState(!all);
             }
         });
         // Создание таблицы для вставки картинок
@@ -393,6 +407,10 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
                 datalayer.layer.updateMapboxFilter(that.condition, undefined);
             }
         });
+    },
+
+    setState: function (value) {
+        L.DomUtil.classIf(this._link, 'dark', !value);
     }
 });
 
