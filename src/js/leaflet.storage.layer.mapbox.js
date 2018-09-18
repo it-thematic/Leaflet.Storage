@@ -44,6 +44,16 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         });
     },
 
+    eachMapboxSource: function(method, context) {
+        if (!this._styleJSON) { return this; }
+        for (var source in this._styleJSON.sources) {
+            if (this._styleJSON.sources.hasOwnProperty(source)) {
+                method.call(context || this, this._styleJSON.sources[source]);
+            }
+        }
+        return this;
+    },
+
     initialize: function (datalayer) {
         L.S.Layer.Default.prototype.initialize.call(this, datalayer);
         var styleID = null;
@@ -82,28 +92,30 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         this.on('add', function (e) {
             if (this.styleID && this.styleID !== -1) {
                 if (!this._styleJSON) { return; }
-                var style = this._styleJSON;
-                for (var source in style.sources) {
-                    if (!style.sources.hasOwnProperty(source)) {
-                        continue;
-                    }
-                    // Получение базово адреса источника данных
-                    var source_type = style.sources[source].type;
-                    if (source_type !== 'geojson') {
-                        continue;
-                    }
-
-                    if (!!this.default_filter) {
-                        var url = style.sources[source].data;
-                        if (url.indexOf('?') === -1) {
-                            url += '?' + this.default_filter;
-                        } else {
-                            url += this.default_filter;
-                        }
-                        url = style.sources[source].data = url;
-                    }
-                }
-                this.datalayer.map.MAPBOX.setStyle(style);
+            //     var style = this._styleJSON;
+            //     for (var source in style.sources) {
+            //         if (!style.sources.hasOwnProperty(source)) {
+            //             continue;
+            //         }
+            //         Получение базово адреса источника данных
+                    // var source_type = style.sources[source].type;
+                    // if (source_type !== 'geojson') {
+                    //     continue;
+                    // }
+                    //
+                    // if (!!this.default_filter) {
+                    //     var url = style.sources[source].data;
+                    //     if (url.indexOf('?') === -1) {
+                    //         url += '?' + this.default_filter;
+                    //     } else {
+                    //         url += this.default_filter;
+                    //     }
+                    //     url = style.sources[source].data = url;
+                    // }
+                // }
+                // this.datalayer.map.MAPBOX.setStyle(style);
+                this.datalayer.map.MAPBOX.setStyle(this._styleJSON);
+                this.updateSource();
             }
         });
 
@@ -226,7 +238,10 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 // Если это поле по которому фильтровать, то фильтруем иначе нет
                 if (metadata_array[1] !== 'filter') { continue; }
                 if (metadata_array[2] === metadata_key) {
-                    this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
+                    if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+                        this._styleJSON.layers[i].filter = this.mapbox_layer_filter;
+                        this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
+                    }
                 }
             }
         }
@@ -271,15 +286,15 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     this.datalayer.map.MAPBOX.setSource(source, url + filter);
                     this.datalayer.map.fire('update-source', {map: this.datalayer.map, layer: this});
                     break;
-                case 'vector':
-                    for (var j = 0; j < this._styleJSON.layers.length; j++) {
-                        if (this._styleJSON.layers[j].source === source) {
-                            if (!!this.mapbox_layer_filter) {
-                                this._styleJSON.layers[j].filter = this.mapbox_layer_filter;
-                            }
-
-                        }
+            }
+            // Добавление Mapbox-фильтра ко всем слоям в этом Datalayer не зависимо от источника
+            for (var j = 0; j < this._styleJSON.layers.length; j++) {
+                if (this._styleJSON.layers[j].source === source) {
+                    if (!!this.mapbox_layer_filter) {
+                        this._styleJSON.layers[j].filter = this.mapbox_layer_filter;
+                        this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[j].id, this.mapbox_layer_filter);
                     }
+                }
             }
         }
     },
