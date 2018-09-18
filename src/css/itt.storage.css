@@ -273,3 +273,19 @@ input:checked + .slider:before {
 .btn.btn-danger.cancel {
     margin-top: -18px;
 }
+
+/* Tree filials MOESK*/
+.jstree-default-large>.jstree-no-dots .jstree-open>.jstree-ocl {
+    background-position: -95px 0px !important;
+}
+
+#rootTree {
+    margin-top: 20px;
+    margin-left: -20px !important;
+}
+
+.jstree-anchor:hover, .jstree-anchor:active {
+    text-decoration: none;
+    color: black !important;
+    background-color: white !important;
+}

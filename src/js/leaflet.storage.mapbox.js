@@ -85,6 +85,10 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
         this._glMap.setFilter(layer, filter);
     },
 
+    getSource: function(id) {
+        return this._glMap.getSource(id);
+    },
+
     setSource: function(id, source) {
         var s = this._glMap.getSource(id);
         if (s) {
@@ -129,6 +133,18 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
                 }
             }
         }
+    },
+
+    getLayer: function (id) {
+        return this._glMap.getLayer(id);
+    },
+
+    moveLayer: function (id, beforeId) {
+        this._glMap.moveLayer(id, beforeId);
+    },
+
+    hasLayer: function (id) {
+        return !!this.getLayer(id);
     },
 
     _reloadSources: function() {

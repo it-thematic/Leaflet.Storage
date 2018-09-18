@@ -400,7 +400,7 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
     options: {
         helpMenu: true,
         className: 'leaflet-filter-hierarchy dark',
-        tooltip: L._('Structure and hierarchy of MOESK')
+        tooltip: L._('Structure and filials of MOESK')
     },
 
     _getContainer: function () {
@@ -409,8 +409,8 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         container.style.height = '100%';
         var root = L.DomUtil.create('div');
         root.setAttribute('id', 'rootTree');
-        container.append(root);
-
+        container.appendChild(root);
+        var map_tree  = this.map;
         var dataTree = null;
 
         $(function  () {
@@ -446,9 +446,11 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                     }
                 },
                 "checkbox" : {
-                    "keep_selected_style" : false
+                    "keep_selected_style" : false,
+                    // "tie_selection" : false,
+                    // "whole_node" : false,
                 },
-                "plugins" : [ "checkbox" ]
+                "plugins" : [ "checkbox", "state"]
             });
         }
         var interval_id = setInterval(function(){
@@ -465,7 +467,7 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                     clearTimeout(timerId);
                     timerId = setTimeout(function () {
                       returnResult();
-                    }, 1200);
+                    }, 350);
                   }
                 );
               }
@@ -497,7 +499,18 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         }
 
         function sendResutl(res_arr) {
-          console.log(res_arr);
+            console.log(res_arr);
+            map_tree.eachDataLayer(function (datalayer) {
+                if ((datalayer.layer._type === 'Mapbox') && (datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol'))) {
+                    if (res_arr.length > 0 ) {
+                        datalayer.layer.updateFilter('owner', '=', res_arr);
+                    }
+                    else {
+                        datalayer.layer.updateFilter('owner', '=', undefined);
+                    }
+                }
+            });
+
         }
         return container;
     },
@@ -535,15 +548,20 @@ L.Storage.ExitAction = L.Storage.FilterAction.extend({
 
     onClick: function () {
         var _modal = document.querySelector(".mgs-modal");
-        $.ajax({
-            url: "/logout/",
-            type: "GET",
-        }).success(function (res) {
-            var _content = document.querySelector(".mgs-modal-content > .mgs-content");
-            _content.innerHTML = res;
-            _modal.className = 'mgs-show-modal';
-        }).error(function (res) {
-            console.log(res)
+        $(function  () {
+             $.ajax({
+                    type: "GET",
+                    url: "/logout/",
+                    success: function (data) {
+                         var _content = document.querySelector(".mgs-modal-content > .mgs-content");
+                        _content.innerHTML = data;
+                        _modal.className = 'mgs-show-modal';
+                    },
+                    error: function (error) {
+                        console.log("Ошибка получения данных", error);
+                    }
+                });
+            return false;
         });
     },
 });
