@@ -289,3 +289,12 @@ input:checked + .slider:before {
     color: black !important;
     background-color: white !important;
 }
+.jstree-anchor {
+    background: none !important;
+}
+
+.jstree-clicked {
+    background: none !important;
+    border-radius: 2px;
+    box-shadow: none !important;
+}
