@@ -410,7 +410,6 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         var root = L.DomUtil.create('div');
         root.setAttribute('id', 'rootTree');
         container.appendChild(root);
-        root.setAttribute('class', 'jstree-checked');
         var map_tree  = this.map;
         var dataTree = null;
 
@@ -424,10 +423,9 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                     dataType: "json",
                     success: function (data) {
                         dataTree = data;
-                        dataTree.state = {'checked':true, "selected" : true};
+                        dataTree.state = {"selected" : true };
                         window.localStorage.setItem('moesk-structure', JSON.stringify(dataTree));
                         buildTree();
-                        // $("#rootTree").jstree(true)
                     },
                     error: function (error) {
                         console.log("Ошибка получения данных", error);
@@ -438,10 +436,13 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                 buildTree();
             }
         });
+
         function buildTree() {
+            $.jstree.defaults.core = {};
             $("#rootTree").jstree({
                 "core": {
                     'data': dataTree,
+                    "multiple" : true,
                     'themes': {
                         "icons": false,
                         "variant" : "large",
@@ -449,16 +450,11 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                     }
                 },
                 "checkbox" : {
-                    "keep_selected_style" : true,
-                    "override_ui" : true,
-
-                    // "two_state" : true
-                    // "tie_selection" : false,
-                    // "whole_node" : false,
+                    "keep_selected_style" : false,
+                     three_state: true
                 },
                 "plugins" : [ "checkbox", "state"]
             });
-            $("#rootTree").jstree("close_all");
         }
         var interval_id = setInterval(function(){
              if($("li#"+ 0).length != 0){
@@ -510,11 +506,17 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
             console.log(res_arr);
             map_tree.eachDataLayer(function (datalayer) {
                 if ((datalayer.layer._type === 'Mapbox') && (datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol'))) {
-                    if (res_arr.length > 0 ) {
+                    if ((res_arr.length === 1)&& res_arr[0]==="0"){
+                        is_tree = JSON.parse(window.localStorage.getItem('jstree'));
+                        if ((is_tree === null) || (is_tree === undefined))
+                            return;
+                        datalayer.layer.updateFilter('owner', '=', undefined);
+                    }
+                    else if (res_arr.length > 0 )  {
                         datalayer.layer.updateFilter('owner', '=', res_arr);
                     }
                     else {
-                        datalayer.layer.updateFilter('owner', '=', undefined);
+                        datalayer.layer.updateFilter('owner', '=', '-1');
                     }
                 }
             });
