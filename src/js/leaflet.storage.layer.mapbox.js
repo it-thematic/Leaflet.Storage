@@ -2,7 +2,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     _type: 'Mapbox',
     _styleJSON: null,
     filters: null,
-    mapbox_layer_filter: null,
+    mapbox_layer_filters: null,
     bbox_filter: null,
     default_filter: null,
     selectOptions: [["-1", '------']],
@@ -58,6 +58,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         L.S.Layer.Default.prototype.initialize.call(this, datalayer);
         var styleID = null;
         this.filters = [];
+        this.mapbox_layer_filters = {};
         var that = this;
         try {
             Object.defineProperty(this, 'styleID', {
@@ -228,30 +229,31 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
     updateMapboxFilter: function (metadata_key, mapbox_layer_filter) {
         // filter: фильтр который принимает Mapbox
-        this.mapbox_layer_filter = mapbox_layer_filter;
-        for (var i = 0; i < this._styleJSON.layers.length; i++) {
-            var metadatas = this._styleJSON.layers[i].metadata;
-            if (!metadatas) { continue; }
-            for (var metadata in metadatas) {
-                if (!metadatas.hasOwnProperty(metadata)) { continue; }
-                var metadata_array = metadata.split(':');
-                // Если это поле по которому фильтровать, то фильтруем иначе нет
-                if (metadata_array[1] !== 'filter') { continue; }
-                if (metadata_array[2] === metadata_key) {
-                    if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
-                        this._styleJSON.layers[i].filter = this.mapbox_layer_filter;
-                        this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
-                    }
-                }
-            }
-        }
+        this.mapbox_layer_filters[metadata_key] = mapbox_layer_filter;
+        this.updateSource();
+        // for (var i = 0; i < this._styleJSON.layers.length; i++) {
+        //     var metadatas = this._styleJSON.layers[i].metadata;
+        //     if (!metadatas) { continue; }
+        //     for (var metadata in metadatas) {
+        //         if (!metadatas.hasOwnProperty(metadata)) { continue; }
+        //         var metadata_array = metadata.split(':');
+        //         Если это поле по которому фильтровать, то фильтруем иначе нет
+                // if (metadata_array[1] !== 'filter') { continue; }
+                // if (metadata_array[2] === metadata_key) {
+                //     if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+                //         this._styleJSON.layers[i].filter = this.mapbox_layer_filter;
+                //         this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
+                //     }
+                // }
+            // }
+        // }
     },
 
     updateSource: function () {
         if (!this._styleJSON) {
             return;
         }
-        var source_type, url, filter, i;
+        var source_type, url, filter, i, j;
         for (var source in this._styleJSON.sources) {
             if (!this._styleJSON.sources.hasOwnProperty(source)) {
                 continue;
@@ -288,11 +290,32 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     break;
             }
             // Добавление Mapbox-фильтра ко всем слоям в этом Datalayer не зависимо от источника
-            for (var j = 0; j < this._styleJSON.layers.length; j++) {
-                if (this._styleJSON.layers[j].source === source) {
-                    if (!!this.mapbox_layer_filter) {
-                        this._styleJSON.layers[j].filter = this.mapbox_layer_filter;
-                        this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[j].id, this.mapbox_layer_filter);
+            for (var mapbox_filter in this.mapbox_layer_filters) {
+                if (!this.mapbox_layer_filters.hasOwnProperty(mapbox_filter)) {
+                    continue;
+                }
+                // Проходим по метаданным слоя
+                // Если в метаданных есть фильтр по этому ключу, то применяем фильтр
+                for (i = 0; i < this._styleJSON.layers.length; i++) {
+                    var metadatas = this._styleJSON.layers[i].metadata;
+                    if (!metadatas) {
+                        continue;
+                    }
+                    for (var metadata in metadatas) {
+                        if (!metadatas.hasOwnProperty(metadata)) {
+                            continue;
+                        }
+                        var metadata_array = metadata.split(':');
+                        // Если это поле по которому фильтровать, то фильтруем иначе нет
+                        if (metadata_array[1] !== 'filter') {
+                            continue;
+                        }
+                        if (metadata_array[2] === mapbox_filter) {
+                            if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+                                this._styleJSON.layers[i].filter = this.mapbox_layer_filters[mapbox_filter];
+                                this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filters[mapbox_filter]);
+                            }
+                        }
                     }
                 }
             }
