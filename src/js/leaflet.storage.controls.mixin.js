@@ -188,17 +188,15 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         var sub_container = L.DomUtil.create('div', 'mgs-swith', container);
         var that = this;
         var fields = [
-            ['actual', {
-                handler: 'Switch', label: 'Актуальные', callback: function (e) {
-                    if (e.helper.value()) {
-                        that._disableDate();
-                        that.cancel();
-                    }
-                    else {
-                        that._enabledData();
-                    }
+            ['actual', { handler: 'Switch', label: 'Актуальные', callback: function (e) {
+                if (e.helper.value()) {
+                    that._disableDate();
+                    that.cancel();
                 }
-            }]
+                else {
+                    that._enabledData();
+                }
+            }}]
         ];
         var builder = new L.S.FormBuilder(this, fields);
         sub_container.appendChild(builder.build());
@@ -351,7 +349,7 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
             var tr = L.DomUtil.create('tr', '', root_table);
             tr.id = Date.now() + 'voltage' + this.values[i].value;
             var td = L.DomUtil.create('td', 'leaflet-filter-voltage-td', tr);
-            L.DomUtil.create('div', 'leaflet-filter-voltage-fill mgs-st-' + this.values[i].value, td);
+            L.DomUtil.create('div', 'leaflet-filter-voltage-fill mgs-st-'+this.values[i].value, td);
             if (i === 0) {
                 var td_builder = L.DomUtil.create('td', '', tr);
                 td_builder.rowSpan = this.values.length;
@@ -412,10 +410,11 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         var root = L.DomUtil.create('div');
         root.setAttribute('id', 'rootTree');
         container.appendChild(root);
-        var map_tree = this.map;
+        root.setAttribute('class', 'jstree-checked');
+        var map_tree  = this.map;
         var dataTree = null;
 
-        $(function () {
+        $(function  () {
             dataTree = JSON.parse(window.localStorage.getItem('moesk-structure'));
             if (dataTree === null) {
                 $.ajax({
@@ -425,8 +424,10 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                     dataType: "json",
                     success: function (data) {
                         dataTree = data;
+                        dataTree.state = {'checked':true, "selected" : true};
                         window.localStorage.setItem('moesk-structure', JSON.stringify(dataTree));
                         buildTree();
+                        // $("#rootTree").jstree(true)
                     },
                     error: function (error) {
                         console.log("Ошибка получения данных", error);
@@ -437,44 +438,47 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                 buildTree();
             }
         });
-
         function buildTree() {
             $("#rootTree").jstree({
                 "core": {
                     'data': dataTree,
                     'themes': {
                         "icons": false,
-                        "variant": "large",
+                        "variant" : "large",
                         "dots": false
                     }
                 },
-                "checkbox": {
-                    "keep_selected_style": false,
+                "checkbox" : {
+                    "keep_selected_style" : true,
+                    "override_ui" : true,
+
+                    // "two_state" : true
                     // "tie_selection" : false,
                     // "whole_node" : false,
                 },
-                "plugins": ["checkbox", "state"]
+                "plugins" : [ "checkbox", "state"]
             });
+            $("#rootTree").jstree("close_all");
         }
-
-        var interval_id = setInterval(function () {
-            if ($("li#" + 0).length !== 0) {
-                clearInterval(interval_id);
-                $("#rootTree").jstree("open_node", "ul > li:first");
-                $(".jstree-anchor").css("background-color", "transparent");
-                $("#0_anchor").css("display", 'none');
-                $("i.jstree-icon.jstree-ocl").first().css("display", "none");
-                $("#rootTree").css('margin-top', '20px');
-                var timerId;
-                $('#rootTree').on(
-                    "changed.jstree", function (evt, data) {
-                        clearTimeout(timerId);
-                        timerId = setTimeout(function () {
-                            returnResult();
-                        }, 350);
-                    }
+        var interval_id = setInterval(function(){
+             if($("li#"+ 0).length != 0){
+                 clearInterval(interval_id);
+                  $("#rootTree").jstree("open_node", "ul > li:first");
+                  $(".jstree-anchor").css("background-color", "transparent");
+                  $("#0_anchor").css("display", 'none');
+                  $("i.jstree-icon.jstree-ocl").first().css("display", "none");
+                  $("#rootTree").css('margin-top', '20px');
+                  $("#rootTree").css("class", 'jstree-checked');
+                  var timerId;
+                  $('#rootTree').on(
+                    "changed.jstree", function(evt, data) {
+                    clearTimeout(timerId);
+                    timerId = setTimeout(function () {
+                      returnResult();
+                    }, 350);
+                  }
                 );
-            }
+              }
         }, 5);
 
         function compareId(a, b) {
@@ -484,7 +488,6 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
                 return 1;
             return 0;
         }
-
         function returnResult() {
             var result = $('#rootTree').jstree('get_selected', true);
             result.sort(compareId);
@@ -506,25 +509,17 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         function sendResutl(res_arr) {
             console.log(res_arr);
             map_tree.eachDataLayer(function (datalayer) {
-                if (datalayer.layer._type !== 'Mapbox')
-                {
-                    return;
-                }
-
-                for (var source in datalayer.layer._styleJSON.sources) {
-                    if (datalayer.layer._styleJSON.sources.hasOwnProperty(source) && source.search('mgs_substations') !== -1) {
-                        if (res_arr.length > 0) {
-                            datalayer.layer.updateFilter('owner', '=', res_arr);
-                        }
-                        else {
-                            datalayer.layer.updateFilter('owner', '=', undefined);
-                        }
+                if ((datalayer.layer._type === 'Mapbox') && (datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol'))) {
+                    if (res_arr.length > 0 ) {
+                        datalayer.layer.updateFilter('owner', '=', res_arr);
+                    }
+                    else {
+                        datalayer.layer.updateFilter('owner', '=', undefined);
                     }
                 }
             });
 
         }
-
         return container;
     },
 
@@ -561,19 +556,19 @@ L.Storage.ExitAction = L.Storage.FilterAction.extend({
 
     onClick: function () {
         var _modal = document.querySelector(".mgs-modal");
-        $(function () {
-            $.ajax({
-                type: "GET",
-                url: "/logout/",
-                success: function (data) {
-                    var _content = document.querySelector(".mgs-modal-content > .mgs-content");
-                    _content.innerHTML = data;
-                    _modal.className = 'mgs-show-modal';
-                },
-                error: function (error) {
-                    console.log("Ошибка получения данных", error);
-                }
-            });
+        $(function  () {
+             $.ajax({
+                    type: "GET",
+                    url: "/logout/",
+                    success: function (data) {
+                         var _content = document.querySelector(".mgs-modal-content > .mgs-content");
+                        _content.innerHTML = data;
+                        _modal.className = 'mgs-show-modal';
+                    },
+                    error: function (error) {
+                        console.log("Ошибка получения данных", error);
+                    }
+                });
             return false;
         });
     },
