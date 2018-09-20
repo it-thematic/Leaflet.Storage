@@ -20,6 +20,8 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
             // "sprite": "http://35.208.236.233/static/sprite/sprite",
             // "sprite": "http://35.206.94.214/static/sprite/sprite",
             // "sprite": "http://10.42.222.190/static/sprite/sprite",
+            // "sprite": "http://10.42.222.190/static/sprite/sprite",
+            // "sprite": "http://212.65.87.2:65527/static/sprite/sprite"
             "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
             "sources": {
             },
@@ -73,6 +75,12 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
                         this._glMap.addLayer(style.layers[j]);
                     }
                 }
+            }
+            // Изменение адреса для sprite
+            // Во-первых: sprite один на всех. И если в добавляемых слоях ссылка на другие картинки, то это их проблема.
+            // Во-вторых: чтобы не зависеть от sprite указанного в options.sprite и не менять вручную на серверах
+            if (style.hasOwnProperty('sprite')) {
+
             }
         }
     },
