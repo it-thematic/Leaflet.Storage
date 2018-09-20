@@ -421,6 +421,18 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         tooltip: L._('Structure and filials of MOESK')
     },
 
+    reloadStorage: function(){
+      var limit = 24 * 3600 * 1000; // 24 часа
+      var localStorageInitTime = localStorage.getItem('localStorageInitTime');
+      if (localStorageInitTime === null) {
+        window.localStorage.clear();
+        window.localStorage.setItem('localStorageInitTime', +new Date());
+      } else if(new Date() - localStorageInitTime > limit){
+        window.localStorage.clear();
+        window.localStorage.setItem('localStorageInitTime', +new Date());
+      }
+    },
+
     _getContainer: function () {
         var container = L.DomUtil.create('div');
         container.style.width = '100%';
@@ -431,7 +443,9 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         var map_tree  = this.map;
         var dataTree = null;
         var that = this;
+        this.reloadStorage();
         $(function  () {
+
             dataTree = JSON.parse(window.localStorage.getItem('moesk-structure'));
             if (dataTree === null) {
                 $.ajax({
