@@ -179,7 +179,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     getContainer: function () {
         var container = L.DomUtil.create('div');
         var label_header = document.createElement('label');
-        label_header.appendChild(document.createTextNode('ОБЪЕКТЫ МОНИТОРИНГА'));
+        label_header.appendChild(document.createTextNode('ОБЪЕКТЫ КОНТРОЛЯ'));
         container.appendChild(label_header);
 
         // Начало создания контейнера для переключателя
