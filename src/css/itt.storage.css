@@ -298,3 +298,7 @@ input:checked + .slider:before {
     border-radius: 2px;
     box-shadow: none !important;
 }
+
+.leaflet-popup-content {
+    width: auto !important;
+}
