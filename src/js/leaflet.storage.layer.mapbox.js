@@ -44,8 +44,10 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         });
     },
 
-    eachMapboxSource: function(method, context) {
-        if (!this._styleJSON) { return this; }
+    eachMapboxSource: function (method, context) {
+        if (!this._styleJSON) {
+            return this;
+        }
         for (var source in this._styleJSON.sources) {
             if (this._styleJSON.sources.hasOwnProperty(source)) {
                 method.call(context || this, this._styleJSON.sources[source]);
@@ -92,27 +94,29 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
         this.on('add', function (e) {
             if (this.styleID && this.styleID !== -1) {
-                if (!this._styleJSON) { return; }
-            //     var style = this._styleJSON;
-            //     for (var source in style.sources) {
-            //         if (!style.sources.hasOwnProperty(source)) {
-            //             continue;
-            //         }
-            //         Получение базово адреса источника данных
-                    // var source_type = style.sources[source].type;
-                    // if (source_type !== 'geojson') {
-                    //     continue;
-                    // }
-                    //
-                    // if (!!this.default_filter) {
-                    //     var url = style.sources[source].data;
-                    //     if (url.indexOf('?') === -1) {
-                    //         url += '?' + this.default_filter;
-                    //     } else {
-                    //         url += this.default_filter;
-                    //     }
-                    //     url = style.sources[source].data = url;
-                    // }
+                if (!this._styleJSON) {
+                    return;
+                }
+                //     var style = this._styleJSON;
+                //     for (var source in style.sources) {
+                //         if (!style.sources.hasOwnProperty(source)) {
+                //             continue;
+                //         }
+                //         Получение базово адреса источника данных
+                // var source_type = style.sources[source].type;
+                // if (source_type !== 'geojson') {
+                //     continue;
+                // }
+                //
+                // if (!!this.default_filter) {
+                //     var url = style.sources[source].data;
+                //     if (url.indexOf('?') === -1) {
+                //         url += '?' + this.default_filter;
+                //     } else {
+                //         url += this.default_filter;
+                //     }
+                //     url = style.sources[source].data = url;
+                // }
                 // }
                 // this.datalayer.map.MAPBOX.setStyle(style);
                 this.datalayer.map.MAPBOX.setStyle(this._styleJSON);
@@ -212,16 +216,22 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 this.filters.push(key + operation + value);
             }
         } else {
+            var _ok = true;
             for (var i = 0; i < this.filters.length; i++) {
                 var filter = this.filters[i];
-                var arr_filter = filter.split(operation);
+                var arr_filter = filter.split('=');
                 if (arr_filter[0] === key) {
+                    _ok = false;
                     if (!!value) {
                         this.filters[i] = key + operation + value;
                     } else {
                         this.filters.splice(i, 1);
                     }
+                    break;
                 }
+            }
+            if ((!!_ok) && (!!value)) {
+                this.filters.push(key + operation + value);
             }
         }
         this.updateSource();
@@ -238,14 +248,14 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         //         if (!metadatas.hasOwnProperty(metadata)) { continue; }
         //         var metadata_array = metadata.split(':');
         //         Если это поле по которому фильтровать, то фильтруем иначе нет
-                // if (metadata_array[1] !== 'filter') { continue; }
-                // if (metadata_array[2] === metadata_key) {
-                //     if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
-                //         this._styleJSON.layers[i].filter = this.mapbox_layer_filter;
-                //         this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
-                //     }
-                // }
-            // }
+        // if (metadata_array[1] !== 'filter') { continue; }
+        // if (metadata_array[2] === metadata_key) {
+        //     if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+        //         this._styleJSON.layers[i].filter = this.mapbox_layer_filter;
+        //         this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
+        //     }
+        // }
+        // }
         // }
     },
 
