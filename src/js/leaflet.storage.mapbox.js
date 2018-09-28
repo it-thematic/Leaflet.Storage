@@ -21,7 +21,8 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
             // "sprite": "http://35.206.94.214/static/sprite/sprite",
             // "sprite": "http://10.42.222.190/static/sprite/sprite",
             // "sprite": "http://10.42.222.190/static/sprite/sprite",
-            // "sprite": "http://212.65.87.2:65527/static/sprite/sprite"
+            // "sprite": "http://isolated-gw-vmw01-mb08.sigma-it.local/static/sprite/sprite"
+            // "sprite": "http://isolated-gw-vmw01-mb09.sigma-it.local/static/sprite/sprite"
             "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
             "sources": {
             },
