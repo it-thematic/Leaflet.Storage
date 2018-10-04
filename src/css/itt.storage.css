@@ -303,13 +303,13 @@ input:checked + .slider:before {
     width: auto !important;
 }
 
-.leaflet-control-print {
-    background-image: url("../img/print-24.png");
+.leaflet-control-print a {
+    background-position: -120px -200px;
 }
 
-.leaflet-control-print.dark {
-    background-image: url("../img/print-24-white.png");
-    background-color: #444;
-    color: #eee;
+.leaflet-control-print.dark a {
+    background-image: url("../img/24-white.png");
+    background-color: #2a2e30;
+    color: #eeeeec;
     border: 1px solid #1b1f20;
 }

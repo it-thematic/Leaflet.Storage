@@ -684,12 +684,17 @@ L.Storage.PrintControl = L.Control.extend({
 
     _onCancel: function (e) {
         this._onDelete(e);
+        if (this.feature) {
+            this.feature.disableEdit();
+            delete this.feature;
+        }
         L.DomUtil.removeClass(this.getContainer(), 'dark');
     },
 
     _onDrawingTooltip: function(e) {
         this.map.ui.tooltip({
-            content: L._('Click to start drawing a polygon') + '\n' + L._('OR') + '\n' + L._("Press 'Enter' to print")
+            content: L._('Click to start drawing a polygon') + '<br>' + L._('OR') + '<br>' + L._("Press 'Enter' to print"),
+            duration: 5000
         });
     },
 
@@ -705,17 +710,21 @@ L.Storage.PrintControl = L.Control.extend({
 
         L.DomEvent
             .on(link, 'click', L.DomEvent.stop)
-            .on(link, 'click', this.beforePrint, this)
+            .on(link, 'click', this.onClick, this)
             .on(link, 'dblclick', L.DomEvent.stopPropagation);
         return container;
     },
 
-    beforePrint: function (e) {
+    onClick: function (e) {
         this._onDelete(e);
         if (!L.DomUtil.hasClass(this.getContainer(), 'dark')) {
             L.DomUtil.addClass(this.getContainer(), 'dark');
         }
-        return this.editable.startRectangle();
+        if (!!this.feature) {
+            this.feature.disableEdit();
+            delete this.feature;
+        }
+        this.feature =  this.editable.startRectangle();
     },
 
     print: function (e) {
