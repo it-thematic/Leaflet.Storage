@@ -33,7 +33,8 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'node_modules/tokml/', src: ['tokml.js'], dest: 'reqs/tokml/'},
           {expand: true, cwd: 'node_modules/mapbox-gl/dist/', src: ['**'], dest: 'reqs/mapbox-gl/'},
           {expand: true, cwd: 'node_modules/mapbox-gl-leaflet/', src: ['leaflet-mapbox-gl.js'], dest: 'reqs/mapbox-gl-leaflet/'},
-          {expand: true, cwd: 'node_modules/leaflet-wfst/dist/', src: ['**'], dest: 'reqs/wfst/'}
+          {expand: true, cwd: 'node_modules/leaflet-wfst/dist/', src: ['**'], dest: 'reqs/wfst/'},
+          {expand: true, cwd: 'node_modules/leaflet-easyprint/dist/', src: ['**'], dest: 'reqs/leaflet-easyprint/'}
         ]
       }
     }

@@ -44,6 +44,7 @@
     "jstree-bootstrap-theme": "^1.0.1",
     "leaflet": "^1.0.3",
     "leaflet-contextmenu": "^1.2.1",
+    "leaflet-easyprint": "^2.1.9",
     "leaflet-editable": "1.0.0",
     "leaflet-editinosm": "^0.2.3",
     "leaflet-formbuilder": "^0.2.3",

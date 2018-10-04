@@ -372,5 +372,8 @@
     "Hour": "Час",
     "Minute": "Минута",
     "Filter by voltage": "Фильтр по напряжению",
-    "Structure and hierarchy of MOESK": "Структура и иерархия МОЭСК"
+    "Structure and hierarchy of MOESK": "Структура и иерархия МОЭСК",
+    "OR": "Или",
+    "Press 'Enter' to print": "Нажмите 'ВВОД' для печати",
+    "Print": "Печать"
 }

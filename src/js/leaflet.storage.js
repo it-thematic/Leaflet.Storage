@@ -330,6 +330,7 @@ L.Storage.Map.include({
         }
         if (this.options.moreControl) this._controls.more.addTo(this);
         if (this.options.scaleControl) this._controls.scale.addTo(this);
+        new L.S.PrintControl().addTo(this);
     },
 
     initDatalayers: function () {

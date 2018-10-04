@@ -627,3 +627,127 @@ L.Storage.ExitToolbar = L.Toolbar.Control.extend({
         L.DomUtil.removeClass(this._container, 'storage-toolbar-enabled');
     }
 });
+
+L.Storage.PrintControl = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    editable: null,
+    feature: null,
+    VK_DELETE: 46,
+
+
+    initialize: function(options) {
+        L.Control.prototype.initialize.call(this, options);
+
+        L.DomEvent.addListener(document, 'keydown', function (e) {
+            switch (e.keyCode) {
+                case this.VK_DELETE:
+                    this._onDelete(e);
+                    break;
+                case L.S.Keys.ENTER:
+                    this._onEnter(e);
+                    break;
+                case L.S.Keys.ESC:
+                    this._onCancel(e);
+            }
+        }, this);
+
+        this.easyPrint =  L.easyPrint({
+            title: 'Pring Control',
+            hidden: true,
+            tileLayer: new Object({
+                isLoading: function () {
+                    return false;
+                }
+            }),
+            sizeModes: ['A4Portrait', 'A4Landscape'],
+            defaultSizeTitles: {Current: 'Current Size', A4Landscape: 'A4 Landscape', A4Portrait: 'A4 Portrait'},
+            tileWait: 5000
+        });
+    },
+
+    _onDelete: function (e) {
+        var _layers = this.editable.featuresLayer.getLayers();
+        for (var i in _layers) {
+            if (!_layers.hasOwnProperty(i)) { continue; }
+            if (_layers[i].editEnabled()) {
+                this.editable.featuresLayer.removeLayer(_layers[i]);
+            }
+        }
+    },
+
+    _onEnter: function (e) {
+        this.print(e);
+    },
+
+    _onCancel: function (e) {
+        this._onDelete(e);
+        L.DomUtil.removeClass(this.getContainer(), 'dark');
+    },
+
+    _onDrawingTooltip: function(e) {
+        this.map.ui.tooltip({
+            content: L._('Click to start drawing a polygon') + '\n' + L._('OR') + '\n' + L._("Press 'Enter' to print")
+        });
+    },
+
+    onAdd: function(map) {
+        this.editable = new L.Editable(map, {});
+        this.editable.on('editable:drawing:start editable:drawing:click', this._onDrawingTooltip);
+        this.easyPrint.addTo(map);
+
+        var container = L.DomUtil.create('div', 'leaflet-control-print storage-control');
+        var link = L.DomUtil.create('a', '', container);
+        link.href = '#';
+        link.title = L._('Print');
+
+        L.DomEvent
+            .on(link, 'click', L.DomEvent.stop)
+            .on(link, 'click', this.beforePrint, this)
+            .on(link, 'dblclick', L.DomEvent.stopPropagation);
+        return container;
+    },
+
+    beforePrint: function (e) {
+        this._onDelete(e);
+        if (!L.DomUtil.hasClass(this.getContainer(), 'dark')) {
+            L.DomUtil.addClass(this.getContainer(), 'dark');
+        }
+        return this.editable.startRectangle();
+    },
+
+    print: function (e) {
+        var layers = this.editable.featuresLayer.getLayers();
+        if (layers.length === 0) {
+            this.easyPrint.printMap('A4Portrait');
+            return;
+        }
+        var llb = layers[0].getBounds();
+        // North - север
+        // West  - запад
+        // South - юг
+        // East  - восток
+        var nw = this._map.latLngToContainerPoint(llb.getNorthWest());
+        var se = this._map.latLngToContainerPoint(llb.getSouthEast());
+        // Расчитываем ширину и высоту получаемого изображения
+        var width = se.x - nw.x, height = se.y - nw.y;
+
+        // Смещаем центр карты, т.к. выбранный фрагмент центруется по карте
+        this._map.panTo(llb.getCenter());
+        this._onDelete(e);
+        this.easyPrint.options.sizeModes.push({
+            width: width,
+            height: height,
+            className: 'userSize',
+            tooltip: 'user Size'
+        });
+        try {
+            this.easyPrint.printMap('userSize');
+        }
+        catch (ex) {
+            console.log(ex);
+        }
+    }
+});

@@ -302,3 +302,14 @@ input:checked + .slider:before {
 .leaflet-popup-content {
     width: auto !important;
 }
+
+.leaflet-control-print {
+    background-image: url("../img/print-24.png");
+}
+
+.leaflet-control-print.dark {
+    background-image: url("../img/print-24-white.png");
+    background-color: #444;
+    color: #eee;
+    border: 1px solid #1b1f20;
+}
