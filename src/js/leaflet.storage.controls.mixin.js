@@ -655,7 +655,7 @@ L.Storage.PrintControl = L.Control.extend({
         }, this);
 
         this.easyPrint =  L.easyPrint({
-            position: 'topleft',
+            position: 'topright',
             hidden: true,
             tileLayer: new Object({
                 isLoading: function () {
