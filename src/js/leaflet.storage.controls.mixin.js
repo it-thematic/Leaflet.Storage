@@ -655,7 +655,7 @@ L.Storage.PrintControl = L.Control.extend({
         }, this);
 
         this.easyPrint =  L.easyPrint({
-            title: 'Pring Control',
+            position: 'topleft',
             hidden: true,
             tileLayer: new Object({
                 isLoading: function () {
@@ -688,12 +688,18 @@ L.Storage.PrintControl = L.Control.extend({
             this.feature.disableEdit();
             delete this.feature;
         }
-        L.DomUtil.removeClass(this.getContainer(), 'dark');
+        this._onChangeState(false);
+    },
+
+    _onChangeState: function(state) {
+        L.DomUtil.classIf(this.getContainer(), 'dark', state);
     },
 
     _onDrawingTooltip: function(e) {
         this.map.ui.tooltip({
-            content: L._('Click to start drawing a polygon') + '<br>' + L._('OR') + '<br>' + L._("Press 'Enter' to print"),
+            content: L._("Press 'Enter' to print") + '<br>' +
+                     L._("Press 'Esc' to cancel") + '<br>' +
+                     L._('Click to start drawing a polygon'),
             duration: 5000
         });
     },
@@ -717,9 +723,7 @@ L.Storage.PrintControl = L.Control.extend({
 
     onClick: function (e) {
         this._onDelete(e);
-        if (!L.DomUtil.hasClass(this.getContainer(), 'dark')) {
-            L.DomUtil.addClass(this.getContainer(), 'dark');
-        }
+        this._onChangeState(true);
         if (!!this.feature) {
             this.feature.disableEdit();
             delete this.feature;
@@ -728,35 +732,27 @@ L.Storage.PrintControl = L.Control.extend({
     },
 
     print: function (e) {
+        var modeName = 'A4Portrait';
         var layers = this.editable.featuresLayer.getLayers();
-        if (layers.length === 0) {
-            this.easyPrint.printMap('A4Portrait');
-            return;
-        }
-        var llb = layers[0].getBounds();
-        // North - север
-        // West  - запад
-        // South - юг
-        // East  - восток
-        var nw = this._map.latLngToContainerPoint(llb.getNorthWest());
-        var se = this._map.latLngToContainerPoint(llb.getSouthEast());
-        // Расчитываем ширину и высоту получаемого изображения
-        var width = se.x - nw.x, height = se.y - nw.y;
+        if (layers.length > 0) {
+            var llb = layers[0].getBounds();
+            var nw = this._map.latLngToContainerPoint(llb.getNorthWest());
+            var se = this._map.latLngToContainerPoint(llb.getSouthEast());
+            // Расчитываем ширину и высоту получаемого изображения
+            var width = se.x - nw.x, height = se.y - nw.y;
 
-        // Смещаем центр карты, т.к. выбранный фрагмент центруется по карте
-        this._map.panTo(llb.getCenter());
-        this._onDelete(e);
-        this.easyPrint.options.sizeModes.push({
-            width: width,
-            height: height,
-            className: 'userSize',
-            tooltip: 'user Size'
-        });
-        try {
-            this.easyPrint.printMap('userSize');
+            // Смещаем центр карты, т.к. при печати фрагмент центрируется по центру карты
+            this._map.panTo(llb.getCenter());
+            this._onDelete(e);
+            modeName = 'userSize';
+            this.easyPrint.options.sizeModes.push({
+                width: width,
+                height: height,
+                className: modeName,
+                tooltip: 'user Size'
+            });
         }
-        catch (ex) {
-            console.log(ex);
-        }
+        this._onChangeState(false);
+        this.easyPrint.printMap(modeName);
     }
 });

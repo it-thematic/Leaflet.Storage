@@ -374,6 +374,7 @@
     "Filter by voltage": "Фильтр по напряжению",
     "Structure and hierarchy of MOESK": "Структура и иерархия МОЭСК",
     "OR": "Или",
-    "Press 'Enter' to print": "Нажмите 'ВВОД' для печати",
+    "Press 'Enter' to print": "Нажмите 'Enter' для печати",
+    "Press 'Esc' to cancel": "Назмите 'Esc' для отмены",
     "Print": "Печать"
 }

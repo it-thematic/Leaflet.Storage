@@ -392,6 +392,7 @@ var locale = {
     "Structure and filials of MOESK": "Структура и филиалы МОЭСК",
     "OR": "Или",
     "Press 'Enter' to print": "Нажмите 'ВВОД' для печати",
+    "Press 'Esc' to cancel": "Нажмите 'Esc' для отмены",
     "Print": "Печать"
 };
 L.registerLocale("ru", locale);
