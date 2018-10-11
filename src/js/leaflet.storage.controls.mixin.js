@@ -641,7 +641,23 @@ L.Storage.PrintControl = L.Control.extend({
     initialize: function(options) {
         L.Control.prototype.initialize.call(this, options);
 
+        var enabled = false;
+        try {
+            Object.defineProperty(this, 'enabled', {
+                get: function () {
+                    return L.DomUtil.hasClass(this.getContainer(), 'dark');
+                },
+                set: function (state) {
+                    return L.DomUtil.classIf(this.getContainer(), 'dark', state);
+                }
+            });
+        }
+        catch (e) {
+            // Certainly IE8, which has a limited version of defineProperty
+        }
+
         L.DomEvent.addListener(document, 'keydown', function (e) {
+            if (!this.enabled) { return; }
             switch (e.keyCode) {
                 case this.VK_DELETE:
                     this._onDelete(e);
@@ -688,11 +704,7 @@ L.Storage.PrintControl = L.Control.extend({
             this.feature.disableEdit();
             delete this.feature;
         }
-        this._onChangeState(false);
-    },
-
-    _onChangeState: function(state) {
-        L.DomUtil.classIf(this.getContainer(), 'dark', state);
+        this.enabled = false;
     },
 
     _onDrawingTooltip: function(e) {
@@ -723,7 +735,7 @@ L.Storage.PrintControl = L.Control.extend({
 
     onClick: function (e) {
         this._onDelete(e);
-        this._onChangeState(true);
+        this.enabled = true;
         if (!!this.feature) {
             this.feature.disableEdit();
             delete this.feature;
@@ -752,7 +764,7 @@ L.Storage.PrintControl = L.Control.extend({
                 tooltip: 'user Size'
             });
         }
-        this._onChangeState(false);
+        this.enabled  = false;
         this.easyPrint.printMap(modeName);
     }
 });
