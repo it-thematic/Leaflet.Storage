@@ -376,5 +376,7 @@
     "OR": "OR",
     "Press 'Enter' to print": "Press 'Enter' to print",
     "Press 'Esc' to cancel": "Press 'Esc' to cancel",
-    "Print": "Print"
+    "Print": "Print",
+    "Filter by fillials": "Filter by fillials",
+    "Filter by time": "Filter by time"
 }

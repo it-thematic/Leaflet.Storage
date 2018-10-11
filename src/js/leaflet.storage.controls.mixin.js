@@ -60,7 +60,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
     options: {
         helpMenu: true,
         className: 'leaflet-filter-datetime dark',
-        tooltip: L._('Задать дату/время')
+        tooltip: L._('Filter by time')
     },
 
     actual: true,
@@ -178,9 +178,8 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
 
     getContainer: function () {
         var container = L.DomUtil.create('div');
-        var label_header = document.createElement('label');
-        label_header.appendChild(document.createTextNode('ОБЪЕКТЫ КОНТРОЛЯ'));
-        container.appendChild(label_header);
+        var title = L.DomUtil.create('h4', '', container);
+        title.innerHTML = L._("Filter by time");
 
         // Начало создания контейнера для переключателя
 
@@ -312,6 +311,8 @@ L.Storage.FilterAction.Voltage = L.Storage.FilterAction.extend({
 
     _getContainer: function () {
         var container = L.DomUtil.create('div'), fields = [], i, that = this;
+        var title = L.DomUtil.create('h4', '', container);
+        title.innerHTML = L._("Filter by voltage");
         for (i = 0; i < this.values.length; i++) {
             fields.push([
                 'filters.voltage' + this.values[i].value + '.check' + this.values[i].value, {
@@ -418,7 +419,7 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
     options: {
         helpMenu: true,
         className: 'leaflet-filter-hierarchy dark',
-        tooltip: L._('Structure and filials of MOESK')
+        tooltip: L._('Filter by fillials')
     },
 
     reloadStorage: function(){
@@ -437,6 +438,8 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         var container = L.DomUtil.create('div');
         container.style.width = '100%';
         container.style.height = '100%';
+        var title = L.DomUtil.create('h4', '', container);
+        title.innerHTML = L._("Filter by fillials");
         var root = L.DomUtil.create('div');
         root.setAttribute('id', 'rootTree');
         container.appendChild(root);
