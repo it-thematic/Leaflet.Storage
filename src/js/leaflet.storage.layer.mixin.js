@@ -14,6 +14,9 @@ DataLayerMixin = {
             delete this._wfs;
         }
         L.Util.extend(this.wfs_options, options);
+        if (!this.wfs_options.url) {
+            return;
+        }
         this._wfs = L.wfs(
             this.wfs_options,
             new L.Format.GeoJSON({

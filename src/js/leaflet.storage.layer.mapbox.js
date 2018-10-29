@@ -93,34 +93,12 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         }
 
         this.on('add', function (e) {
-            if (this.styleID && this.styleID !== -1) {
-                if (!this._styleJSON) {
+            if (that.styleID && that.styleID !== -1) {
+                if (!that._styleJSON) {
                     return;
                 }
-                //     var style = this._styleJSON;
-                //     for (var source in style.sources) {
-                //         if (!style.sources.hasOwnProperty(source)) {
-                //             continue;
-                //         }
-                //         Получение базово адреса источника данных
-                // var source_type = style.sources[source].type;
-                // if (source_type !== 'geojson') {
-                //     continue;
-                // }
-                //
-                // if (!!this.default_filter) {
-                //     var url = style.sources[source].data;
-                //     if (url.indexOf('?') === -1) {
-                //         url += '?' + this.default_filter;
-                //     } else {
-                //         url += this.default_filter;
-                //     }
-                //     url = style.sources[source].data = url;
-                // }
-                // }
-                // this.datalayer.map.MAPBOX.setStyle(style);
-                this.datalayer.map.MAPBOX.setStyle(this._styleJSON);
-                this.updateSource();
+                that.datalayer.map.MAPBOX.setStyle(that._styleJSON);
+                that.updateSource();
             }
         });
 
@@ -230,7 +208,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     break;
                 }
             }
-            if ((!!_ok) && (!!value)) {
+            if ((_ok) && (!!value)) {
                 this.filters.push(key + operation + value);
             }
         }
