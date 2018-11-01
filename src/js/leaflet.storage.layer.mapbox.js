@@ -217,7 +217,12 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
     updateMapboxFilter: function (metadata_key, mapbox_layer_filter) {
         // filter: фильтр который принимает Mapbox
-        this.mapbox_layer_filters[metadata_key] = mapbox_layer_filter;
+        if (!!mapbox_layer_filter) {
+            this.mapbox_layer_filters[metadata_key] = mapbox_layer_filter;
+        } else {
+            delete this.mapbox_layer_filters[metadata_key];
+        }
+
         this.updateSource();
         // for (var i = 0; i < this._styleJSON.layers.length; i++) {
         //     var metadatas = this._styleJSON.layers[i].metadata;
