@@ -112,6 +112,10 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             that.updateBboxFilter(true);
         });
 
+        this.datalayer.map.on('zoomend', function (e) {
+            that.updateZoomFilter(that.datalayer.map.getZoom());
+        }, this.datalayer.map);
+
         this.on('styleloaded', function () {
             that.updateBboxFilter(that.datalayer.options.mapbox.in_bbox);
             that.updateSource();
@@ -164,6 +168,10 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 break;
         }
         L.S.Layer.Default.prototype.postUpdate.call(this, field);
+    },
+
+    updateZoomFilter: function(value) {
+        !!value ? this.zoom_filter = 'zoom=' + this.datalayer.map.getZoom() : null;
     },
 
     updateBboxFilter: function (value) {
@@ -271,6 +279,10 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     // Добавление фильтра по видимой области карты
                     if (!!this.bbox_filter) {
                         url += '&' + this.bbox_filter;
+                    }
+
+                    if (!!this.zoom_filter) {
+                        url += '&' + this.zoom_filter;
                     }
 
                     filter = '';
