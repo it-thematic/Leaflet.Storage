@@ -540,8 +540,11 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
         function sendResutl(res_arr) {
             console.log(res_arr);
             map_tree.eachDataLayer(function (datalayer) {
-                if ((datalayer.layer._type === 'Mapbox') && ((datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol')) ||
-                                                              datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_locations'))) {
+                if ((datalayer.layer._type === 'Mapbox')
+                    // незачем
+                    // && ((datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_substations_symbol')) ||
+                    //                                           datalayer.layer._styleJSON.sources.hasOwnProperty('mgs_locations'))
+                    ) {
                     if ((res_arr.length === 1) && res_arr[0] === "0") {
                         var is_tree = JSON.parse(window.localStorage.getItem('jstree'));
                         if ((is_tree === null) || (is_tree === undefined)) {
