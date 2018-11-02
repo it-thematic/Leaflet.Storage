@@ -423,14 +423,12 @@ L.Storage.FilterAction.Hierarchy = L.Storage.FilterAction.extend({
     },
 
     reloadStorage: function(){
+      // обновление  времени  хранения  дерева id-филиалов  localstorage  - каждые 24 часа
       var limit = 24 * 3600 * 1000; // 24 часа
       var localStorageInitTime = localStorage.getItem('localStorageInitTime');
-      if (localStorageInitTime === null) {
-        window.localStorage.clear();
-        window.localStorage.setItem('localStorageInitTime', +new Date());
-      } else if(new Date() - localStorageInitTime > limit){
-        window.localStorage.clear();
-        window.localStorage.setItem('localStorageInitTime', +new Date());
+      if ((!localStorageInitTime) || (new Date() - localStorageInitTime > limit) ) {
+          window.localStorage.removeItem('moesk-structure');
+          window.localStorage.setItem('localStorageInitTime', + new Date());
       }
     },
 
