@@ -254,7 +254,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         if (!this._styleJSON) {
             return;
         }
-        var source_type, url, filter, i, j;
+        var source_type, url, filter, i;
         for (var source in this._styleJSON.sources) {
             if (!this._styleJSON.sources.hasOwnProperty(source)) {
                 continue;
@@ -294,32 +294,33 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     this.datalayer.map.fire('update-source', {map: this.datalayer.map, layer: this});
                     break;
             }
-            // Добавление Mapbox-фильтра ко всем слоям в этом Datalayer не зависимо от источника
-            for (var mapbox_filter in this.mapbox_layer_filters) {
-                if (!this.mapbox_layer_filters.hasOwnProperty(mapbox_filter)) {
+        }
+
+        for (i = 0; i < this._styleJSON.layers.length; i++) {
+            delete this._styleJSON.layers[i].filter;
+            this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, undefined);
+
+            var metadatas = this._styleJSON.layers[i].metadata;
+            if (!metadatas) {
+                continue;
+            }
+            for (var metadata in metadatas) {
+                if (!metadatas.hasOwnProperty(metadata)) {
                     continue;
                 }
-                // Проходим по метаданным слоя
-                // Если в метаданных есть фильтр по этому ключу, то применяем фильтр
-                for (i = 0; i < this._styleJSON.layers.length; i++) {
-                    var metadatas = this._styleJSON.layers[i].metadata;
-                    if (!metadatas) {
+                var metadata_array = metadata.split(':');
+                // Если это поле по которому фильтровать, то фильтруем иначе нет
+                if (metadata_array[1] !== 'filter') {
+                    continue;
+                }
+                for (var mapbox_filter in this.mapbox_layer_filters) {
+                    if (!this.mapbox_layer_filters.hasOwnProperty(mapbox_filter)) {
                         continue;
                     }
-                    for (var metadata in metadatas) {
-                        if (!metadatas.hasOwnProperty(metadata)) {
-                            continue;
-                        }
-                        var metadata_array = metadata.split(':');
-                        // Если это поле по которому фильтровать, то фильтруем иначе нет
-                        if (metadata_array[1] !== 'filter') {
-                            continue;
-                        }
-                        if (metadata_array[2] === mapbox_filter) {
-                            if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
-                                this._styleJSON.layers[i].filter = this.mapbox_layer_filters[mapbox_filter];
-                                this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filters[mapbox_filter]);
-                            }
+                    if (metadata_array[2] === mapbox_filter) {
+                        if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+                            this._styleJSON.layers[i].filter = this.mapbox_layer_filters[mapbox_filter];
+                            this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filters[mapbox_filter]);
                         }
                     }
                 }
