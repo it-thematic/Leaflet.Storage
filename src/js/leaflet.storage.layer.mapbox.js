@@ -50,8 +50,18 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         }
         for (var source in this._styleJSON.sources) {
             if (this._styleJSON.sources.hasOwnProperty(source)) {
-                method.call(context || this, this._styleJSON.sources[source]);
+                method.call(context || this, source, this._styleJSON.sources[source]);
             }
+        }
+        return this;
+    },
+
+    eachMapboxLayer: function (method, context) {
+        if (!this._styleJSON) {
+            return this;
+        }
+        for (var i = 0; i < this._styleJSON.layers.length; i++) {
+            method.call(context || this, this._styleJSON.layers[i].id, this._styleJSON.layers[i]);
         }
         return this;
     },
@@ -76,14 +86,8 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     }
                     styleID = style_id;
                     this.datalayer.map.get(this._getStyleUrl(style_id), {
-                        callback: function (response) {
-                            that.datalayer.map.MAPBOX.removeStyle(that._styleJSON);
-                            if (response) {
-                                that._styleJSON = response;
-                                that.datalayer.map.MAPBOX.setStyle(response);
-                                that.fire('styleloaded', that);
-                            }
-                        }
+                        context: this,
+                        callback: that.onLoadStyle
                     });
                 }
             });
@@ -108,18 +112,15 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             }
         }, this);
 
+        // Подписка за завершение события перемещения карты
         this.datalayer.map.on('moveend', function (e) {
             that.updateBboxFilter(true);
         });
 
+        // Подписка за завершение события окончания изменения уровня отображения
         this.datalayer.map.on('zoomend', function (e) {
             that.updateZoomFilter(that.datalayer.map.getZoom());
         }, this.datalayer.map);
-
-        this.on('styleloaded', function () {
-            that.updateBboxFilter(that.datalayer.options.mapbox.in_bbox);
-            that.updateSource();
-        }, this);
 
         // Инициализация параметров для слоя, если они переданы
         if (this.datalayer.options.mapbox) {
@@ -134,6 +135,90 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             }
         }
         this._getStyle(this.datalayer.storage_id);
+    },
+
+    onLoadStyle: function(data, response) {
+        // TODO: Эта функция срабатывает только после получения стиля с сервера по его ID
+        this.datalayer.map.MAPBOX.removeStyle(this._styleJSON);
+        if (data) {
+            // После загрузки фильтра запоминаем его во внутреннее поле
+            this._styleJSON = data;
+            this.datalayer.map.MAPBOX.setStyle(this.changeStyle(this._styleJSON));
+            // После того как стиль загрузился вызываем событие окончания загрузки стиля с сервера
+            this.fire('styleloaded', this);
+        }
+    },
+
+    changeStyle: function(style) {
+        var type_, url, filter, i;
+
+        // Изменение источников в Mapbox-стиле
+        for (var source in style.sources) {
+            if (!style.sources.hasOwnProperty(source)) {
+                continue;
+            }
+
+            // Получение базового адреса источника данных
+            type_ = this._styleJSON.sources[source].type;
+            switch (type_) {
+                case 'geojson':
+                    url = style.sources[source].data;
+                    if (url.indexOf('?') === -1) {
+                        url += '?';
+                    }
+
+                    // Добавление фильтра по умолчанию
+                    if (!!this.default_filter) {
+                        url += '&' + this.default_filter;
+                    }
+
+                    // Добавление фильтра по видимой области карты
+                    url += '&' + 'in_bbox=' + this.datalayer.map.getBounds().toBBoxString();
+
+                    // Добавление фильтра по уровню отображения
+                    url += '&' + 'zoom=' + this.datalayer.map.getZoom();
+
+                    // Добавление остальных динамических фильтров
+                    filter = '';
+                    for (i = 0; i < this.filters.length; i++) {
+                        filter += '&' + this.filters[i];
+                    }
+                    style.sources[source].data = url + filter;
+                    break;
+            }
+        }
+
+        // Изменение слоёв в Mapbox-стиле
+        for (i = 0; i < style.layers.length; i++) {
+            delete style.layers[i].filter;
+
+            var metadatas = style.layers[i].metadata;
+            if (!metadatas) {
+                continue;
+            }
+            for (var metadata in metadatas) {
+                if (!metadatas.hasOwnProperty(metadata)) {
+                    continue;
+                }
+                var metadata_array = metadata.split(':');
+                // Если это поле по которому фильтровать, то фильтруем иначе нет
+                if (metadata_array[1] !== 'filter') {
+                    continue;
+                }
+                for (var mapbox_filter in this.mapbox_layer_filters) {
+                    if (!this.mapbox_layer_filters.hasOwnProperty(mapbox_filter)) {
+                        continue;
+                    }
+                    if (metadata_array[2] !== mapbox_filter) {
+                        continue;
+                    }
+                    if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+                        style.layers[i].filter = this.mapbox_layer_filters[mapbox_filter];
+                    }
+                }
+            }
+        }
+        return style;
     },
 
     getEditableOptions: function () {
