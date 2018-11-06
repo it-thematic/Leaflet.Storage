@@ -151,18 +151,18 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
     changeStyle: function(style) {
         var type_, url, filter, i;
-
+        var new_style = JSON.parse(JSON.stringify(style));
         // Изменение источников в Mapbox-стиле
-        for (var source in style.sources) {
-            if (!style.sources.hasOwnProperty(source)) {
+        for (var source in new_style.sources) {
+            if (!new_style.sources.hasOwnProperty(source)) {
                 continue;
             }
 
             // Получение базового адреса источника данных
-            type_ = this._styleJSON.sources[source].type;
+            type_ = new_style.sources[source].type;
             switch (type_) {
                 case 'geojson':
-                    url = style.sources[source].data;
+                    url = new_style.sources[source].data;
                     if (url.indexOf('?') === -1) {
                         url += '?';
                     }
@@ -183,16 +183,16 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     for (i = 0; i < this.filters.length; i++) {
                         filter += '&' + this.filters[i];
                     }
-                    style.sources[source].data = url + filter;
+                    new_style.sources[source].data = url + filter;
                     break;
             }
         }
 
         // Изменение слоёв в Mapbox-стиле
-        for (i = 0; i < style.layers.length; i++) {
-            delete style.layers[i].filter;
+        for (i = 0; i < new_style.layers.length; i++) {
+            delete new_style.layers[i].filter;
 
-            var metadatas = style.layers[i].metadata;
+            var metadatas = new_style.layers[i].metadata;
             if (!metadatas) {
                 continue;
             }
@@ -213,12 +213,12 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                         continue;
                     }
                     if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
-                        style.layers[i].filter = this.mapbox_layer_filters[mapbox_filter];
+                        new_style.layers[i].filter = this.mapbox_layer_filters[mapbox_filter];
                     }
                 }
             }
         }
-        return style;
+        return new_style;
     },
 
     getEditableOptions: function () {
