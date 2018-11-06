@@ -383,8 +383,9 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
         for (i = 0; i < this._styleJSON.layers.length; i++) {
             delete this._styleJSON.layers[i].filter;
-            this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, undefined);
-
+            if (this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
+                this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, undefined);
+            }
             var metadatas = this._styleJSON.layers[i].metadata;
             if (!metadatas) {
                 continue;
