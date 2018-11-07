@@ -245,7 +245,7 @@ L.Storage.FilterAction.Datetime = L.Storage.FilterAction.extend({
         console.log(_date);
         _date = _date.getTime() / 1000;
         console.log(_date);
-        if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox') {
+        if (!!this.map.activeDataLayer && this.map.activeDataLayer.layer._type === 'Mapbox' && _date) {
             this.map.activeDataLayer.layer.updateFilter('time', '=', _date);
             this.setState(true);
             localStorage.setItem(this.localStorageHistoryKey, _date);
