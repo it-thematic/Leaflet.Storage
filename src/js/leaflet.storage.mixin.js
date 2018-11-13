@@ -1,9 +1,9 @@
 StorageMixin = {
-    initMapbox: function () {
+    initMapbox: function (properties) {
         // TODO: vector_tiles
         this._timeout = 10000;
 
-        this.MAPBOX = L.MapboxITT(this, {});
+        this.MAPBOX = L.MapboxITT(this, properties);
         this.MAPBOX.addTo(this);
 
         var that = this;

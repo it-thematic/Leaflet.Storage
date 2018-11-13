@@ -11,37 +11,24 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
         accessToken: "pk.eyJ1Ijoic2hwYXdlbCIsImEiOiJjaXMwOGRqajYwMDBhMnpvNzdyOWYxNWU2In0.tCzDmtQKGwFwHx40zXQhKQ",
         center: [37.627487, 55.741028],
         // style: 'mapbox://styles/mapbox/streets-v9'
+        // TODO: Стиль определяется в админке в параметрах карты. Этот стиль больше не будет работать
         style: {
-            "version": 8,
-            "name": "moesk_gis_show",
-            "center": [37.627487, 55.741028],
-            "zoom": 8,
-            "sprite": "http://localhost:8000/static/sprite/sprite",
-            // ittdev
-            // "sprite": "http://35.206.94.214/static/sprite/sprite",
-            // apigis
-            // "sprite": "http://10.42.222.190/static/sprite/sprite",
-            // gismoesk
-            // "sprite": "http://10.42.222.190/static/sprite/sprite",
-            // sigma mb08
-            // "sprite": "http://isolated-gw-vmw01-mb08.sigma-it.local/static/sprite/sprite",
-            // sigma mb09
-            // "sprite": "http://isolated-gw-vmw01-mb09.sigma-it.local/static/sprite/sprite",
-            // ia-mob-gis1
-            // "sprite": "http://10.42.224.60/static/sprite/sprite",
-            // ia-mob-gis2
-            // "sprite": "http://10.42.224.61/static/sprite/sprite",
-            "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-            "sources": {
-            },
-            "layers": [
-            ]
+            // "version": 8,
+            // "name": "moesk_gis_show",
+            // "center": [37.627487, 55.741028],
+            // "zoom": 8,
+            // "sprite": "mapbox://sprites/mapbox/streets-v8",
+            // "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        //     "sources": {
+        //     },
+        //     "layers": [
+        //     ]
         }
     },
 
     initialize: function (map, options) {
         this.map = map;
-        L.Util.extend(this.options, options);
+        L.Util.extend(this.options.style, options.style);
         L.MapboxGL.prototype.initialize.call(this, this.options);
     },
 

@@ -242,7 +242,7 @@ L.Storage.Map.include({
         this.initContextMenu();
         this.on('click contextmenu.show', this.closeInplaceToolbar);
 
-        this.initMapbox();
+        this.initMapbox(geojson.properties);
     },
 
     initControls: function () {
