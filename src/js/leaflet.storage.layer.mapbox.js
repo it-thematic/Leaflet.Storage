@@ -101,8 +101,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 if (!that._styleJSON) {
                     return;
                 }
-                that.datalayer.map.MAPBOX.setStyle(that._styleJSON);
-                that.updateSource();
+                that.datalayer.map.MAPBOX.setStyle(that.changeStyle(that._styleJSON));
             }
         });
 
