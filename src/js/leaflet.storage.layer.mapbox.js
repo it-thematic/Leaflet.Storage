@@ -111,9 +111,25 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             }
         }, this);
 
+        // Подписка начала события перемещения карты
+        this.datalayer.map.on('movestart', function (e) {
+            currentTime = localStorage.getItem('currTimeBbox');
+            if (currentTime === null){
+                localStorage.setItem('currTimeBbox', new Date())
+            }
+        });
+
         // Подписка за завершение события перемещения карты
         this.datalayer.map.on('moveend', function (e) {
-            that.updateBboxFilter(true);
+            currentTime = localStorage.getItem('currTimeBbox');
+
+            if ((currentTime === null)) {
+                that.updateBboxFilter(that.bbox_filter);
+            }
+            else if (currentTime && (new Date().getTime() - new Date(currentTime).getTime() > 3000)){
+                localStorage.removeItem('currTimeBbox');
+                that.updateBboxFilter(that.bbox_filter);
+            }
         });
 
         // Подписка за завершение события окончания изменения уровня отображения
@@ -255,11 +271,11 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     },
 
     updateZoomFilter: function(value) {
-        !!value ? this.zoom_filter = 'zoom=' + this.datalayer.map.getZoom() : null;
+        this.zoom_filter = !!value ? 'zoom=' + this.datalayer.map.getZoom() : null;
     },
 
     updateBboxFilter: function (value) {
-        !!value ? this.bbox_filter = 'in_bbox=' + this.datalayer.map.getBounds().toBBoxString() : null;
+        this.bbox_filter =  !!value ? 'in_bbox=' + this.datalayer.map.getBounds().toBBoxString() : null;
         this.updateSource();
     },
 
