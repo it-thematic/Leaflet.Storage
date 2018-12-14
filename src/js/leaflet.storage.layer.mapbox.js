@@ -111,19 +111,11 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             }
         }, this);
 
-        // Подписка начала события перемещения карты
-        this.datalayer.map.on('movestart', function (e) {
-            currentTime = localStorage.getItem('currTimeBbox');
-            if (currentTime === null){
-                localStorage.setItem('currTimeBbox', new Date())
-            }
-        });
-
         // Подписка за завершение события перемещения карты
         this.datalayer.map.on('moveend', function (e) {
             currentTime = localStorage.getItem('currTimeBbox');
-
-            if ((currentTime === null)) {
+            if (currentTime === null){
+                localStorage.setItem('currTimeBbox', new Date())
                 that.updateBboxFilter(that.bbox_filter);
             }
             else if (currentTime && (new Date().getTime() - new Date(currentTime).getTime() > 3000)){
