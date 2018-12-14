@@ -113,15 +113,16 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
 
         // Подписка за завершение события перемещения карты
         this.datalayer.map.on('moveend', function (e) {
-            currentTime = localStorage.getItem('currTimeBbox');
-            if (currentTime === null){
-                localStorage.setItem('currTimeBbox', new Date())
-                that.updateBboxFilter(that.bbox_filter);
-            }
-            else if (currentTime && (new Date().getTime() - new Date(currentTime).getTime() > 3000)){
-                localStorage.removeItem('currTimeBbox');
-                that.updateBboxFilter(that.bbox_filter);
-            }
+            // FIXME: попытка  добавиить timeout
+            // currentTime = localStorage.getItem('currTimeBbox');
+            // if (currentTime && (new Date().getTime() - new Date(currentTime).getTime() <1000)){
+            //     localStorage.removeItem('currTimeBbox');
+            //     console.log('not set request  <2000' + currentTime);
+            //     return;
+            // }
+            // console.log('send request ');
+            // localStorage.setItem('currTimeBbox', new Date());
+            that.updateBboxFilter(that.bbox_filter);
         });
 
         // Подписка за завершение события окончания изменения уровня отображения
