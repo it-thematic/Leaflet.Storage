@@ -37,18 +37,18 @@ StorageMixin = {
 
 
         // Задержка по времени обработки события перемещения карты
-        var next = false, lastEvent;
-
-        this.on('mousemove', function (e) {
-            lastEvent = e;
-            if (!next) {
-                next = true;
-                setTimeout(function () {
-                    next = false;
-                    that._onMouseMove(e);
-                },1000);
-            }
-        }, this.MAPBOX);
+        // var next = false, lastEvent;
+        //
+        // this.on('mousemove', function (e) {
+        //     lastEvent = e;
+        //     if (!next) {
+        //         next = true;
+        //         setTimeout(function () {
+        //             next = false;
+        //             that._onMouseMove(e);
+        //         },1000);
+        //     }
+        // }, this.MAPBOX);
     },
 
     _onMouseMove: function (e) {
