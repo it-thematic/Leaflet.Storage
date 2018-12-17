@@ -102,7 +102,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             that.updateTimeout = setTimeout(function tick() {
                 that._update();
                 clearTimeout(that.updateTimeout);
-            }, 1000);
+            }, 500);
         }, this);
 
         // Подписка за завершение события перемещения карты
