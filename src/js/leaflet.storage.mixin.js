@@ -34,6 +34,34 @@ StorageMixin = {
                 e.map.activeDataLayer.layer.default_filter = e.layer.default_filter;
             }
         });
+
+
+        // Задержка по времени обработки события перемещения карты
+        var next = false, lastEvent;
+
+        this.on('mousemove', function (e) {
+            lastEvent = e;
+            if (!next) {
+                next = true;
+                setTimeout(function () {
+                    next = false;
+                    that._onMouseMove(e);
+                },1000);
+            }
+        }, this.MAPBOX);
+    },
+
+    _onMouseMove: function (e) {
+        var features = e.target.MAPBOX.queryRenderedFeatures([e.layerPoint.x, e.layerPoint.y]);
+        if (features.length === 0) { return; }
+        var info = [];
+        for (var i = 0; i < features.length; i++) {
+            info.push(features[i].properties);
+        }
+        e.target.ui.tooltip({
+            content: JSON.stringify(info, null, 4),
+            duration: 3000
+        });
     },
 
     startTimer: function () {

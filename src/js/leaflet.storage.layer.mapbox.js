@@ -3,9 +3,15 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     _styleJSON: null,
     filters: null,
     mapbox_layer_filters: null,
-    bbox_filter: null,
     default_filter: null,
     selectOptions: [["-1", '------']],
+
+    // Таймаут для событий обновления слоя
+    updateTimeout: null,
+
+    _update: function () {
+        this.updateSource();
+    },
 
     _getStylesUrl: function () {
         var template = '/styles/datalayer/{id}/styles';
@@ -44,28 +50,6 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         });
     },
 
-    eachMapboxSource: function (method, context) {
-        if (!this._styleJSON) {
-            return this;
-        }
-        for (var source in this._styleJSON.sources) {
-            if (this._styleJSON.sources.hasOwnProperty(source)) {
-                method.call(context || this, source, this._styleJSON.sources[source]);
-            }
-        }
-        return this;
-    },
-
-    eachMapboxLayer: function (method, context) {
-        if (!this._styleJSON) {
-            return this;
-        }
-        for (var i = 0; i < this._styleJSON.layers.length; i++) {
-            method.call(context || this, this._styleJSON.layers[i].id, this._styleJSON.layers[i]);
-        }
-        return this;
-    },
-
     initialize: function (datalayer) {
         L.S.Layer.Default.prototype.initialize.call(this, datalayer);
         var styleID = null;
@@ -85,7 +69,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                         return;
                     }
                     styleID = style_id;
-                    this.datalayer.map.get(this._getStyleUrl(style_id), {
+                    that.datalayer.map.get(that._getStyleUrl(style_id), {
                         context: this,
                         callback: that.onLoadStyle
                     });
@@ -111,24 +95,25 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             }
         }, this);
 
+        this.on('layer.update', function () {
+            if (!!that.updateTimeout) {
+                clearTimeout(that.updateTimeout);
+            }
+            that.updateTimeout = setTimeout(function tick() {
+                that._update();
+                clearTimeout(that.updateTimeout);
+            }, 1000);
+        }, this);
+
         // Подписка за завершение события перемещения карты
         this.datalayer.map.on('moveend', function (e) {
-            // FIXME: попытка  добавиить timeout
-            // currentTime = localStorage.getItem('currTimeBbox');
-            // if (currentTime && (new Date().getTime() - new Date(currentTime).getTime() <1000)){
-            //     localStorage.removeItem('currTimeBbox');
-            //     console.log('not set request  <2000' + currentTime);
-            //     return;
-            // }
-            // console.log('send request ');
-            // localStorage.setItem('currTimeBbox', new Date());
-            that.updateBboxFilter(that.bbox_filter);
+            that.fire('layer.update');
         });
 
         // Подписка за завершение события окончания изменения уровня отображения
         this.datalayer.map.on('zoomend', function (e) {
-            that.updateZoomFilter(that.datalayer.map.getZoom());
-        }, this.datalayer.map);
+            that.fire('layer.update');
+        });
 
         // Инициализация параметров для слоя, если они переданы
         if (this.datalayer.options.mapbox) {
@@ -136,9 +121,8 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 this.datalayer.map.activeDataLayer = this.datalayer;
             }
 
-            this.default_filter = this.datalayer.options.mapbox.default_filter;
-
-            if (this.datalayer.options.mapbox.style) {
+            // ID стиля должен назначаться в последнюю очередь, т.к. раньше должно пройти применение всех фильтров
+            if (this.datalayer.options.mapbox.hasOwnProperty('style')) {
                 this.styleID = this.datalayer.options.mapbox.style;
             }
         }
@@ -175,16 +159,20 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                         url += '?';
                     }
 
-                    // Добавление фильтра по умолчанию
-                    if (!!this.default_filter) {
-                        url += '&' + this.default_filter;
+                    if (this.datalayer.options.hasOwnProperty('mapbox')) {
+                        // Добавление фильтра по умолчанию
+                        if (!!this.datalayer.options.mapbox.default_filter) {
+                            url += '&' + this.datalayer.options.mapbox.default_filter;
+                        }
+
+                        // Добавление фильтра по видимой области карты
+                        if (!!this.datalayer.options.mapbox.in_bbox) {
+                            url += '&in_bbox=' + this.datalayer.map.getBounds().toBBoxString();
+                        }
                     }
 
-                    // Добавление фильтра по видимой области карты
-                    url += '&' + 'in_bbox=' + this.datalayer.map.getBounds().toBBoxString();
-
                     // Добавление фильтра по уровню отображения
-                    url += '&' + 'zoom=' + this.datalayer.map.getZoom();
+                    url += '&zoom=' + this.datalayer.map.getZoom();
 
                     // Добавление остальных динамических фильтров
                     filter = '';
@@ -250,26 +238,16 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
     postUpdate: function (field) {
         switch (field.helper.name) {
             case 'in_bbox':
-                this.updateBboxFilter(field.helper.value());
+                this.fire('layer.update');
                 break;
             case 'active':
                 this.datalayer.map.activeDatalaye = this.datalayer;
                 break;
             case 'default_filter':
-                this.default_filter = field.helper.value();
-                this.updateSource();
+                this.fire('layer.update');
                 break;
         }
         L.S.Layer.Default.prototype.postUpdate.call(this, field);
-    },
-
-    updateZoomFilter: function(value) {
-        this.zoom_filter = !!value ? 'zoom=' + this.datalayer.map.getZoom() : null;
-    },
-
-    updateBboxFilter: function (value) {
-        this.bbox_filter =  !!value ? 'in_bbox=' + this.datalayer.map.getBounds().toBBoxString() : null;
-        this.updateSource();
     },
 
     appendFilter: function (filter) {
@@ -277,7 +255,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             return;
         }
         this.filters.push(filter);
-        this.updateSource();
+        this.fire('layer.update');
     },
 
     removeFilter: function (filter) {
@@ -286,7 +264,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
             return;
         }
         this.filters.splice(index, 1);
-        this.updateSource();
+        this.fire('layer.update');
     },
 
     updateFilter: function (key, operation, value) {
@@ -313,7 +291,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                 this.filters.push(key + operation + value);
             }
         }
-        this.updateSource();
+        this.fire('layer.update');
     },
 
     updateMapboxFilter: function (metadata_key, mapbox_layer_filter) {
@@ -323,24 +301,7 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
         } else {
             delete this.mapbox_layer_filters[metadata_key];
         }
-
-        this.updateSource();
-        // for (var i = 0; i < this._styleJSON.layers.length; i++) {
-        //     var metadatas = this._styleJSON.layers[i].metadata;
-        //     if (!metadatas) { continue; }
-        //     for (var metadata in metadatas) {
-        //         if (!metadatas.hasOwnProperty(metadata)) { continue; }
-        //         var metadata_array = metadata.split(':');
-        //         Если это поле по которому фильтровать, то фильтруем иначе нет
-        // if (metadata_array[1] !== 'filter') { continue; }
-        // if (metadata_array[2] === metadata_key) {
-        //     if (!!this.datalayer.map.MAPBOX.hasLayer(this._styleJSON.layers[i].id)) {
-        //         this._styleJSON.layers[i].filter = this.mapbox_layer_filter;
-        //         this.datalayer.map.MAPBOX.setFilter(this._styleJSON.layers[i].id, this.mapbox_layer_filter);
-        //     }
-        // }
-        // }
-        // }
+        this.fire('layer.update');
     },
 
     updateSource: function () {
@@ -360,29 +321,27 @@ L.S.Layer.Mapbox = L.S.Layer.Default.extend({
                     if (url.indexOf('?') === -1) {
                         url += '?';
                     }
-                    // if (this.filters.length >=0 ) {
-                    //     url += '?';
-                    // }
 
-                    // Добавление фильтра по умолчанию
-                    if (!!this.default_filter) {
-                        url += '&' + this.default_filter;
+                    if (this.datalayer.options.hasOwnProperty('mapbox')) {
+                        // Добавление фильтра по умолчанию
+                        if (!!this.datalayer.options.mapbox.default_filter) {
+                            url += '&' + this.datalayer.options.mapbox.default_filter;
+                        }
+
+                        // Добавление фильтра по видимой области карты
+                        if (!!this.datalayer.options.mapbox.in_bbox) {
+                            url += '&in_bbox=' + this.datalayer.map.getBounds().toBBoxString();
+                        }
                     }
 
-                    // Добавление фильтра по видимой области карты
-                    if (!!this.bbox_filter) {
-                        url += '&' + this.bbox_filter;
-                    }
+                    // Фильтр по уровню отображения используем всегда, но он не вынесен в свойства
+                    url += '&zoom=' + this.datalayer.map.getZoom();
 
-                    if (!!this.zoom_filter) {
-                        url += '&' + this.zoom_filter;
-                    }
-
+                    // Применение дополнительных фильтров
                     filter = '';
                     for (i = 0; i < this.filters.length; i++) {
                         filter += '&' + this.filters[i];
                     }
-                    // this._styleJSON.sources[source].data = url + filter;
                     this.datalayer.map.MAPBOX.setSource(source, url + filter);
                     this.datalayer.map.fire('update-source', {map: this.datalayer.map, layer: this});
                     break;

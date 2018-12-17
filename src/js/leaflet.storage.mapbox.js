@@ -247,6 +247,16 @@ L.MapboxGL.ITT = L.MapboxGL.extend({
     */
     mapOFF: function (type, layer, listener) {
         this._glMap.off(type, layer, listener);
+    },
+
+    queryRenderedFeatures: function(geometry) {
+        var layers = [], style = this.getStyle();
+        for (var i = 0; i < style.layers.length; i++) {
+            layers.push(style.layers[i].id);
+        }
+        return this._glMap.queryRenderedFeatures(geometry, {
+            layers: layers
+        });
     }
 });
 
